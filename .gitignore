@@ -11,6 +11,6 @@ logs
 logs/all_events.logs
 logs/all_events.log
 ./logs
-dist
+dist 
 .env
 Tooling
