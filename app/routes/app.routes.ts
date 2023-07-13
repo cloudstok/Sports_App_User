@@ -86,6 +86,19 @@ export class AppRoutes {
         ]
       },
       {
+        path: "/showReel",
+        component : [
+          routingComponents.showReel.bind(routingComponents)
+        ]
+
+      },
+      {
+         path: "/getNews",
+         component : [
+          routingComponents.getNews.bind(routingComponents)
+         ]
+      },
+      {
         path: "*",
         component: [
           routingComponents.pageNotFound.bind(routingComponents)

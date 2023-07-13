@@ -1,13 +1,15 @@
 import { ResponseInterceptor } from "../core/utilities/response-interceptor";
 import { TestController } from "../core/controllers/test.controller";
 import { user } from "../core/controllers/userController";
-import { ThemeController } from "../core/controllers/themes.controller"
+import { ThemeController } from "../core/controllers/themes.controller";
+import { reel } from "../core/controllers/reel.controller";
 
 export class RoutingComponents {
   responseInterceptor: ResponseInterceptor;
   test: TestController
   user: user
   theme: ThemeController
+  reel: reel
   
 
   constructor() {
@@ -15,6 +17,7 @@ export class RoutingComponents {
     this.test = new TestController();
     this.user = new user();
     this.theme = new ThemeController();
+    this.reel = new reel();
   }
 
   /**
@@ -58,5 +61,14 @@ updateTheme(req: any, res: any){
 }  
 deleteThemes(req:any, res: any){
   this.theme.deleteThemes(req,res)
+}
+
+//-------------------reels------------------------->
+showReel(req:any, res: any){
+  this.reel.showReel(req,res)
+}
+//--------------------News------------------------>
+getNews(req:any, res: any){
+  this.reel.getNews(req,res)
 }
 }
