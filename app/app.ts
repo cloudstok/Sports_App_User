@@ -2,6 +2,7 @@ import { appConfig } from "./config/appConf";
 import * as express from "express";
 import { AppRoutes } from "./routes/app.routes";
 import { ResponseInterceptor } from "./core/utilities/response-interceptor"
+import * as cors from 'cors';
 
 
 class App {
@@ -43,6 +44,7 @@ class App {
     private config(): void {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(cors());
     }
 }
 

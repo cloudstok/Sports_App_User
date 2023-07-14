@@ -1,6 +1,5 @@
 import {createPool} from 'mysql2/promise';
 import { appConfig } from './appConf';
-console.log(appConfig.uri)
   export class connection{
     public data :string = appConfig.uri
     
