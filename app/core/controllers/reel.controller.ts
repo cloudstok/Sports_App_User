@@ -13,8 +13,8 @@ export class reel extends ResponseInterceptor{
 
 async showReel (req : any , res : any) {
     try{
-        let {PageLimit , PagOffset} = req.query
-        const [showsReel] = await this.connection.read.query(this.SQL_SHOW_REELS , [PageLimit , PagOffset] );
+        let {PageLimit , PageOffset} = req.query
+        const [showsReel] = await this.connection.read.query(this.SQL_SHOW_REELS, [+PageLimit, +PageOffset] );
         return this.sendSuccess(res, {data: showsReel})
     }
     catch(err){
@@ -24,8 +24,8 @@ async showReel (req : any , res : any) {
 
 async getNews(req: any ,res: any ) {
     try{
-        let {PageLimit , PagOffset} = req.query
-        const [news] = await this.connection.write.query(this.SQL_SHOW_NEWS ,  [PageLimit , PagOffset]);
+        let {PageLimit , PageOffset} = req.query
+        const [news] = await this.connection.write.query(this.SQL_SHOW_NEWS ,  [+PageLimit , +PageOffset]);
         return this.sendSuccess(res, {data: news})
     }catch(err){
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
