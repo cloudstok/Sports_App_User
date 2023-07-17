@@ -8,5 +8,11 @@ import { validData } from './validData';
         user_id: validData.alphaNum,
         user_password: validData.alphaNum,
       });
+    export const reel = Joi.object().keys({
+        PageLimit: validData.number,
+        PageOffset: validData.number,
+      });
+
+      
 
 

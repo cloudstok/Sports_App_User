@@ -1,4 +1,4 @@
- import { register } from "../core/validation/schema";
+ import { reel, register } from "../core/validation/schema";
 import { RoutingComponents } from "./routing-components";
 import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
@@ -88,6 +88,7 @@ export class AppRoutes {
       {
         path: "/showReel",
         component : [
+          this.apiValidation.validateQueryData(reel),
           routingComponents.showReel.bind(routingComponents)
         ]
 

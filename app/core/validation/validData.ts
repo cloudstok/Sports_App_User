@@ -1,7 +1,7 @@
 import * as Joi from 'joi'
 export const validData = {
     alphaNum: Joi.string().regex(/^[a-zA-Z0-9, ]*$/, 'Alphanumerics, space and comma characters').min(3).max(30),
-    age: Joi.number().required(),
+    number: Joi.number().required(),
     Date: Joi.date().raw().required(),
     comments: Joi.string().min(30).max(1500).required(),
     email: Joi.string().email().required(),

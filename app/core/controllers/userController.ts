@@ -2,13 +2,9 @@ import { connection } from "../../config/dbConf";
 import { ResponseInterceptor } from "../../core/utilities/response-interceptor";
 import { EncryptionDecryption } from "../bcrypt/bcrypt";
 import { tokenController } from "../../core/jwt/jsonwebtoken";
+import { SQL_ALL_USER, SQL_CHECK_USER, SQL_DELETE_USER, SQL_INSERT_USER, SQL_UPDATE_USER } from "../query/query";
 export class user extends ResponseInterceptor {
     public connection: connection
-    SQL_CHECK_USER: string = "select * from user_profile where user_id = ? limit 1";
-    SQL_INSERT_USER: string = "insert into user_profile(user_id, password) values (?,?)";
-    SQL_ALL_USER: string = "select * from user_profile";
-    SQL_UPDATE_USER: string = "update user_profile set user_id = ?, password= ? where u_id = ? limit 1 ";
-    SQL_DELETE_USER: string = "update user_profile set is_deleted = 1 where u_id = ? limit 1 ";
     encryptionDecryption : EncryptionDecryption;
     tokenController : tokenController;
     constructor() {
@@ -20,12 +16,12 @@ export class user extends ResponseInterceptor {
     async register(req: any, res: any) {
         try {
             const { user_id, password } = req.body
-            const [user]: any = await this.connection.write.query(this.SQL_CHECK_USER, [user_id]);
+            const [user]: any = await this.connection.write.query(SQL_CHECK_USER, [user_id]);
             if (user.length > 0) {
                 return this.sendBadRequest(res,  "User Already Exist" , this.BAD_REQUEST)
             }
             const hash = await this.encryptionDecryption.Encryption(password)
-            await this.connection.write.query(this.SQL_INSERT_USER, [user_id, hash]);
+            await this.connection.write.query(SQL_INSERT_USER, [user_id, hash]);
             return this.sendSuccess(res, { message: "User Insert Successfully" })
         }
         catch (err) {
@@ -37,7 +33,7 @@ export class user extends ResponseInterceptor {
     async login(req: any, res: any) {
         try {
             const { user_id, password } = req.body
-            const [user]: any = await this.connection.write.query(this.SQL_CHECK_USER, [user_id]);
+            const [user]: any = await this.connection.write.query(SQL_CHECK_USER, [user_id]);
             if (user.length === 0) {
                 return this.sendBadRequest(res, "You are not register" , this.BAD_REQUEST)
             }
@@ -54,7 +50,7 @@ export class user extends ResponseInterceptor {
     }
    async findAllUsers(req : any, res : any){
     try{
-        const [user]: any = await this.connection.write.query(this.SQL_ALL_USER);
+        const [user]: any = await this.connection.write.query(SQL_ALL_USER);
         return this.sendSuccess(res, { message: "User Insert Successfully", data : user })
     }
     catch(err){
@@ -66,7 +62,7 @@ export class user extends ResponseInterceptor {
     try{
         const { user_id, password } = req.body
         let userId = req.params.u_id
-        const [user]: any = await this.connection.write.query(this.SQL_UPDATE_USER, [user_id, password, userId]);
+        const [user]: any = await this.connection.write.query(SQL_UPDATE_USER, [user_id, password, userId]);
         return this.sendSuccess(res, { message: "User updated Successfully", data : user })
 
     }
@@ -77,7 +73,7 @@ export class user extends ResponseInterceptor {
 
    async DeleteUser(req : any, res : any){
     try{
-        const [user]: any = await this.connection.write.query(this.SQL_DELETE_USER, [req.params.u_id]);
+        const [user]: any = await this.connection.write.query(SQL_DELETE_USER, [req.params.u_id]);
         return this.sendSuccess(res, { message: "User delete Successfully", data : user })
     }
     catch(err){
@@ -86,7 +82,7 @@ export class user extends ResponseInterceptor {
    }
    async findById(req : any, res : any){
     try{
-        const [user]: any = await this.connection.write.query(this.SQL_CHECK_USER, [req.params.u_id]);
+        const [user]: any = await this.connection.write.query(SQL_CHECK_USER, [req.params.u_id]);
         return this.sendSuccess(res, {  data : user })
     }
     catch(err){

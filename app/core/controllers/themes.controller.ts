@@ -1,14 +1,11 @@
 import { connection } from "../../config/dbConf";
 import { ResponseInterceptor } from "../utilities/response-interceptor";
 import { uploads3 } from "../../core/aws/uploads3";
+import { SQL_ADD_THEMES, SQL_DELETE_THEME, SQL_GET_THEMES, SQL_UPDATE_THEME } from "../query/query";
 
 export class ThemeController extends ResponseInterceptor {
     public connection : connection
     public uploads3 : uploads3
-    SQL_ADD_THEMES: string = "INSERT INTO themes (meta_data) VALUE (?)" ;
-    SQL_GET_THEMES: string = "SELECT * FROM themes";
-    SQL_UPDATE_THEME: string = "UPDATE theme SET meta_data = ? WHERE themes_id = ?";
-    SQL_DELETE_THEME: string = "Delete from themes where themes_id = ?";
     constructor() {
         super()
         this.connection = new connection()
@@ -21,7 +18,7 @@ export class ThemeController extends ResponseInterceptor {
             const url =  await this.uploads3.uploadImage(files)
             console.log(url)
             const  {meta_data} = req.body
-            const [addThemes] = await this.connection.write.query(this.SQL_ADD_THEMES, [JSON.stringify(meta_data)]);
+            const [addThemes] = await this.connection.write.query(SQL_ADD_THEMES, [JSON.stringify(meta_data)]);
             return this.sendSuccess(res, {message: "Theme add successfully"})
         }
         catch (err) {
@@ -33,7 +30,7 @@ export class ThemeController extends ResponseInterceptor {
 
     async showThemes(req: any, res: any) {
         try {
-            const [themeList]: any = await this.connection.write.query(this.SQL_GET_THEMES);
+            const [themeList]: any = await this.connection.write.query(SQL_GET_THEMES);
             return this.sendSuccess(res, {message: "Theme list fetched successfully", data: themeList})
         }
         catch (err) {
@@ -46,7 +43,7 @@ export class ThemeController extends ResponseInterceptor {
     async updateThemes(req: any, res: any) {
         try {
             const { meta_data } = req.body;
-            const [theme]: any = await this.connection.write.query(this.SQL_UPDATE_THEME, [meta_data, req.params.themes_id]);
+            const [theme]: any = await this.connection.write.query(SQL_UPDATE_THEME, [meta_data, req.params.themes_id]);
             return this.sendSuccess(res, { message: "Theme updated successfully", data: theme})
         }
         catch (err) {
@@ -59,7 +56,7 @@ export class ThemeController extends ResponseInterceptor {
     async deleteThemes(req: any, res: any) {
         try {
             const {message} = req.body;
-            const [delThemes]: any = await this.connection.write.query(this.SQL_DELETE_THEME, [req.params.themes_id])
+            const [delThemes]: any = await this.connection.write.query(SQL_DELETE_THEME, [req.params.themes_id])
             return this.sendSuccess(res, { message: "Theme delete successfully"} )
         }
         catch (err) {
