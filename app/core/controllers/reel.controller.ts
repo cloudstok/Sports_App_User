@@ -4,8 +4,8 @@ import {connection} from '../../config/dbConf';
 
 export class reel extends ResponseInterceptor{
     connection : connection
-    SQL_SHOW_REELS : string = `select * from reels where is_deleted = 0`;
-    SQL_SHOW_NEWS: string = `SELECT * from news where is_deleted = 0`;
+    SQL_SHOW_REELS : string = `select * from reels where is_deleted = 0 limit ? offset ?`;
+    SQL_SHOW_NEWS: string = `SELECT * from news where is_deleted = 0 limit ? offset ?`;
     constructor(){
         super();
         this.connection = new connection()
@@ -13,7 +13,8 @@ export class reel extends ResponseInterceptor{
 
 async showReel (req : any , res : any) {
     try{
-        const [showsReel] = await this.connection.read.query(this.SQL_SHOW_REELS);
+        let {PageLimit , PagOffset} = req.query
+        const [showsReel] = await this.connection.read.query(this.SQL_SHOW_REELS , [PageLimit , PagOffset] );
         return this.sendSuccess(res, {data: showsReel})
     }
     catch(err){
@@ -23,7 +24,8 @@ async showReel (req : any , res : any) {
 
 async getNews(req: any ,res: any ) {
     try{
-        const [news] = await this.connection.write.query(this.SQL_SHOW_NEWS);
+        let {PageLimit , PagOffset} = req.query
+        const [news] = await this.connection.write.query(this.SQL_SHOW_NEWS ,  [PageLimit , PagOffset]);
         return this.sendSuccess(res, {data: news})
     }catch(err){
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
