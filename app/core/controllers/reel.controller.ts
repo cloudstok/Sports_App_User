@@ -15,9 +15,23 @@ async showReel (req : any , res : any) {
         let {PageLimit , PageOffset} = req.query
         const [showsReel] : any= await this.connection.write.query(SQL_SHOW_REELS, [+PageLimit, +PageOffset] );
         for(let x of showsReel){
-            for(let y of x.meta_data){
-                
+            x.like = 0
+            x.dislike = 0
+            x.commentCount = 0
+            if(x.meta_data !== null && Array.isArray(x.meta_data)){
+                for(let y of x.meta_data){
+                if(y.status && y.status === "like"){
+                    x.like +=1;
+                }
+                if(y.status && y.status === "dislike"){
+                    x.like +=1;
+                }
+                if(y.comments && y.comments.length > 0 ){
+                    x.commentCount += y.comments.length
+                }
+                }
             }
+            
         }
         return this.sendSuccess(res, {data: showsReel})
     }
