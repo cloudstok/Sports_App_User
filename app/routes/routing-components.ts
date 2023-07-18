@@ -67,6 +67,9 @@ deleteThemes(req:any, res: any){
 showReel(req:any, res: any){
   this.reel.showReel(req,res)
 }
+addUpdateReelStatus(req:any, res:any){
+  this.reel.addUpdateReelStatus(req,res)
+}
 //--------------------News------------------------>
 getNews(req:any, res: any){
   this.reel.getNews(req,res)

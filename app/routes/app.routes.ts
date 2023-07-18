@@ -52,6 +52,13 @@ export class AppRoutes {
           routingComponents.addThemes.bind(routingComponents)
         ]
       },
+      {
+        path: "/addUpdateReelStatus/:reel_id",
+        component : [
+          routingComponents.addUpdateReelStatus.bind(routingComponents)
+        ]
+      },
+
 
       // 404
       {

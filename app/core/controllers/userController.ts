@@ -64,7 +64,6 @@ export class user extends ResponseInterceptor {
         let userId = req.params.u_id
         const [user]: any = await this.connection.write.query(SQL_UPDATE_USER, [user_id, password, userId]);
         return this.sendSuccess(res, { message: "User updated Successfully", data : user })
-
     }
     catch(err){
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
