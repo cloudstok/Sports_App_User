@@ -18,6 +18,7 @@ async showReel (req : any , res : any) {
             x.likeCount = 0
             x.dislikeCount = 0
             x.commentCount = 0
+            x.currentStatus = {}
             if(x.meta_data !== null && Array.isArray(x.meta_data)){
                 for(let y of x.meta_data){
                 if(y.status && y.status === "like"){
@@ -28,6 +29,9 @@ async showReel (req : any , res : any) {
                 }
                 if(y.comments && y.comments.length > 0 ){
                     x.commentCount += y.comments.length
+                }
+                if(y.userId == 3){
+                    x.currentStatus = y
                 }
                 }
             }
@@ -56,7 +60,7 @@ async addUpdateReelStatus(req:any, res:any){
         const { reel_id} = req.params;
         const { meta_data} = req.body;
         let data = await this.findMetaData(reel_id);
-        if(data.meta_data === null){
+        if(data.meta_data === null && typeof data.meta_data !== 'object'){
             data.meta_data = [meta_data]
         }else{
           let check=   data.meta_data.findIndex(e=>e.userId === meta_data.userId)
