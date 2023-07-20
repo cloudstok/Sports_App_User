@@ -3,7 +3,6 @@ import { TestController } from "../core/controllers/test.controller";
 import { user } from "../core/controllers/userController";
 import { ThemeController } from "../core/controllers/themes.controller";
 import { reel } from "../core/controllers/reel.controller";
-
 export class RoutingComponents {
   responseInterceptor: ResponseInterceptor;
   test: TestController

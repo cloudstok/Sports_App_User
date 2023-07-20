@@ -40,6 +40,7 @@ export class AppRoutes {
       {
         path: "/login",
         component: [
+          this.apiValidation.validateBodyData(register),
           routingComponents.login.bind(routingComponents)
         ]
       },
@@ -55,6 +56,7 @@ export class AppRoutes {
       {
         path: "/addUpdateReelStatus/:reel_id",
         component : [
+          this.tokenController.verifyToken,
           routingComponents.addUpdateReelStatus.bind(routingComponents)
         ]
       },
@@ -77,12 +79,14 @@ export class AppRoutes {
       {
         path: "/alluser",
         component: [
+          this.tokenController.verifyToken,
           routingComponents.findAllUSer.bind(routingComponents)
         ]
       },
       {
         path: "/userfindbyid/:u_id",
         component: [
+          this.tokenController.verifyToken,
           routingComponents.userFindById.bind(routingComponents)
         ]
       },
@@ -95,6 +99,7 @@ export class AppRoutes {
       {
         path: "/showReel",
         component : [
+          this.tokenController.verifyToken,
           this.apiValidation.validateQueryData(reel),
           routingComponents.showReel.bind(routingComponents)
         ]
@@ -103,6 +108,7 @@ export class AppRoutes {
       {
          path: "/getNews",
          component : [
+          this.tokenController.verifyToken,
           routingComponents.getNews.bind(routingComponents)
          ]
       },
@@ -119,6 +125,7 @@ export class AppRoutes {
       {
         path: "/updateuser/:u_id",
         component: [
+           this.tokenController.verifyToken,
           routingComponents.updateUser.bind(routingComponents)
         ]
       },
