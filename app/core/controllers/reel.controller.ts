@@ -10,6 +10,23 @@ export class reel extends ResponseInterceptor{
         this.connection = new connection()
     }
 
+    async updateMetaData(data :{}, id : number){
+        try{
+            await this.connection.write.query(SQL_UPDATE_REALS, [data, id]);
+            return true
+        }catch(err){
+            console.log(err)
+        }
+    }
+    async findMetaData(id :number){
+        try{
+            const [metaData] = await this.connection.write.query(SQL_ADD_REELS, [id]);
+            return metaData[0]
+        }catch(err){
+            console.log(err)
+        }
+    }    
+
 async showReel (req : any , res : any) {
     try{
         let {PageLimit , PageOffset} = req.query
@@ -78,20 +95,5 @@ async addUpdateReelStatus(req:any, res:any){
     }
 }
 
-async updateMetaData(data :{}, id : number){
-    try{
-        await this.connection.write.query(SQL_UPDATE_REALS, [data, id]);
-        return true
-    }catch(err){
-        console.log(err)
-    }
-}
-async findMetaData(id :number){
-    try{
-        const [metaData] = await this.connection.write.query(SQL_ADD_REELS, [id]);
-        return metaData[0]
-    }catch(err){
-        console.log(err)
-    }
-}
+
 }
