@@ -113,6 +113,24 @@ export class AppRoutes {
          ]
       },
       {
+        path: "/getSeries",
+        component : [
+         routingComponents.getSeries.bind(routingComponents)
+        ]
+     },
+     {
+      path: "/getTeam",
+      component : [
+       routingComponents.getTeam.bind(routingComponents)
+      ]
+   },
+   {
+    path: "/getPlayer",
+    component : [
+     routingComponents.getPlayer.bind(routingComponents)
+    ]
+ },
+      {
         path: "*",
         component: [
           routingComponents.pageNotFound.bind(routingComponents)

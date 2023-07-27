@@ -15,3 +15,18 @@ export const SQL_SHOW_NEWS: string = "SELECT * from news where is_deleted = 0 li
 export const SQL_SHOW_REELS : string = "select * from reels where is_deleted = 0 limit ? offset ?";
 export const SQL_ADD_REELS : string = "select * from reels where reel_id = ? and is_deleted=0 limit 1";
 export const SQL_UPDATE_REALS :  string = "UPDATE reels set ? where reel_id = ?";
+
+//<<<<------------------------------series table sql --------------------------------->>>>>
+
+export const SQL_GET_SERIES : string = "select * from series";
+
+
+// <<<----------------------------team table sql------------------------------------->>>>>
+
+export const SQL_GET_TEAM : string = "select * from team";
+
+//<<<<---------------------------Player--------------------------------->>>>
+
+export const SQL_GET_PLAYER : string = "select * from player";
+
+

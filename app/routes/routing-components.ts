@@ -3,12 +3,18 @@ import { TestController } from "../core/controllers/test.controller";
 import { user } from "../core/controllers/userController";
 import { ThemeController } from "../core/controllers/themes.controller";
 import { reel } from "../core/controllers/reel.controller";
+import { seriesController } from "../core/controllers/series.controller"; 
+import { teamController } from "../core/controllers/team.controller";
+import { playerController } from "../core/controllers/player.controller";
 export class RoutingComponents {
   responseInterceptor: ResponseInterceptor;
   test: TestController
   user: user
   theme: ThemeController
   reel: reel
+  seriesController : seriesController
+  teamController : teamController
+  playerController : playerController
   
 
   constructor() {
@@ -17,6 +23,9 @@ export class RoutingComponents {
     this.user = new user();
     this.theme = new ThemeController();
     this.reel = new reel();
+    this.seriesController = new seriesController();
+    this.teamController = new teamController();
+    this.playerController = new playerController();
   }
 
   /**
@@ -73,4 +82,23 @@ addUpdateReelStatus(req:any, res:any){
 getNews(req:any, res: any){
   this.reel.getNews(req,res)
 }
+
+// <---------------series----------------------->
+
+  getSeries(req:any, res:any){
+    this.seriesController.getSeries(req,res)
+  }
+
+
+  //<------------------team------------------------->
+ getTeam(req:any, res:any){
+  this.teamController.getTeam(req,res)
+ }
+
+ //<--------------------player---------------------->
+
+ getPlayer(req:any, res:any){
+  this.playerController.getPlayer(req,res)
+ }
+
 }
