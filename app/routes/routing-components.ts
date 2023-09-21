@@ -3,30 +3,50 @@ import { TestController } from "../core/controllers/test.controller";
 import { user } from "../core/controllers/userController";
 import { ThemeController } from "../core/controllers/themes.controller";
 import { reel } from "../core/controllers/reel.controller";
+<<<<<<< HEAD
 import { teamController } from '../core/controllers/team.controller'
 import { tournament } from "../core/controllers/tournament.controller";
 import { match } from "../core/controllers/match.controller";
 import { otpController } from "../core/controllers/otp.controller";
+=======
+import { seriesController } from "../core/controllers/series.controller"; 
+import { teamController } from "../core/controllers/team.controller";
+import { playerController } from "../core/controllers/player.controller";
+>>>>>>> a330244de1378098a2d5b034b52d2491d2d7bcd4
 export class RoutingComponents {
   responseInterceptor: ResponseInterceptor;
   test: TestController
   user: user
   theme: ThemeController
   reel: reel
+<<<<<<< HEAD
   teamController :teamController
   tournament  : tournament
   match : match
   otpController : otpController
+=======
+  seriesController : seriesController
+  teamController : teamController
+  playerController : playerController
+  
+
+>>>>>>> a330244de1378098a2d5b034b52d2491d2d7bcd4
   constructor() {
     this.responseInterceptor = new ResponseInterceptor();
     this.test = new TestController();
     this.user = new user();
     this.theme = new ThemeController();
     this.reel = new reel();
+<<<<<<< HEAD
     this.teamController = new teamController()
     this.tournament = new tournament();
     this.match = new match()
     this.otpController = new otpController()
+=======
+    this.seriesController = new seriesController();
+    this.teamController = new teamController();
+    this.playerController = new playerController();
+>>>>>>> a330244de1378098a2d5b034b52d2491d2d7bcd4
   }
 
   /**
@@ -89,6 +109,7 @@ addUpdateReelStatus(req:any, res:any){
 getNews(req:any, res: any){
   this.reel.getNews(req,res)
 }
+<<<<<<< HEAD
 getTeam(req:any, res: any){
   this.teamController.get_team(req,res)
 }
@@ -101,4 +122,25 @@ get_match(req:any, res: any){
 pointTable(req:any, res: any){
   this.match.point_table(req,res)
 }
+=======
+
+// <---------------series----------------------->
+
+  getSeries(req:any, res:any){
+    this.seriesController.getSeries(req,res)
+  }
+
+
+  //<------------------team------------------------->
+ getTeam(req:any, res:any){
+  this.teamController.getTeam(req,res)
+ }
+
+ //<--------------------player---------------------->
+
+ getPlayer(req:any, res:any){
+  this.playerController.getPlayer(req,res)
+ }
+
+>>>>>>> a330244de1378098a2d5b034b52d2491d2d7bcd4
 }
