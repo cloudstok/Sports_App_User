@@ -27,7 +27,5 @@ validateBodyData = (schema :any) => (req :any ,res :any , next : any) => {
         } else {
           next();
         }
-      };
-      
-      
+      };  
 }

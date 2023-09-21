@@ -1,4 +1,4 @@
- import { reel, register } from "../core/validation/schema";
+ import { login, reel, register } from "../core/validation/schema";
 import { RoutingComponents } from "./routing-components";
 import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
@@ -38,9 +38,23 @@ export class AppRoutes {
         ]
       },
       {
+        path: "/send_otp",
+        component: [
+          // this.apiValidation.validateBodyData(register),
+          routingComponents.genrateOtp.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/verify_otp",
+        component: [
+          // this.apiValidation.validateBodyData(register),
+          routingComponents.verifyOtp.bind(routingComponents)
+        ]
+      },
+      {
         path: "/login",
         component: [
-          this.apiValidation.validateBodyData(register),
+          this.apiValidation.validateBodyData(login),
           routingComponents.login.bind(routingComponents)
         ]
       },
@@ -106,9 +120,33 @@ export class AppRoutes {
 
       },
       {
+        path: "/get_team",
+        component : [
+          routingComponents.getTeam.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/get_tournament",
+        component : [
+          routingComponents.get_tournament.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/get_match",
+        component : [
+          routingComponents.get_match.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/point_table",
+        component : [
+          routingComponents.pointTable.bind(routingComponents)
+        ]
+      },
+      {
          path: "/getNews",
          component : [
-          this.tokenController.verifyToken,
+          // this.tokenController.verifyToken,
           routingComponents.getNews.bind(routingComponents)
          ]
       },
@@ -123,9 +161,9 @@ export class AppRoutes {
     this.AppUpdateRoutes = [
       // 404
       {
-        path: "/updateuser/:u_id",
+        path: "/change_password",
         component: [
-           this.tokenController.verifyToken,
+          //  this.tokenController.verifyToken,
           routingComponents.updateUser.bind(routingComponents)
         ]
       },

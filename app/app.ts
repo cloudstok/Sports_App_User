@@ -3,8 +3,6 @@ import * as express from "express";
 import { AppRoutes } from "./routes/app.routes";
 import { ResponseInterceptor } from "./core/utilities/response-interceptor"
 import * as cors from 'cors';
-
-
 class App {
     public app: express.Application;
     private PORT: number = appConfig.server.port;
@@ -48,4 +46,5 @@ class App {
     }
 }
 
+ 
 export default new App().app;

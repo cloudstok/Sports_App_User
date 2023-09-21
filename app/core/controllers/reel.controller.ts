@@ -30,6 +30,7 @@ export class reel extends ResponseInterceptor{
 async showReel (req : any , res : any) {
     try{
         let {PageLimit , PageOffset} = req.query
+        let userId =  res.locals.auth.user?.user_id
         const [showsReel] : any= await this.connection.write.query(SQL_SHOW_REELS, [+PageLimit, +PageOffset] );
         for(let x of showsReel){
             x.likeCount = 0
@@ -47,7 +48,7 @@ async showReel (req : any , res : any) {
                 if(y.comments && y.comments.length > 0 ){
                     x.commentCount += y.comments.length
                 }
-                if(y.userId == 3){
+                if(y.userId == userId){
                     x.currentStatus = y
                 }
                 }
@@ -76,11 +77,13 @@ async addUpdateReelStatus(req:any, res:any){
     try{
         const { reel_id} = req.params;
         const { meta_data} = req.body;
+        let userId =  res.locals.auth.user?.user_id
+        meta_data.userId = userId 
         let data = await this.findMetaData(reel_id);
-        if(data.meta_data === null && typeof data.meta_data !== 'object'){
+        if(data.meta_data === null){
             data.meta_data = [meta_data]
         }else{
-          let check=   data.meta_data.findIndex(e=>e.userId === meta_data.userId)
+          let check=   data.meta_data.findIndex(e=>e.userId === userId)
           if(check !== -1){
             data.meta_data[check] = meta_data
           }else{
