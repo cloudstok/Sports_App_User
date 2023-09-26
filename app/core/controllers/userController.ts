@@ -39,7 +39,6 @@ export class user extends ResponseInterceptor {
         catch (err) {
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
         }
-
     }
 
     async login(req: any, res: any) {
@@ -91,14 +90,14 @@ export class user extends ResponseInterceptor {
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
+   //    find user By Id  from users
    async findById(req : any, res : any){
     try{
         const [user]: any = await this.connection.write.query(SQL_CHECK_USER, [req.params.u_id]);
-        return this.sendSuccess(res, {  data : user })
+        return this.sendSuccess(res, { data : user })
     }
     catch(err){
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
-
 }

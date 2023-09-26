@@ -150,24 +150,14 @@ export class AppRoutes {
           routingComponents.getNews.bind(routingComponents)
          ]
       },
-      {
-        path: "/getSeries",
-        component : [
-         routingComponents.getSeries.bind(routingComponents)
-        ]
-     },
+     
      {
       path: "/getTeam",
       component : [
        routingComponents.getTeam.bind(routingComponents)
       ]
    },
-   {
-    path: "/getPlayer",
-    component : [
-     routingComponents.getPlayer.bind(routingComponents)
-    ]
- },
+  
       {
         path: "*",
         component: [
