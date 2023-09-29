@@ -68,7 +68,7 @@ export class user extends ResponseInterceptor {
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
-
+// 
    async updateAllUser(req : any, res : any){
     try{
         const { phone, password } = req.body
@@ -80,7 +80,7 @@ export class user extends ResponseInterceptor {
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
-
+  // delete user from users tables
    async DeleteUser(req : any, res : any){
     try{
         const [user]: any = await this.connection.write.query(SQL_DELETE_USER, [req.params.u_id]);

@@ -144,6 +144,36 @@ export class AppRoutes {
         ]
       },
       {
+        path: "/socrecard",
+        component : [
+          routingComponents.getsocrecard.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/player",
+        component : [
+          routingComponents.players.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/get_commentory",
+        component : [
+          routingComponents.getcommentory.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/fantasy_match_point",
+        component : [
+          routingComponents.fantasy.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/fantasy_point",
+        component : [
+          routingComponents.fantasy_points.bind(routingComponents)
+        ]
+      },
+      {
          path: "/getNews",
          component : [
           // this.tokenController.verifyToken,

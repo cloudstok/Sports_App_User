@@ -27,6 +27,6 @@ export const SQL_GET_TEAM : string = "select * from team";
 
 //<<<<---------------------------Player--------------------------------->>>>
 
-export const SQL_GET_PLAYER : string = "select * from player";
+export const SQL_GET_PLAYER : string = "select players , play from cricket_match where match_key = ?";
 
 

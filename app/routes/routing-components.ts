@@ -7,6 +7,7 @@ import { teamController } from '../core/controllers/team.controller'
 import { tournament } from "../core/controllers/tournament.controller";
 import { match } from "../core/controllers/match.controller";
 import { otpController } from "../core/controllers/otp.controller";
+import { playerController } from "../core/controllers/player.controller";
 export class RoutingComponents {
   responseInterceptor: ResponseInterceptor;
   test: TestController
@@ -17,6 +18,7 @@ export class RoutingComponents {
   tournament  : tournament
   match : match
   otpController : otpController
+  player : playerController
   constructor() {
     this.responseInterceptor = new ResponseInterceptor();
     this.test = new TestController();
@@ -27,6 +29,7 @@ export class RoutingComponents {
     this.tournament = new tournament();
     this.match = new match()
     this.otpController = new otpController()
+    this.player = new playerController()
   }
 
   /**
@@ -98,7 +101,22 @@ get_tournament(req:any, res: any){
 get_match(req:any, res: any){
   this.match.get_match(req,res)
 }
+getcommentory(req:any, res: any){
+  this.player.getcommentory(req,res)
+}
+getsocrecard(req:any, res: any){
+  this.player.getsocrecard(req,res)
+}
+players(req:any, res: any){
+  this.player.getPlayerbyId(req,res)
+}
 pointTable(req:any, res: any){
   this.match.point_table(req,res)
+}
+fantasy(req:any, res: any){
+  this.match.fantasy_match_point(req,res)
+}
+fantasy_points(req:any, res: any){
+  this.match.fantasy_point(req,res)
 }
 }

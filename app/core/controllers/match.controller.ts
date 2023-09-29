@@ -12,7 +12,11 @@ export class match extends ResponseInterceptor{
     async get_match(req:any, res: any){
         try{
           let sql = "select  * from cricket_match"
-          let [tournament]  = await this.connection.write.query(sql);
+          let [tournament]: any  = await this.connection.write.query(sql);
+          
+          for(let x of tournament){
+            x.venue.country.url= await this.imageURL(x.venue.country.code)
+          }
           return this.sendSuccess(res, { data: tournament })
         }
         catch(err){
@@ -39,7 +43,6 @@ export class match extends ResponseInterceptor{
                 for(let z of y.groups){
                   for(let w of z.points){
                     w.team.imageURL = await this.imageURL(w.team.code) 
-                    console.log(w.team.imageURL, "yooo" )
                   
                   }
               
@@ -54,6 +57,28 @@ export class match extends ResponseInterceptor{
         }
     }
 
+    async fantasy_match_point(req:any, res: any){
+      try{
+        let sql = "select  * from fantasy"
+        let [fantasy]  = await this.connection.write.query(sql);
+        return this.sendSuccess(res, { data: fantasy })
+      }
+      catch(err){
+            console.log(err)
+      }
+  }
+
+  async fantasy_point(req:any, res: any){
+    try{
+      let sql = "select * from fantasy_points where match_key = ? limit ? offset ?"
+      const {match_key , offset , limit } =  req.query
+      let [points]  = await this.connection.write.query(sql , [match_key  , +limit , +offset ]  );
+      return this.sendSuccess(res, { data: points })
+    }
+    catch(err){
+          console.log(err)
+    }
+}
 
 
 }
