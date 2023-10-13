@@ -132,9 +132,34 @@ export class AppRoutes {
         ]
       },
       {
+        path: "/gettournamentbyid/:tou_key",
+        component : [
+          routingComponents.getTournamentById.bind(routingComponents)
+        ]
+      },
+      {
         path: "/get_match",
         component : [
           routingComponents.get_match.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/get_squad",
+        component : [
+          routingComponents.get_squad.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/get_stats",
+        component : [
+          routingComponents.get_stats.bind(routingComponents)
+        ]
+      },
+   
+      {
+        path: "/get_match_by_tournament",
+        component : [
+          routingComponents.get_match_tournament.bind(routingComponents)
         ]
       },
       {
@@ -153,6 +178,12 @@ export class AppRoutes {
         path: "/player",
         component : [
           routingComponents.players.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/playerImage",
+        component : [
+          routingComponents.playersImage.bind(routingComponents)
         ]
       },
       {

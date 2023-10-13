@@ -15,20 +15,24 @@ export class playerController extends ResponseInterceptor{
     let batsman = [];
     let bowler = [];
     let allRounder = [];
+    let a = []
     for(let x of players){
         if(x.player.roles[0] === 'all_rounder'){
             allRounder.push(x)
         }
-        console.log(bowling_order.includes(x.player.key),x.player.key,x.player.roles[0])
+        // console.log(bowling_order.includes(x.player.key),x.player.key,x.player.roles[0])
+         a.push(x.player.key)
         if(bowling_order.includes(x.player.key)){
             let index = bowling_order.findIndex(e=> e === x.player.key)
             bowler[index] = x
+
         }if(batting_order.includes(x.player.key)){
             let battingIndex = batting_order.findIndex(e=> e === x.player.key);
             batsman[battingIndex] = x
         }
         
     }
+    // console.log(a  , "a", bowling_order , "bowling_order" ,  batting_order  , "batting_order")
        finalData.batsman = batsman; 
        finalData.bowler = bowler; 
        finalData.allRounder = allRounder;
@@ -37,30 +41,39 @@ export class playerController extends ResponseInterceptor{
     
     async getsocrecard(req:any, res:any){
         try{
+
             let data  : any = {}
             let [player]  : any= await this.connection.write.query(SQL_GET_PLAYER , [req.query.match_key]);
-            let play = Object.values( player[0].play.innings)
-            let partnerships1 : any = play[0]['partnerships']
-            let partnerships2 : any = play[1]['partnerships']
-            let order = {
-                p0bt: play[1]['batting_order'],
-                p0bo: play[1]['bowling_order'],
-                p1b1: play[0]['batting_order'],
-                p1bo: play[0]['bowling_order']
+            if(player[0].status != "completed"){
+                return this.sendSuccess(res, { message: "this match is not completed"})
             }
-            delete play[0]['partnerships']
-            delete play[1]['partnerships']
-            player = Object.values(player[0].players);
-            let nationality = [...new Set(player.map(e=>e.player.nationality.name))]
-            data.nationality = [{name :nationality[0] , score : play[1] } , 
-            {name :nationality[1] , score : play[0]}]
-            let a = [...new Set(player.filter(e=>e.player.nationality.name === nationality[1] ))] ;
-            let b = [...new Set(player.filter(e=>e.player.nationality.name === nationality[0] ))]
-            data.team1 = await this.getPlayerByRoles(b, order.p0bt, order.p0bo)
-            data.team2 = await this.getPlayerByRoles(a, order.p1b1, order.p1bo) 
-            data.team1.partnerships2 = partnerships2
-          data.team2.partnerships1 = partnerships1 
-          return this.sendSuccess(res, {data: data })
+        let teamA = player[0].team.a
+        let teamB = player[0].team.b
+        let players = Object.values(player[0].players)
+        let teamAplayer = players.filter((e: any)=>e?.player?.nationality?.code== teamA.country_code)
+        let teamBplayer = players.filter((e: any)=>e?.player?.nationality?.code== teamB.country_code)
+      
+       player[0].team.a.score = player[0].play.innings['a_1']
+       player[0].team.b.score = player[0].play.innings['b_1']
+       let o = {
+       'batting_order_A' :player[0].play.innings['a_1'].batting_order ,
+       'batting_order_B' :player[0].play.innings['b_1'].batting_order ,
+       'bowling_order_A' :player[0].play.innings['a_1'].bowling_order ,
+       'bowling_order_B' :player[0].play.innings['b_1'].bowling_order ,
+       }
+       data.nationality = Object.values(player[0].team);
+       let partnerships1 : any = player[0].play.innings['a_1']['partnerships']
+       let partnerships2 : any = player[0].play.innings['b_1']['partnerships']
+       data.teamA = await this.getPlayerByRoles(teamAplayer,o.batting_order_A,o.bowling_order_A) 
+       data.teamB = await this.getPlayerByRoles(teamBplayer,o.batting_order_B,o.bowling_order_B) 
+       data.teamB.partnerships = partnerships2
+       data.teamA.partnerships = partnerships1 
+       data.teamA.extraRun = data.nationality[0].score.extra_runs
+       data.teamB.extraRun = data.nationality[1].score.extra_runs
+       delete  data.nationality[0].score.extra_runs;
+       delete  data.nationality[1].score.extra_runs;
+    
+          return this.sendSuccess(res, { data:data })
         }   
         catch(err){
             console.log(err)
@@ -69,10 +82,11 @@ export class playerController extends ResponseInterceptor{
     }
     async getcommentory(req:any, res:any){
         try{
-          let [commentory] : any = await this.connection.write.query("select play from cricket_match where match_key = ?" ,[req.query.match_key]);
-       
-          commentory = commentory[0].play
-          commentory.related_balls = Object.values(commentory.related_balls)
+          let [commentory] : any = await this.connection.write.query("select play , status from cricket_match where match_key = ?" ,[req.query.match_key]);
+           if(commentory[0].status == "completed" ){
+               commentory = commentory[0]?.play 
+               commentory.related_balls = Object.values(commentory.related_balls)
+           }
           
           return this.sendSuccess(res, {data: commentory})
         }
@@ -92,5 +106,17 @@ export class playerController extends ResponseInterceptor{
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
         }
 
+    }
+
+
+    async findPlayerImage(req:any, res: any){
+        try{
+          let sql = "select  image from players where player_key = ?"
+          let [image]: any  = await this.connection.write.query(sql , [req.query.player_key]);
+          return this.sendSuccess(res, { data: image })
+        }
+        catch(err){
+              console.log(err)
+        }
     }
 }

@@ -8,6 +8,8 @@ import { tournament } from "../core/controllers/tournament.controller";
 import { match } from "../core/controllers/match.controller";
 import { otpController } from "../core/controllers/otp.controller";
 import { playerController } from "../core/controllers/player.controller";
+import { statsController } from "../core/controllers/stats.controller";
+import { squadController } from "../core/controllers/squad.controller";
 export class RoutingComponents {
   responseInterceptor: ResponseInterceptor;
   test: TestController
@@ -19,6 +21,8 @@ export class RoutingComponents {
   match : match
   otpController : otpController
   player : playerController
+  stats : statsController
+  squad : squadController
   constructor() {
     this.responseInterceptor = new ResponseInterceptor();
     this.test = new TestController();
@@ -30,6 +34,8 @@ export class RoutingComponents {
     this.match = new match()
     this.otpController = new otpController()
     this.player = new playerController()
+    this.stats = new statsController()
+    this.squad = new squadController()
   }
 
   /**
@@ -98,8 +104,21 @@ getTeam(req:any, res: any){
 get_tournament(req:any, res: any){
   this.tournament.get_tournament(req,res)
 }
+getTournamentById(req:any, res: any){
+  this.tournament.getTournamentById(req,res)
+}
 get_match(req:any, res: any){
   this.match.get_match(req,res)
+}
+get_squad(req:any, res: any){
+  this.squad.getSquad(req,res)
+}
+get_stats(req:any, res: any){
+  this.stats.get_stats(req,res)
+}
+
+get_match_tournament(req:any, res: any){
+  this.match.get_match_tournament(req,res)
 }
 getcommentory(req:any, res: any){
   this.player.getcommentory(req,res)
@@ -109,6 +128,9 @@ getsocrecard(req:any, res: any){
 }
 players(req:any, res: any){
   this.player.getPlayerbyId(req,res)
+}
+playersImage(req:any, res: any){
+  this.player.findPlayerImage(req,res)
 }
 pointTable(req:any, res: any){
   this.match.point_table(req,res)
