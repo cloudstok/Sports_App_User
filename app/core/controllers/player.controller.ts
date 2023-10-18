@@ -47,31 +47,31 @@ export class playerController extends ResponseInterceptor{
             if(player[0].status != "completed"){
                 return this.sendSuccess(res, { message: "this match is not completed"})
             }
-        let teamA = player[0].team.a
-        let teamB = player[0].team.b
-        let players = Object.values(player[0].players)
-        let teamAplayer = players.filter((e: any)=>e?.player?.nationality?.code== teamA.country_code)
-        let teamBplayer = players.filter((e: any)=>e?.player?.nationality?.code== teamB.country_code)
+        let teamA = player[0]?.team?.a
+        let teamB = player[0]?.team?.b
+        let players = Object.values(player[0]?.players)
+        let teamAplayer = players?.filter((e: any)=>e?.player?.nationality?.code== teamA.country_code)
+        let teamBplayer = players?.filter((e: any)=>e?.player?.nationality?.code== teamB.country_code)
       
-       player[0].team.a.score = player[0].play.innings['a_1']
-       player[0].team.b.score = player[0].play.innings['b_1']
+       player[0].team.a.score = player[0]?.play?.innings['a_1']
+       player[0].team.b.score = player[0]?.play?.innings['b_1']
        let o = {
-       'batting_order_A' :player[0].play.innings['a_1'].batting_order ,
-       'batting_order_B' :player[0].play.innings['b_1'].batting_order ,
-       'bowling_order_A' :player[0].play.innings['a_1'].bowling_order ,
-       'bowling_order_B' :player[0].play.innings['b_1'].bowling_order ,
+       'batting_order_A' :player[0]?.play?.innings['a_1']?.batting_order ,
+       'batting_order_B' :player[0]?.play?.innings['b_1']?.batting_order ,
+       'bowling_order_A' :player[0]?.play?.innings['a_1']?.bowling_order ,
+       'bowling_order_B' :player[0]?.play?.innings['b_1']?.bowling_order ,
        }
        data.nationality = Object.values(player[0].team);
-       let partnerships1 : any = player[0].play.innings['a_1']['partnerships']
-       let partnerships2 : any = player[0].play.innings['b_1']['partnerships']
+       let partnerships1 : any = player[0]?.play?.innings['a_1']['partnerships']
+       let partnerships2 : any = player[0]?.play?.innings['b_1']['partnerships']
        data.teamA = await this.getPlayerByRoles(teamAplayer,o.batting_order_A,o.bowling_order_A) 
        data.teamB = await this.getPlayerByRoles(teamBplayer,o.batting_order_B,o.bowling_order_B) 
        data.teamB.partnerships = partnerships2
        data.teamA.partnerships = partnerships1 
-       data.teamA.extraRun = data.nationality[0].score.extra_runs
-       data.teamB.extraRun = data.nationality[1].score.extra_runs
-       delete  data.nationality[0].score.extra_runs;
-       delete  data.nationality[1].score.extra_runs;
+       data.teamA.extraRun = data?.nationality[0]?.score?.extra_runs
+       data.teamB.extraRun = data?.nationality[1]?.score?.extra_runs
+       delete  data?.nationality[0]?.score?.extra_runs;
+       delete  data?.nationality[1]?.score?.extra_runs;
     
           return this.sendSuccess(res, { data:data })
         }   
@@ -85,7 +85,7 @@ export class playerController extends ResponseInterceptor{
           let [commentory] : any = await this.connection.write.query("select play , status from cricket_match where match_key = ?" ,[req.query.match_key]);
            if(commentory[0].status == "completed" ){
                commentory = commentory[0]?.play 
-               commentory.related_balls = Object.values(commentory.related_balls)
+               commentory.related_balls = Object.values(commentory?.related_balls)
            }
           
           return this.sendSuccess(res, {data: commentory})
@@ -98,8 +98,8 @@ export class playerController extends ResponseInterceptor{
         try{
             let [player] : any = await this.connection.write.query("select players from cricket_match where match_key = ?" , 
                  [req.query.match_key]);
-                 player = Object.values(player[0].players)
-                 player = player.find(e=>e.player.key === req.query.player_key)
+                 player = Object.values(player[0]?.players?? {})
+                 player = player.find(e=>e.player?.key === req.query.player_key)
               return this.sendSuccess(res, {data: player})
         }catch(err){
             console.error(err)

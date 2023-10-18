@@ -1,6 +1,5 @@
 import { ResponseInterceptor } from "../utilities/response-interceptor";
 import { connection} from "../../config/dbConf";
-import { x } from "joi";
 
 export class statsController extends ResponseInterceptor {
 connection : connection
@@ -10,7 +9,6 @@ connection : connection
   }
 
   async imageURL(code , name){
-    console.log(code ,name)
     let country  = "select * from countries where code = ? OR name = ?" 
     let [countries] = await this.connection.write.query(country ,  [code , name])
     if(countries && countries[0]?.['imgURl'] !== undefined){
@@ -36,7 +34,7 @@ connection : connection
       let sql = "select  * from stats where tou_key = ?"
       let [stats]: any = await this.connection.write.query(sql , [req.query.tou_key]);
      for(let s of stats){
-        s.nationality.image = await this.imageURL(s.nationality.code , s.nationality.name)
+        s.nationality.image = await this.imageURL(s.nationality.code , s.nationality.name)   || process.env.country 
        s.player_image = await this.playerImage(s.player_key)
        delete s.image
      }

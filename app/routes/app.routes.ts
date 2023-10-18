@@ -1,4 +1,4 @@
- import { login, reel, register } from "../core/validation/schema";
+ import { login, match, match_fixtures, reel, register } from "../core/validation/schema";
 import { RoutingComponents } from "./routing-components";
 import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
@@ -24,9 +24,9 @@ export class AppRoutes {
       {
         path: "/test",
         component: [
-          this.apiValidation.validateBodyData(register),
-          this.apiValidation.validateParamsData(register),
-          this.apiValidation.validateQueryData(register),
+          // this.apiValidation.validateBodyData(register),
+          // this.apiValidation.validateParamsData(register),
+          // this.apiValidation.validateQueryData(register),
           routingComponents.testAPI.bind(routingComponents)
         ]
       },
@@ -140,7 +140,15 @@ export class AppRoutes {
       {
         path: "/get_match",
         component : [
+          this.apiValidation.validateQueryData(match),
           routingComponents.get_match.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/get/match/fixtures",
+        component : [
+          this.apiValidation.validateQueryData(match_fixtures),
+          routingComponents.getMatchFixtures.bind(routingComponents)
         ]
       },
       {

@@ -9,7 +9,12 @@ connection : connection
   }
 
   async test(req :any, res :any) {
-    return this.sendResponse(res, 200, { data: "Hello World"})
+
+for(let x of req.body.data){
+  await this.connection.write.query("UPDATE `cricket_match` SET `start_at` = ?  where match_key = ?" , [new Date(x.start_at) , x.match_key])
+}
+    return this.sendResponse(res, 200, { data:"update success fully"})
+    
   }
 
   async register(req :any, res : any){

@@ -16,7 +16,6 @@ export class ThemeController extends ResponseInterceptor {
         try {
             const files = req.files
             const url =  await this.uploads3.uploadImage(files)
-            console.log(url)
             const  {meta_data} = req.body
             const [addThemes] = await this.connection.write.query(SQL_ADD_THEMES, [JSON.stringify(meta_data)]);
             return this.sendSuccess(res, {message: "Theme add successfully"})

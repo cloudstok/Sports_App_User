@@ -110,6 +110,9 @@ getTournamentById(req:any, res: any){
 get_match(req:any, res: any){
   this.match.get_match(req,res)
 }
+getMatchFixtures(req:any, res: any){
+  this.match.getMatchFxitures(req,res)
+}
 get_squad(req:any, res: any){
   this.squad.getSquad(req,res)
 }

@@ -16,6 +16,18 @@ import { otpController } from 'core/controllers/otp.controller';
         PageOffset: validData.number,
       });
 
+
+      export const match_fixtures = Joi.object().keys({
+        limit: validData.limit,
+        offset: validData.limit,
+        date : validData.string,
+      });
+
+      export const match = Joi.object().keys({
+        limit: validData.limit,
+        offset: validData.limit,
+       
+      });
       
 
 

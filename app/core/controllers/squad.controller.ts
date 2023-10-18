@@ -23,7 +23,6 @@ connection : connection
     try{
       let sql = "select  image from players where player_key = ?"
       let [image]: any  = await this.connection.write.query(sql , [player_key]);
-      console.log(image[0]?.image , "image")
       return image[0]?.image
     }
     catch(err){
@@ -77,7 +76,6 @@ connection : connection
     }catch(err){
       console.error(err)
     }
-    return this.sendResponse(res, 200, { data: "Hello World"})
   }
  
 }

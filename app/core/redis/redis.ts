@@ -32,7 +32,6 @@ export default  class RedisOperations{
     async getRedis(key){
         try{
             const value = await this.redis.get(key);
-            console.log('Value:', value);
             return value
         }catch(err){
             console.error(err)
