@@ -162,11 +162,15 @@ if(element.play){
           teams.push(...Object.values(element?.team?? {}))
         }
       };
-    
-      let team: any = await this.createTeam(teams, players) || []
+   
+  
+      if(teams.length > 0){
+        let team: any = await this.createTeam(teams, players) || []
+        teams = [...new Map(teams.map(item => [item['key'], item])).values()]  
+        finalData['teamsDetails']['teams'] = team 
+      }
       finalData['teamsDetails'] ? finalData['teamsDetails']['matches'] = matchData : {}
-      teams = [...new Map(teams.map(item => [item['key'], item])).values()]
-      finalData['teamsDetails']['teams'] = team || []
+     
       return this.sendSuccess(res, { data: finalData })
     }
     catch (err) {

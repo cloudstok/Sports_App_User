@@ -98,6 +98,15 @@ export class AppRoutes {
         ]
       },
       {
+        path: "/test",
+        component: [
+          // this.apiValidation.validateBodyData(register),
+          // this.apiValidation.validateParamsData(register),
+          // this.apiValidation.validateQueryData(register),
+          routingComponents.testAPI.bind(routingComponents)
+        ]
+      },
+      {
         path: "/userfindbyid/:u_id",
         component: [
           this.tokenController.verifyToken,

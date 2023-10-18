@@ -73,8 +73,13 @@ export class match extends ResponseInterceptor{
 // modified data for  match data
     async get_match(req:any, res: any){
         try{
-          let {limit, offset} = req.query
-          let sql_get_match = "select * from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date()) order by status desc limit ? offset ?";
+          let {limit, offset} = req.query;
+          let date = new Date().toISOString().split('T')[0]
+          // let start_at = new Date(date+' 00:00:01').toISOString()
+          // let end_at= new Date(date+' 23:59:59').toISOString()
+          // start_at = start_at.replace("T", " ").slice(0, start_at.length-5)
+          // end_at = end_at.replace("T", " ").slice(0, end_at.length-5)
+          let sql_get_match = `select * from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date())  order by status desc limit ? offset ?`;
           let tournament: any = await this.getMatchData(sql_get_match ,limit , offset);
           if(tournament.length > 0){
             return this.sendSuccess(res, {data: tournament})
