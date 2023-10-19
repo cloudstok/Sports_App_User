@@ -1,4 +1,4 @@
-import * as Joi from 'joi'
+
 import { validData } from './validData';
 import { otpController } from 'core/controllers/otp.controller';
     export const register = Joi.object().keys({
@@ -24,6 +24,12 @@ import { otpController } from 'core/controllers/otp.controller';
       });
 
       export const match = Joi.object().keys({
+        limit: validData.limit,
+        offset: validData.limit,
+       
+      });
+      export const commentory = Joi.object().keys({
+        match_key : validData.string,
         limit: validData.limit,
         offset: validData.limit,
        

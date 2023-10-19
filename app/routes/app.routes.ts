@@ -1,4 +1,4 @@
- import { login, match, match_fixtures, reel, register } from "../core/validation/schema";
+ import { commentory, login, match, match_fixtures, reel, register } from "../core/validation/schema";
 import { RoutingComponents } from "./routing-components";
 import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
@@ -195,9 +195,11 @@ export class AppRoutes {
       {
         path: "/get_commentory",
         component : [
+          this.apiValidation.validateQueryData(commentory),
           routingComponents.getcommentory.bind(routingComponents)
         ]
       },
+     // not use
       {
         path: "/fantasy_match_point",
         component : [
@@ -207,6 +209,7 @@ export class AppRoutes {
       {
         path: "/fantasy_point",
         component : [
+          this.apiValidation.validateQueryData(commentory),
           routingComponents.fantasy_points.bind(routingComponents)
         ]
       },
