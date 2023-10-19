@@ -1,4 +1,4 @@
-
+import * as Joi from 'joi'
 import { validData } from './validData';
 import { otpController } from 'core/controllers/otp.controller';
     export const register = Joi.object().keys({
