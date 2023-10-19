@@ -22,7 +22,6 @@ export class match extends ResponseInterceptor{
           x.team.b.url =await this.imageURL(x.team?.b?.name)
           x.start_at = new Date(x.start_at).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'})
           if(x.play){
-            console.log(x?.play?.result)
             play.live = x?.play?.live;
             play.result = x?.play?.result;
             play.target = x?.play?.target;
