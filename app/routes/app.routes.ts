@@ -22,15 +22,6 @@ export class AppRoutes {
     this.AppPostRoutes = [
       //DEPOSIT
       {
-        path: "/test",
-        component: [
-          // this.apiValidation.validateBodyData(register),
-          // this.apiValidation.validateParamsData(register),
-          // this.apiValidation.validateQueryData(register),
-          routingComponents.testAPI.bind(routingComponents)
-        ]
-      },
-      {
         path: "/register",
         component: [
           this.apiValidation.validateBodyData(register),
@@ -100,9 +91,7 @@ export class AppRoutes {
       {
         path: "/test",
         component: [
-          // this.apiValidation.validateBodyData(register),
-          // this.apiValidation.validateParamsData(register),
-          // this.apiValidation.validateQueryData(register),
+
           routingComponents.testAPI.bind(routingComponents)
         ]
       },

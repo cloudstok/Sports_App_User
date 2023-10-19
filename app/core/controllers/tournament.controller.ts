@@ -124,9 +124,9 @@ if(finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points){
     e.team.url = await this.imageURL(e?.team?.code) || process.env.country
   }
 }
-if(element.play){
+// if(element.play){
 
-}
+// }
 
 
         element.team.a.url =  await this.imageURL(element?.team?.a?.code) || process.env.country
@@ -134,6 +134,7 @@ if(element.play){
         element.team.a.match_key = element?.match_key
         element.team.b.match_key = element?.match_key
         matchData.push({
+          match_key : element?.match_key?? "",
           subTitle: element?.sub_title ?? "",
           status: element?.status ?? "",
           start_at: new Date(element.start_at).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
@@ -147,11 +148,12 @@ if(element.play){
           completedDateApproximate: element?.completed_date_approximate ?? "",
           umpires: element?.umpires ?? "",
           weather: element?.weather ?? "",
+          play : {
           result : element?.play?.result,
           target : element?.play?.target,
           innings : {a_1 : {index :element?.play?.innings['a_1'].index, overs :element?.play?.innings['a_1'].overs ,  score :element?.play?.innings['a_1'].score , wickets :element?.play?.innings['a_1'].wickets  } , 
           b_1 : {index :element?.play?.innings['b_1'].index, overs :element?.play?.innings['b_1'].overs ,  score :element?.play?.innings['b_1'].score , wickets :element?.play?.innings['b_1'].wickets  }
-        }
+        }}
         });
         if(element.players){
           (Object.values(element?.players?? {})).map((e: any) => {
