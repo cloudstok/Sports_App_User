@@ -12,8 +12,9 @@ export class match extends ResponseInterceptor{
     async getMatchData(sql : string , limit: number , offset : number){
       try{
         let [tournament]: any  = await this.connection.write.query(sql , [+limit , +offset]);
-        let play: any = {}
         for(let x of tournament){
+        let play: any = {}
+
           if(x.venue){
             x.venue.country.url= await this.imageURL(x.venue?.country?.name)
           }
@@ -21,6 +22,7 @@ export class match extends ResponseInterceptor{
           x.team.b.url =await this.imageURL(x.team?.b?.name)
           x.start_at = new Date(x.start_at).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'})
           if(x.play){
+            console.log(x?.play?.result)
             play.live = x?.play?.live;
             play.result = x?.play?.result;
             play.target = x?.play?.target;
