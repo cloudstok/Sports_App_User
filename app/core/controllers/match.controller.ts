@@ -16,10 +16,10 @@ export class match extends ResponseInterceptor{
         let play: any = {}
 
           if(x.venue){
-            x.venue.country.url= await this.imageURL(x.venue?.country?.name)
+            x.venue.country.url= await this.imageURL(x.venue?.country?.name) || process.env.country
           }
-          x.team.a.url =await this.imageURL(x.team?.a?.name)
-          x.team.b.url =await this.imageURL(x.team?.b?.name)
+          x.team.a.url =await this.imageURL(x.team?.a?.name) || process.env.country
+          x.team.b.url =await this.imageURL(x.team?.b?.name) || process.env.country
           x.start_at = new Date(x.start_at).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'})
           if(x.play){
             play.live = x?.play?.live;
