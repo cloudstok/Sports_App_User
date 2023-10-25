@@ -65,6 +65,9 @@ export class RoutingComponents {
   updateUser(req:any, res :any){
     this.user.updateAllUser(req, res)
   }
+  updateUserImage(req:any, res :any){
+    this.user.profileImage(req, res)
+  }
   deleteUser(req:any, res :any){
     this.user.DeleteUser(req, res)
   }

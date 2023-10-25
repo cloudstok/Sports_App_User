@@ -2,7 +2,7 @@
 export const SQL_CHECK_USER: string = "select * from user_profile where phone = ? limit 1";
 export const SQL_INSERT_USER: string = "insert into user_profile(phone, password) values (?,?)";
 export const SQL_ALL_USER: string = "select * from user_profile order by u_id DESC";
-export const SQL_UPDATE_USER: string = "update user_profile set password= ? where phone = ? limit 1 ";
+export const SQL_UPDATE_USER: string = "update user_profile set fname = ? ,mname = ? ,lname = ?  , email = ? where phone = ? limit 1 ";
 export const SQL_DELETE_USER: string = "update user_profile set is_deleted = 1 where u_id = ? limit 1 ";
 // <<<<------------------------- themes table  sql Query  --------------------------------------------<<<<
 export const SQL_ADD_THEMES: string = "INSERT INTO themes (meta_data) VALUE (?)";

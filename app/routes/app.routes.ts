@@ -96,7 +96,7 @@ export class AppRoutes {
         ]
       },
       {
-        path: "/userfindbyid/:u_id",
+        path: "/userfindbyid",
         component: [
           this.tokenController.verifyToken,
           routingComponents.userFindById.bind(routingComponents)
@@ -239,10 +239,19 @@ export class AppRoutes {
     this.AppUpdateRoutes = [
       // 404
       {
-        path: "/change_password",
+        path: "/updateuser/profile",
         component: [
-          //  this.tokenController.verifyToken,
+           this.tokenController.verifyToken,
           routingComponents.updateUser.bind(routingComponents)
+        ]
+
+      },
+      {
+        path: "/updateuser/profile/image",
+        component: [
+           this.tokenController.verifyToken,
+           this.upload.array('docs' , 1),
+          routingComponents.updateUserImage.bind(routingComponents)
         ]
       },
       {

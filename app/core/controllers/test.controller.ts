@@ -10,7 +10,7 @@ connection : connection
 
   async test(req :any, res :any) {
 
-    return this.sendResponse(res, 200, { data:"Testing Successfully"})
+    return this.sendResponse(res, 200, { message:"Testing Successfully" , body : req.body , query : req.query  })
     
   }
 
