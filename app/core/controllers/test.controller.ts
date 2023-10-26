@@ -9,10 +9,14 @@ connection : connection
   }
 
   async test(req, res ) {
-    console.log(req.body , req.query , req.header)
-    this.connection.write.query("insert into logs (body,query,header) values (?,?,?)",[JSON.stringify(req.body), JSON.stringify(req.query), JSON.stringify(req.headers) ])
-
-    return this.sendResponse(res, 200, { message:"OK" })
+    try{
+      console.log(req.body , req.query , req.header)
+      this.connection.write.query("insert into logs (body,query,header) values (?,?,?)",[JSON.stringify(req.body), JSON.stringify(req.query), JSON.stringify(req.headers) ])
+  
+      return this.sendResponse(res, 200, { message:"OK" })
+    }catch(err){
+      console.error(err);
+    }
     
   }
 
