@@ -8,9 +8,11 @@ connection : connection
     this.connection = new connection()
   }
 
-  async test(req :any, res :any) {
+  async test(req, res ) {
+    console.log(req.body , req.query , req.header)
+    this.connection.write.query("insert into logs (body,query,header) values (?,?,?)",[JSON.stringify(req.body), JSON.stringify(req.query), JSON.stringify(req.headers) ])
 
-    return this.sendResponse(res, 200, { message:"Testing Successfully" , body : req.body , query : req.query  })
+    return this.sendResponse(res, 200, { message:"OK" })
     
   }
 
