@@ -4,6 +4,10 @@ import { AppRoutes } from "./routes/app.routes";
 import { AdminAppRoutes } from "./routes/app.admin.routes";
 import { ResponseInterceptor } from "./core/utilities/response-interceptor"
 import * as cors from 'cors';
+var getRawBody = require('raw-body');
+var zlib = require('zlib');
+
+
 class App {
     public app: express.Application;
     private PORT: number = appConfig.server.port;
@@ -50,6 +54,30 @@ for (var delRoute = 0; delRoute < AllDeleteRoutes.length; delRoute++) {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cors());
+        this.app.use(function (req, res, next) {
+            if (req.headers['content-type'] === 'application/octet-stream') {
+                getRawBody(req, {
+                    length: req.headers['content-length'],
+                }, function (err, string) {
+                    if (err){
+                        console.log(err);
+                        return next(err);
+                    }
+                    zlib.gunzip(string,function(err, dezipped:Buffer) {
+                        if(err){
+                            console.log(err);
+                            next(err);
+                        }
+                        req.body = JSON.parse(dezipped.toString());    
+                        next();
+                    });
+                 })
+            }
+            else {
+                next();
+            }
+        });
+        
     }
 }
 
