@@ -23,7 +23,7 @@ export class AppRoutes {
       //DEPOSIT
 
       {
-        path: "/test",
+        path: "/user/v1/test",
         component: [
 
           routingComponents.testAPI.bind(routingComponents)
@@ -34,13 +34,6 @@ export class AppRoutes {
         component: [
           this.apiValidation.validateBodyData(register),
           routingComponents.register.bind(routingComponents)
-        ]
-      },
-      {
-        path: "/user/v1/test",
-        component: [
-
-          routingComponents.testAPI.bind(routingComponents)
         ]
       },
       {
@@ -255,7 +248,7 @@ export class AppRoutes {
     this.AppUpdateRoutes = [
 
       {
-        path: "/test",
+        path: "/user/v1/test",
         component: [
 
           routingComponents.testAPI.bind(routingComponents)
@@ -270,13 +263,7 @@ export class AppRoutes {
         ]
 
       },
-      {
-        path: "/user/v1/test",
-        component: [
-
-          routingComponents.testAPI.bind(routingComponents)
-        ]
-      },
+   
       {
         path: "/user/v1/updateuser/profile/image",
         component: [
