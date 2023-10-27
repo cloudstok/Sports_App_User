@@ -21,6 +21,14 @@ export class AppRoutes {
     /* Post calls */
     this.AppPostRoutes = [
       //DEPOSIT
+
+      {
+        path: "/test",
+        component: [
+
+          routingComponents.testAPI.bind(routingComponents)
+        ]
+      },
       {
         path: "/register",
         component: [
@@ -74,6 +82,7 @@ export class AppRoutes {
           routingComponents.pageNotFound.bind(routingComponents)
         ]
       }
+
 
 
     ];
@@ -237,6 +246,14 @@ export class AppRoutes {
     ];
     // update  request
     this.AppUpdateRoutes = [
+
+      {
+        path: "/test",
+        component: [
+
+          routingComponents.testAPI.bind(routingComponents)
+        ]
+      },
       // 404
       {
         path: "/updateuser/profile",
