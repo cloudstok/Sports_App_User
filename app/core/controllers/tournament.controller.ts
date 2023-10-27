@@ -11,7 +11,7 @@ export class tournament extends ResponseInterceptor {
 
   async get_tournament(req: any, res: any) {
     try {
-      let sql = "select  * from tournament where last_scheduled_match_date >  current_date() order by start_date desc"
+      let sql = "select  * from tournament where last_scheduled_match_date >=  current_date() order by start_date desc"
       let [tournament] = await this.connection.write.query(sql);
       return this.sendSuccess(res, { data: tournament })
     }

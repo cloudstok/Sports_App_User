@@ -1,6 +1,6 @@
 import { connection } from "../../config/dbConf";
 import { ResponseInterceptor } from "../utilities/response-interceptor";
-import { uploads3 } from "../../core/aws/uploads3";
+import { uploads3 } from "../aws/uploads3";
 import { SQL_ADD_THEMES, SQL_DELETE_THEME, SQL_GET_THEMES, SQL_UPDATE_THEME } from "../query/query";
 
 export class ThemeController extends ResponseInterceptor {

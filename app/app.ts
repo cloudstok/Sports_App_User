@@ -1,6 +1,7 @@
 import { appConfig } from "./config/appConf";
 import * as express from "express";
 import { AppRoutes } from "./routes/app.routes";
+import { AdminAppRoutes } from "./routes/app.admin.routes";
 import { ResponseInterceptor } from "./core/utilities/response-interceptor"
 import * as cors from 'cors';
 class App {
@@ -14,29 +15,35 @@ class App {
         this.app.listen(this.PORT, () => {
             console.log(`server listening @ port ${appConfig.server.port} `);
         });
+        const admin_appRoutes = new AdminAppRoutes();
         const appRoutes = new AppRoutes();
-    
-        for (var getRoute = 0; getRoute < appRoutes.AppGetRoutes.length; getRoute++) {
-            let getPath = appRoutes.AppGetRoutes[getRoute].path
-            getPath = getPath !== "*" ? appConfig.path + getPath : getPath
-            this.app.get(getPath, [appRoutes.AppGetRoutes[getRoute].component]);
-        }
-        for (var postRoute = 0; postRoute < appRoutes.AppPostRoutes.length; postRoute++) {
-            let postPath = appRoutes.AppPostRoutes[postRoute].path
-            postPath = postPath !== '*' ? appConfig.path  + postPath : postPath 
-            this.app.post( postPath, [appRoutes.AppPostRoutes[postRoute].component]);          
-        }
-        for (var putRoute = 0; putRoute < appRoutes.AppUpdateRoutes.length; putRoute++) {
-            let putPath = appRoutes.AppUpdateRoutes[putRoute].path 
-            putPath = putPath !== "*" ? appConfig.path  + putPath : putPath
-            this.app.put(putPath, [appRoutes.AppUpdateRoutes[putRoute].component])
-        }
-        for (var delRoute = 0; delRoute < appRoutes.AppDeleteRoutes.length; delRoute++) {
-            let delPath = appRoutes.AppDeleteRoutes[delRoute].path
-            delPath = delPath  !== "*" ? appConfig.path  + delPath : delPath
-            this.app.delete(delPath, [appRoutes.AppDeleteRoutes[delRoute].component])
-        }
+       
+let AllGetRoutes = [...admin_appRoutes.AppGetRoutes, ...appRoutes.AppGetRoutes]
+let AllPostRoutes = [...admin_appRoutes.AppPostRoutes, ...appRoutes.AppPostRoutes]
+let AllDeleteRoutes = [...admin_appRoutes.AppDeleteRoutes, ...appRoutes.AppDeleteRoutes]
+let AllUpdateRoutes = [...admin_appRoutes.AppUpdateRoutes, ...appRoutes.AppUpdateRoutes]
+
+for (var getRoute = 0; getRoute < AllGetRoutes.length; getRoute++) {
+    let getPath = AllGetRoutes[getRoute].path
+    this.app.get(getPath, [AllGetRoutes[getRoute].component]);
+}
+for (var postRoute = 0; postRoute < AllPostRoutes.length; postRoute++) {
+    let postPath = AllPostRoutes[postRoute].path
+    // postPath = postPath !== '*' ? appConfig.adminpath  + postPath : postPath 
+    this.app.post( postPath, [AllPostRoutes[postRoute].component]);          
+}
+for (var putRoute = 0; putRoute < AllUpdateRoutes.length; putRoute++) {
+    let putPath = AllUpdateRoutes[putRoute].path 
+
+    this.app.put(putPath, [AllUpdateRoutes[putRoute].component])
+}
+for (var delRoute = 0; delRoute < AllDeleteRoutes.length; delRoute++) {
+    let delPath = AllDeleteRoutes[delRoute].path
+    this.app.delete(delPath, [AllDeleteRoutes[delRoute].component])
+}
+
     }
+
 
 
     private config(): void {

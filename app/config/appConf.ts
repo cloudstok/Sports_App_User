@@ -10,6 +10,8 @@ let AWS_S3_BUCKET_NAME = verifyenv("AWS_S3_BUCKET_NAME") || "";
 let AWS_ACCESS_KEY = verifyenv("AWS_ACCESS_KEY") || ""
 let AWS_SECRET_KEY = verifyenv("AWS_SECRET_KEY") || ""
 let AWS_REGION = verifyenv("AWS_REGION") || ""
+let PROJECT_KEY = verifyenv("PROJECT_KEY") || ""
+let RS_TOKEN = verifyenv("RS_TOKEN") || ""
 
 function verifyenv(env_key) {
   if (process.env[env_key] == undefined) {
@@ -24,10 +26,13 @@ export const appConfig = {
   server_env: SERVER_ENV, //['dev','uat']sr
   ver: '0.0.1',
   path: "/user/v1",
+  adminpath: "/admin/v1",
+
   server: {
     port: SERVER_PORT,
   },
-
+  PROJECT_KEY : PROJECT_KEY,
+  RS_TOKEN :RS_TOKEN,
     uri: DB_URL,
   
   jwt: {
