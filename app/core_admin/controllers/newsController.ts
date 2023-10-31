@@ -31,7 +31,7 @@ export class News extends ResponseInterceptor{
     async insertNews(req: any ,res: any){
         try{
             console.log(req.files)
-            if(req.files.length > 0){
+            if(req?.files?.length > 0){
              req.body.cover_image = (await  this.uploads3.uploadImage(req.files)).Location}
             const {heading, sub_heading, cover_image, created_by, url, content} = req.body;
           await this.connection.write.query(SQL_INSERT_NEWS, [heading, sub_heading, cover_image, created_by, url, content]);
@@ -58,7 +58,7 @@ export class News extends ResponseInterceptor{
 
     async deleteNews(req: any, res: any){
         try{
-            const [news]: any = await this.connection.write.query(SQL_DELETE_NEWS, [req.params.news_id]);
+            const [news]: any = await this.connection.write.query(SQL_DELETE_NEWS, [req.query.news_id]);
             return this.sendSuccess(res, { message: "News deleted Successfully", data : news })
         }catch(err){
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)

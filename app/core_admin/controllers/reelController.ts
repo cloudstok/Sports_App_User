@@ -37,5 +37,16 @@ export class reelController extends ResponseInterceptor {
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
+   
 
+    //
+    async deleteReel(req : any , res : any){
+        try {
+            const [showsReel] = await this.connection.read.query("delete from reels where reel_id = ?" , [req.query.reel_id]);
+            return this.sendSuccess(res, { data: showsReel })
+        }
+        catch (err) {
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+        }
+    }
 }

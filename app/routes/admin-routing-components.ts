@@ -137,6 +137,10 @@ export class RoutingComponents {
     this.reels.showReel(req,res)
   }
 
+
+  deleteReel(req : any , res : any){
+    this.reels.deleteReel(req,res)
+  }
   //<--------------News-------------->
   getNews(req : any, res: any){
     this.news.getNews(req,res)

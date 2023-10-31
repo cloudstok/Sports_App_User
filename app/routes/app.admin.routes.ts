@@ -21,107 +21,107 @@ export class AdminAppRoutes {
     /* Post calls */
     this.AppPostRoutes = [
       {
-        path: "/admin/v1//register",
+        path: "/admin/v1/register",
         component: [
           this.apiValidation.validate(register),
           routingComponents.register.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//login",
+        path: "/admin/v1/login",
         component: [
           this.apiValidation.validate(register),
           routingComponents.login.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//add_association",
+        path: "/admin/v1/add_association",
         component: [
           routingComponents.add_association.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//add_venues",
+        path: "/admin/v1/add_venues",
         component: [
           routingComponents.add_venues.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//add_countries",
+        path: "/admin/v1/add_countries",
         component: [
           routingComponents.add_countries.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//add_tournaments",
+        path: "/admin/v1/add_tournaments",
         component: [
           routingComponents.add_tournaments.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//tournaments/stats/:tou_key",
+        path: "/admin/v1/tournaments/stats/:tou_key",
         component: [
           routingComponents.add_tournaments_stats.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//add/fanstasy/points",
+        path: "/admin/v1/add/fanstasy/points",
         component: [
           routingComponents.add_fantasyPoints.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//update_tournament",
+        path: "/admin/v1/update_tournament",
         component: [
           routingComponents.update_tournament.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//tournament_point",
+        path: "/admin/v1/tournament_point",
         component: [
           routingComponents.tournament_point.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//add_matches",
+        path: "/admin/v1/add_matches",
         component: [
           routingComponents.add_matches.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//update_matches",
+        path: "/admin/v1/update_matches",
         component: [
           routingComponents.update_matches.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//detail_matches",
+        path: "/admin/v1/detail_matches",
         component: [
           routingComponents.detail_matches.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//table",
+        path: "/admin/v1/table",
         component: [
           routingComponents.table.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//add_teams",
+        path: "/admin/v1/add_teams",
         component: [
           routingComponents.add_teams.bind(routingComponents)
         ]
       },
   
       {
-        path: "/admin/v1//addReel",
+        path: "/admin/v1/addReel",
         component: [
           this.upload.array("docs" , 1),
           routingComponents.addReel.bind(routingComponents)
         ]
       },
       {
-        path: "/admin/v1//insertNews",
+        path: "/admin/v1/insertNews",
         component: [
           this.upload.array("docs" , 1),
           routingComponents.insertNews.bind(routingComponents)
@@ -129,7 +129,7 @@ export class AdminAppRoutes {
 
       },
       {
-        path: "/admin/v1//countriesImage",
+        path: "/admin/v1/countriesImage",
         component: [
           this.upload.array("docs" , 1),
           routingComponents.countriesImage.bind(routingComponents)
@@ -137,7 +137,7 @@ export class AdminAppRoutes {
 
       },
       {
-        path: "/admin/v1//playerImage",
+        path: "/admin/v1/playerImage",
         component: [
           this.upload.array("docs" , 1),
           routingComponents.playerImage.bind(routingComponents)
@@ -145,7 +145,7 @@ export class AdminAppRoutes {
 
       },
       {
-        path: "/admin/v1//tournamentImage",
+        path: "/admin/v1/tournamentImage",
         component: [
           this.upload.array("docs" , 1),
           routingComponents.tournamentImage.bind(routingComponents)
@@ -269,6 +269,13 @@ export class AdminAppRoutes {
         path: "/admin/v1/deleteNews",
         component: [
           routingComponents.deleteNews.bind(routingComponents)
+        ]
+      },
+
+      {
+        path: "/admin/v1/deleteReel",
+        component: [
+          routingComponents.deleteReel.bind(routingComponents)
         ]
       }
       // {
