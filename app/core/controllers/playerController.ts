@@ -1,10 +1,10 @@
 import { ResponseInterceptor } from "../utilities/response-interceptor";
 import { connection} from "../../config/dbConf";
-import { cricketApi } from "../thirdPartyApi/thirdPartyApi";
-import { uploads3 } from "../../core/aws/uploads3";
+import { cricketApi } from "./thirdPartyApi/thirdPartyApi";
+import { uploads3 } from "../aws/uploads3";
   const vinay = "https://jaunpur123.s3.ap-south-1.amazonaws.com/1697093979829_vinay.jpeg"
 
-export class playerController extends ResponseInterceptor {
+export class players extends ResponseInterceptor {
 connection : connection
 cricketApi : cricketApi
 uploads3 : uploads3

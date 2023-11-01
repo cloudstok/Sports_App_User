@@ -1,7 +1,7 @@
-import { ResponseInterceptor } from "../../core/utilities/response-interceptor";
+import { ResponseInterceptor } from "../utilities/response-interceptor";
 import {connection} from '../../config/dbConf';
 import { SQL_INSERT_NEWS, SQL_SHOW_NEWS, SQL_SHOW_NEWS_BY_ID, SQL_UPDATE_NEWS, SQL_DELETE_NEWS} from '../query/query'
-import {uploads3} from "../../core/aws/uploads3"
+import {uploads3} from "../aws/uploads3"
 export class News extends ResponseInterceptor{
     public connection : connection
     uploads3 : uploads3
@@ -12,7 +12,8 @@ export class News extends ResponseInterceptor{
     }
     async getNews(req: any ,res: any ) {
         try{
-            const [news] = await this.connection.write.query(SQL_SHOW_NEWS);
+            const {PageLimit , PageOffset} = req.query
+            const [news] = await this.connection.write.query(SQL_SHOW_NEWS , [+PageLimit , +PageOffset]);
             return this.sendSuccess(res, {data: news})
         }catch(err){
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)

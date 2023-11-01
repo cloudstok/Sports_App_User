@@ -33,7 +33,7 @@ export class AppRoutes {
         path: "/user/v1/register",
         component: [
           this.apiValidation.validateBodyData(register),
-          routingComponents.register.bind(routingComponents)
+          routingComponents.UseRregister.bind(routingComponents)
         ]
       },
       {
@@ -54,7 +54,7 @@ export class AppRoutes {
         path: "/user/v1/login",
         component: [
           this.apiValidation.validateBodyData(login),
-          routingComponents.login.bind(routingComponents)
+          routingComponents.Userlogin.bind(routingComponents)
         ]
       },
       
@@ -108,7 +108,7 @@ export class AppRoutes {
         path: "/user/v1/userfindbyid",
         component: [
           this.tokenController.verifyToken,
-          routingComponents.userFindById.bind(routingComponents)
+          routingComponents.userFindByAuth.bind(routingComponents)
         ]
       },
       {
@@ -259,7 +259,7 @@ export class AppRoutes {
         path: "/user/v1/updateuser/profile",
         component: [
            this.tokenController.verifyToken,
-          routingComponents.updateUser.bind(routingComponents)
+          routingComponents.updateUserByAuth.bind(routingComponents)
         ]
 
       },

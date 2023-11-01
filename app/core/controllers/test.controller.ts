@@ -1,6 +1,6 @@
 import { ResponseInterceptor } from "../utilities/response-interceptor";
 import { connection} from "../../config/dbConf";
-import { commentary, score } from "../../core_admin/controllers/live/liveScore";
+import { commentary, score } from "./live/liveScore";
 
 export class TestController extends ResponseInterceptor {
 connection : connection

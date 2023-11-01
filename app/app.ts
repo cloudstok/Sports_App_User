@@ -9,13 +9,15 @@ var getRawBody = require('raw-body');
 var zlib = require('zlib');
 
 import { Server } from "socket.io";
+import { Socket } from "dgram";
 
 
 class App {
     public app: express.Application;
     private PORT: number = appConfig.server.port;
     responseInterceptor: ResponseInterceptor;
-   
+       
+    
     constructor() {
         this.app = express();
         this.config();
@@ -52,29 +54,21 @@ for (var delRoute = 0; delRoute < AllDeleteRoutes.length; delRoute++) {
     this.app.delete(delPath, [AllDeleteRoutes[delRoute].component])
 }
 
-
+// ==================================socket===================================
 io.on('connection', (socket) => {
     console.log('socket connected');
-    // socket.emit('sub', 'Hello Bro!' );
-  
     socket.on("sub", async (...ev) => {
         await socket.join(ev);
         console.log(ev , socket.id , typeof ev[0] , )
         setTimeout(async ()=>{
-        io.to(ev[0]).emit('score', "hello world");
+        io.to(socket.id).emit('score', "hello world");
         } ,1000)
       
     })
   
   });
 
-   setInterval(async ()=>{
-console.log("change")
-let a = 1
-  io.to('1').emit("score" , "hello vinay")
-      } ,10000)
 
-//   io.emit("sub1" , "vishal")
 
 }
 

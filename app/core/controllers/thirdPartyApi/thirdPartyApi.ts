@@ -1,5 +1,5 @@
 
-import { appConfig } from "../../config/appConf";
+import { appConfig } from "../../../config/appConf";
 import axios from "axios";
 import tournamentDetail from "interfaces/apiRequest/tournamentDetailsInterface";
 import FeaturedTournaments from "interfaces/apiRequest/featured_tournamentInterface";

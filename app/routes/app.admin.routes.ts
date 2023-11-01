@@ -1,8 +1,8 @@
-import { findbyid, register } from "../core_admin/validation/schema";
-import { RoutingComponents } from "./admin-routing-components";
-import { apiValidation } from "../core_admin/validation/apiValidation";
+import {  register } from "../core/validation/schema";
+import { RoutingComponents } from "./routing-components";
+import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
-import { upload } from "../core_admin/uploadDocs/DocsController";
+import { upload } from "../core/uploadDocs/DocsController";
 export class AdminAppRoutes {
   AppGetRoutes: any[];
   AppPostRoutes: any[];
@@ -23,15 +23,15 @@ export class AdminAppRoutes {
       {
         path: "/admin/v1/register",
         component: [
-          this.apiValidation.validate(register),
-          routingComponents.register.bind(routingComponents)
+          // this.apiValidation.validate(register),
+          routingComponents.adminregister.bind(routingComponents)
         ]
       },
       {
         path: "/admin/v1/login",
         component: [
-          this.apiValidation.validate(register),
-          routingComponents.login.bind(routingComponents)
+          // this.apiValidation.validate(register),
+          routingComponents.Adminlogin.bind(routingComponents)
         ]
       },
       {
@@ -167,6 +167,34 @@ export class AdminAppRoutes {
     /* Get call */
     this.AppGetRoutes = [
       // 404
+
+
+      {
+        path: "/admin/v1/get_tournament",
+        component : [
+          routingComponents.get_tournament.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/admin/v1/get_tournament_by_month",
+        component : [
+          routingComponents.getMonthWiseTournament.bind(routingComponents)
+        ]
+      },
+
+      {
+        path: "/admin/v1/get_tournament_by_assocation",
+        component : [
+          routingComponents.getTournamentByAss.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/admin/v1/association_list",
+        component : [
+          routingComponents.getAssociationList.bind(routingComponents)
+        ]
+      },
+
       {
         path: "/admin/v1/test",
         component: [
@@ -194,14 +222,14 @@ export class AdminAppRoutes {
       {
         path: "/admin/v1/findbyid/:phone",
         component: [
-          this.apiValidation.validateParams(findbyid),
+          // this.apiValidation.validateParams(findbyid),
           routingComponents.userFindById.bind(routingComponents)
         ]
       },
       {
         path: "/admin/v1/showReel",
         component : [
-          routingComponents.showReel.bind(routingComponents)
+          routingComponents.showReels.bind(routingComponents)
         ]
       },
       {

@@ -1,6 +1,6 @@
 import { ResponseInterceptor } from "../../utilities/response-interceptor";
 import { connection} from "../../../config/dbConf";
-import { cricketApi } from "../../thirdPartyApi/thirdPartyApi";
+import { cricketApi } from "../thirdPartyApi/thirdPartyApi";
 export class static_data extends ResponseInterceptor {
 connection : connection
 cricketapi : cricketApi

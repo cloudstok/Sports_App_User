@@ -1,6 +1,6 @@
-import { ResponseInterceptor } from "../../utilities/response-interceptor";
-import { connection} from "../../../config/dbConf";
-import { uploads3 } from "../../../core/aws/uploads3";
+import { ResponseInterceptor } from "../utilities/response-interceptor";
+import { connection} from "../../config/dbConf";
+import { uploads3 } from "../aws/uploads3";
 
 export class countries extends ResponseInterceptor {
 connection : connection

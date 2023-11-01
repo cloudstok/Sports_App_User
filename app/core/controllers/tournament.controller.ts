@@ -1,13 +1,100 @@
 import { connection } from "../../config/dbConf";
 import { ResponseInterceptor } from "../utilities/response-interceptor";
 import { match } from "./match.controller";
+
+import { uploads3 } from "../aws/uploads3";
 // const vinay = "https://jaunpur123.s3.ap-south-1.amazonaws.com/1697093979829_vinay.jpeg"
 export class tournament extends ResponseInterceptor {
   connection: connection
+  uploads3 : uploads3
   constructor() {
     super()
     this.connection = new connection()
+    this.uploads3 = new uploads3()
   }
+
+// ====================== this function find all tournament ======================
+async findAllTournament(){
+  try{
+    let [allTournament] = await this.connection.write.query('SELECT * FROM tournament');
+   return allTournament
+  }catch(err){
+    console.log(`Err while getting data from DB is::`, err)
+    return false
+  }
+}
+
+async  findTournamentbyAssKey(PageLimit , PageOffset , ass_key) {
+  try{
+    let [allTournament] = await this.connection.write.query('SELECT * FROM tournament where association_key = ?  limit ? offset ?' , [ass_key ,+PageLimit , +PageOffset]);
+   return allTournament
+  }catch(err){
+    console.log(`Err while getting data from DB is::`, err)
+    return false
+  }
+}
+
+async findTournamentByAss(req, res){
+  try{
+    const {PageLimit , PageOffset , ass_key} = req.query
+    let tournamentData: any = await this.findTournamentbyAssKey(PageLimit , PageOffset , ass_key);
+    return this.sendSuccess(res, { data: tournamentData })
+   
+  }catch(err){
+    console.log(`Err while getting tournament data is::`, err)
+    this.sendBadRequest(err)
+  }
+}
+
+
+async findMonthWiseTournament(req, res){
+  try{
+    let tournamentData: any = await this.findAllTournament();
+    let finalData = [];
+    var month= ["January","February","March","April","May","June","July",
+            "August","September","October","November","December"];
+// var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
+    tournamentData.map(e=> {
+      let key = month[new Date(e.start_date).getMonth() + 1] + " " + new Date(e.start_date).getFullYear();
+      let finalObj = {
+        "month": key,
+        "data": [e]
+      }
+      let keyCheck =  finalData.find(e=> e.month === key)
+      if(keyCheck){
+        keyCheck.data.push(e)
+      }else{
+        finalData.push(finalObj)
+      }
+     
+    })
+    
+    return this.sendSuccess(res, { data: finalData })
+  }catch(err){
+    console.log(`Err while getting tournament data is::`, err)
+    this.sendBadRequest(err)
+  }
+}
+
+
+
+  async addImageTournament(req :any , res :any){
+    try{
+    let url = '';
+    if (req.files && req.files.length > 0) {
+        let imageUrl = await this.uploads3.uploadImage(req.files)
+        url = imageUrl.Location
+    }
+     console.log(url, req.query.tou_key)
+    const sql = "UPDATE tournament SET imgURl = ?  where tou_key = ?"
+    await this.connection.write.query(sql , [url , req.query.tou_key])
+    this.sendSuccess(res, {status: true, msg: ' image uploaded  successfully'})
+  }catch(err){
+      console.error(err)
+      this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
+  }
+  }
+
 
   async get_tournament(req: any, res: any) {
     try {
@@ -180,5 +267,12 @@ if(finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points){
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
+
+
+
+
+
+  // ==============
+
 }
 

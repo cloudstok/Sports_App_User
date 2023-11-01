@@ -1,7 +1,7 @@
 import { connection } from "../../config/dbConf";
-import { ResponseInterceptor } from "../../core/utilities/response-interceptor";
-import { EncryptionDecryption } from "../../core/bcrypt/bcrypt";
-import { tokenController } from "../../core/jwt/jsonwebtoken";
+import { ResponseInterceptor } from "../utilities/response-interceptor";
+import { EncryptionDecryption } from "../bcrypt/bcrypt";
+import { tokenController } from "../jwt/jsonwebtoken";
 import { SQL_ALL_ADMIN, SQL_CHECK_ADMIN, SQL_DELETE_ADMIN, SQL_INSERT_ADMIN, SQL_UPDATE_ADMIN } from "../query/query";
 export class admin extends ResponseInterceptor {
     public connection: connection
@@ -83,6 +83,7 @@ export class admin extends ResponseInterceptor {
    }
    async findById(req : any, res : any){
     try{
+        
         const [user]: any = await this.connection.write.query(SQL_CHECK_ADMIN, [req.params.phone]);
         return this.sendSuccess(res, {  data : user })
     }
