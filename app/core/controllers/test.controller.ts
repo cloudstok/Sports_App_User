@@ -11,11 +11,11 @@ connection : connection
 
   async test(req, res ) {
     try{
-     
+     console.log("live")
       this.connection.write.query("insert into logs (body,query,header) values (?,?,?)",[JSON.stringify(req.body), JSON.stringify(req.query), JSON.stringify(req.headers) ])
       
-      await commentary();
-      await score()
+      await commentary(req.body);
+      await score(req.body)
 
       return this.sendResponse(res, 200, { message:"OK" })
     }catch(err){

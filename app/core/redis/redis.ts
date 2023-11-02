@@ -2,7 +2,7 @@ import Redis from 'ioredis';
 
 // Create a Redis client instance
 const redis = new Redis({
-  host: 'localhost', // Redis server host
+  host: '13.233.238.112', // Redis server host
   port: 6379,        // Redis server port
   password: '',      // Optional: Redis server password, if set
 });
@@ -14,7 +14,7 @@ redis.on('error', (err) => {
 
 
 // Perform Redis operations
-export default  class RedisOperations{
+export  class RedisOperations{
     redis = redis
     constructor(){
      this.redis = redis
