@@ -99,6 +99,12 @@ export class AppRoutes {
         ]
       },
       {
+        path: "/user/v1/get_tournament_by_month",
+        component : [
+          routingComponents.getMonthWiseTournament.bind(routingComponents)
+        ]
+      },
+      {
         path: "/user/v1/test",
         component: [
 

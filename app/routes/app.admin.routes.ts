@@ -175,12 +175,7 @@ export class AdminAppRoutes {
           routingComponents.get_tournament.bind(routingComponents)
         ]
       },
-      {
-        path: "/admin/v1/get_tournament_by_month",
-        component : [
-          routingComponents.getMonthWiseTournament.bind(routingComponents)
-        ]
-      },
+     
 
       {
         path: "/admin/v1/get_tournament_by_assocation",
