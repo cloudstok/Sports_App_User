@@ -25,9 +25,7 @@ export class ResponseInterceptor {
         let response = {
             ver : appConfig.ver,
             timeStamp: new Date(),
-            status: 'success',
-            // data: data
-
+            status: true,
         };
         response = Object.assign({}, response, data);
         if (message) response["message"] = message;
@@ -38,7 +36,7 @@ export class ResponseInterceptor {
         let response = {
             version : appConfig.ver,
             timeStamp: new Date(),
-            status: 'fail',
+            status: false,
             errCode: errCode,
             errMsg: errMsg,
         }
@@ -48,7 +46,8 @@ export class ResponseInterceptor {
         let responseBody = {
             version : appConfig.ver,
             timeSamp: new Date(), 
-            status:  status + " fail",
+            status_code:  status,
+            status : false,
             errCode: this.BAD_MESSAGE,
             errMsg: message ? message : 'Bad Request',
         }
@@ -58,7 +57,7 @@ export class ResponseInterceptor {
         let responseBody = {
             version : appConfig.ver,
             timeSamp: new Date(),
-            status: "fail",
+            status:false,
             errCode: this.INTERNAL_ERROR, "errMsg": message ? message : 'Internal Server Error'
         }
         return this.sendResponse(res, this.BAD_REQUEST, responseBody);

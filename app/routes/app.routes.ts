@@ -1,4 +1,4 @@
- import { commentory, login, match, match_fixtures, reel, register } from "../core/validation/schema";
+ import { commentory, login, match, match_fixtures, reel, reelsUpdateBody, reelsUpdateParams, register, sendOtp } from "../core/validation/schema";
 import { RoutingComponents } from "./routing-components";
 import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
@@ -25,7 +25,6 @@ export class AppRoutes {
       {
         path: "/user/v1/test",
         component: [
-
           routingComponents.testAPI.bind(routingComponents)
         ]
       },
@@ -39,14 +38,14 @@ export class AppRoutes {
       {
         path: "/user/v1/send_otp",
         component: [
-          // this.apiValidation.validateBodyData(register),
+          this.apiValidation.validateQueryData(sendOtp),
           routingComponents.genrateOtp.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/verify_otp",
         component: [
-          // this.apiValidation.validateBodyData(register),
+          this.apiValidation.validateQueryData(register),
           routingComponents.verifyOtp.bind(routingComponents)
         ]
       },
@@ -70,6 +69,8 @@ export class AppRoutes {
         path: "/user/v1/addUpdateReelStatus/:reel_id",
         component : [
           this.tokenController.verifyToken,
+          this.apiValidation.validateBodyData(reelsUpdateBody),
+          this.apiValidation.validateParamsData(reelsUpdateParams),
           routingComponents.addUpdateReelStatus.bind(routingComponents)
         ]
       },

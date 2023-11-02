@@ -7,6 +7,19 @@ import { otpController } from 'core/controllers/otp.controller';
         otp : validData.number,
         otp_id : validData.number
       });
+      export const verifyOtp = Joi.object().keys({
+        otp: validData.number,
+        otp_id: validData.number
+      })
+      export const sendOtp = Joi.object().keys({
+        phone: validData.number
+      });
+      export const reelsUpdateParams = Joi.object().keys({
+        reelId : validData.number
+      });
+      export const reelsUpdateBody = Joi.object().keys({
+        meta_data : validData.Json
+      });
     export const login = Joi.object().keys({
         phone: validData.number,
         password: validData.alphaNum,

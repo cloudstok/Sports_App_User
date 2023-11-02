@@ -8,7 +8,6 @@ export const validData = {
     mobile : Joi.string().regex(/^[0-9]{10}$/).required(),
     birth_year: Joi.number().integer() .min(1900) .max(2013),
     string : Joi.string(),
-    limit : Joi.number().integer()
-
-
+    limit : Joi.number().integer(),
+    Json : Joi.object()
 }

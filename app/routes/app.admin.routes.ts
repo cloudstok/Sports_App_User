@@ -1,4 +1,4 @@
-import {  register } from "../core/validation/schema";
+import {  login, register } from "../core/validation/schema";
 import { RoutingComponents } from "./routing-components";
 import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
@@ -23,14 +23,14 @@ export class AdminAppRoutes {
       {
         path: "/admin/v1/register",
         component: [
-          // this.apiValidation.validate(register),
+          this.apiValidation.validateBodyData(login),
           routingComponents.adminregister.bind(routingComponents)
         ]
       },
       {
         path: "/admin/v1/login",
         component: [
-          // this.apiValidation.validate(register),
+          this.apiValidation.validateBodyData(login),
           routingComponents.Adminlogin.bind(routingComponents)
         ]
       },
