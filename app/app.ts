@@ -3,7 +3,8 @@ import * as express from "express";
 import { AppRoutes } from "./routes/app.routes";
 import { AdminAppRoutes } from "./routes/app.admin.routes";
 import { ResponseInterceptor } from "./core/utilities/response-interceptor"
-import { io } from './core/socket/socket';
+import { io , firstSUb } from './core/socket/socket';
+
 import * as cors from 'cors';
 var getRawBody = require('raw-body');
 var zlib = require('zlib');
@@ -56,9 +57,12 @@ io.on('connection', (socket) => {
     socket.on("sub", async (...ev) => {
         await socket.join(ev);
         console.log(ev , socket.id , typeof ev[0] , )
-        setTimeout(async ()=>{
-        io.to(socket.id).emit('score', "hello world");
-        } ,1000)
+       await firstSUb(socket.id, ev)
+
+       
+        // setTimeout(async ()=>{
+        // io.to(socket.id).emit('score', "hello world");
+        // } ,1000)
       
     })
   
@@ -103,6 +107,3 @@ io.on('connection', (socket) => {
 
  
 export default new App().app;
-
-
-
