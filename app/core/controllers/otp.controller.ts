@@ -19,7 +19,7 @@ export class otpController extends ResponseInterceptor {
       expiration_time.setMinutes(expiration_time.getMinutes() + 1);
       const sql =
         "INSERT INTO otp (otp, phone, status, retries, expiration_time) VALUES (? ,? ,? ,? , ?)";
-     let [data] =  await this.connection.write.query(sql, [
+      let [data] = await this.connection.write.query(sql, [
         otp,
         phone,
         "PENDING",
@@ -42,48 +42,48 @@ export class otpController extends ResponseInterceptor {
       return false;
     }
   }
-  
+
   async verify(id: any) {
-      try {
-        const sql = "select * from otp where otp_id  = ?";
-        let [otpData]: any = await this.connection.write.query(sql, [id]);
-        if(otpData){
-          return otpData[0]
-        }
-      } catch (err) {
-        console.error(err);
-        return false;
+    try {
+      const sql = "select * from otp where otp_id  = ?";
+      let [otpData]: any = await this.connection.write.query(sql, [id]);
+      if (otpData) {
+        return otpData[0]
       }
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   }
 
- async genrateOtp(req :any ,res : any){
-    try{
-         const otp:number = await this.generateRandom6DigitNumber()
-        let data :any = await this.add_otp(otp , req.query.phone);
-         return this.sendSuccess(res, { OTP : otp , otp_id : data.insertId})
-    }catch(err){
-       
-        console.error(err)
-        this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
-    }
- } 
- async verifyOtp(req :any ,res : any){
-    try{
-      let {otp ,otp_id} = req.query
-      let data : any = this.verify(otp_id)
-      if(data.otp === otp){
-        return this.sendBadRequest(res,  "Invalid OTP" , this.BAD_REQUEST)
-      }
-      if(data.expiration_time < new Date()){
-        return this.sendBadRequest(res,  "OTP Expirer" , this.BAD_REQUEST)
-      }
-      this.update_otp({ status : 'USED'} , otp_id)
-      return this.sendSuccess(res, { message: "OTP Verify Successfully" })
-    }catch(err){
+  async genrateOtp(req: any, res: any) {
+    try {
+      const otp: number = await this.generateRandom6DigitNumber()
+      let data: any = await this.add_otp(otp, req.query.phone);
+      return this.sendSuccess(res, { OTP: otp, otp_id: data.insertId })
+    } catch (err) {
+
       console.error(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
- } 
+  }
+  async verifyOtp(req: any, res: any) {
+    try {
+      let { otp, otp_id } = req.query
+      let data: any = this.verify(otp_id)
+      if (data.otp === otp) {
+        return this.sendBadRequest(res, "Invalid OTP", this.BAD_REQUEST)
+      }
+      if (data.expiration_time < new Date()) {
+        return this.sendBadRequest(res, "OTP Expirer", this.BAD_REQUEST)
+      }
+      this.update_otp({ status: 'USED' }, otp_id)
+      return this.sendSuccess(res, { message: "OTP Verify Successfully" })
+    } catch (err) {
+      console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+    }
+  }
 
 
 }

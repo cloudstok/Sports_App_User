@@ -1,19 +1,19 @@
 //------------------------------------------------------------------------------------------------------------
 import { io } from '../../socket/socket';
-import {RedisOperations} from '../../redis/redis'
-import { json } from 'stream/consumers';
+import { RedisOperations } from '../../redis/redis'
+
 const redis = new RedisOperations()
-export const score = async(data , key)=> {
-    io.to(key).emit("score" , data)
-    await redis.setRedis(key+"score" , JSON.stringify(data))
+export const score = async (data, key) => {
+    io.to(key).emit("score", data)
+    await redis.setRedis(key + "score", JSON.stringify(data))
     return true
 }
 
-export const commentary = async(data , key)=> {
-    io.to(key).emit("commentory" , data)
-    await redis.setRedis(key+"commentory" , JSON.stringify(data))
+export const commentary = async (data, key) => {
+    io.to(key).emit("commentory", data)
+    await redis.setRedis(key + "commentory", JSON.stringify(data))
     return true
-} 
+}
 
 
 
