@@ -1,4 +1,4 @@
- import { commentory, login, match, match_fixtures, reel, reelsUpdateBody, reelsUpdateParams, register, sendOtp } from "../core/validation/schema";
+import { commentory, login, match, match_fixtures, reel, reelsUpdateBody, reelsUpdateParams, register, sendOtp } from "../core/validation/schema";
 import { RoutingComponents } from "./routing-components";
 import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
@@ -8,16 +8,16 @@ export class AppRoutes {
   AppPostRoutes: any[];
   AppUpdateRoutes: any[];
   AppDeleteRoutes: any[];
-  apiValidation :any = apiValidation
-  tokenController : tokenController
+  apiValidation: any = apiValidation
+  tokenController: tokenController
   upload = upload
   register = register
-    constructor() {
+  constructor() {
     const routingComponents: RoutingComponents = new RoutingComponents();
-     this.apiValidation = new apiValidation()
-     this.register = register
-     this.tokenController = new tokenController()
-      this .upload = upload
+    this.apiValidation = new apiValidation()
+    this.register = register
+    this.tokenController = new tokenController()
+    this.upload = upload
     /* Post calls */
     this.AppPostRoutes = [
       //DEPOSIT
@@ -25,12 +25,14 @@ export class AppRoutes {
       {
         path: "/user/v1/test",
         component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.testAPI.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/register",
         component: [
+          //  this.tokenController.auth(["user"]),
           this.apiValidation.validateBodyData(register),
           routingComponents.UseRregister.bind(routingComponents)
         ]
@@ -38,6 +40,7 @@ export class AppRoutes {
       {
         path: "/user/v1/send_otp",
         component: [
+          //  this.tokenController.auth(["user"]),
           this.apiValidation.validateQueryData(sendOtp),
           routingComponents.genrateOtp.bind(routingComponents)
         ]
@@ -45,6 +48,7 @@ export class AppRoutes {
       {
         path: "/user/v1/verify_otp",
         component: [
+          //  this.tokenController.auth(["user"]),
           this.apiValidation.validateQueryData(register),
           routingComponents.verifyOtp.bind(routingComponents)
         ]
@@ -52,23 +56,26 @@ export class AppRoutes {
       {
         path: "/user/v1/login",
         component: [
+          //  this.tokenController.auth(["user"]),
           this.apiValidation.validateBodyData(login),
           routingComponents.Userlogin.bind(routingComponents)
         ]
       },
-      
+
       {
         path: "/user/v1/addtheme",
-        component : [
-          this.tokenController.verifyToken,
-          this.upload.array('docs' , 3),
+        component: [
+          // this.tokenController.verifyToken,
+          this.tokenController.auth(["user"]),
+          this.upload.array('docs', 3),
           routingComponents.addThemes.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/addUpdateReelStatus/:reel_id",
-        component : [
-          this.tokenController.verifyToken,
+        component: [
+          // this.tokenController.verifyToken,
+          this.tokenController.auth(["user"]),
           this.apiValidation.validateBodyData(reelsUpdateBody),
           this.apiValidation.validateParamsData(reelsUpdateParams),
           routingComponents.addUpdateReelStatus.bind(routingComponents)
@@ -94,40 +101,45 @@ export class AppRoutes {
       {
         path: "/user/v1/alluser",
         component: [
-          this.tokenController.verifyToken,
+          // this.tokenController.verifyToken,
+          this.tokenController.auth(["user"]),
           routingComponents.findAllUSer.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/get_tournament_by_month",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.getMonthWiseTournament.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/test",
         component: [
-
+          //  this.tokenController.auth(["user"]),
           routingComponents.testAPI.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/userfindbyid",
         component: [
-          this.tokenController.verifyToken,
+          // this.tokenController.verifyToken,
+          this.tokenController.auth(["user"]),
           routingComponents.userFindByAuth.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/getallthemes",
         component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.getAllThemes.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/showReel",
-        component : [
-          this.tokenController.verifyToken,
+        component: [
+          // this.tokenController.verifyToken,
+          this.tokenController.auth(["user"]),
           this.apiValidation.validateQueryData(reel),
           routingComponents.showReel.bind(routingComponents)
         ]
@@ -135,115 +147,132 @@ export class AppRoutes {
       },
       {
         path: "/user/v1/get_team",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.getTeam.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/get_tournament",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.get_tournament.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/gettournamentbyid/:tou_key",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.getTournamentById.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/get_match",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           this.apiValidation.validateQueryData(match),
           routingComponents.get_match.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/get/match/fixtures",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           this.apiValidation.validateQueryData(match_fixtures),
           routingComponents.getMatchFixtures.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/get_squad",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.get_squad.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/get_stats",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.get_stats.bind(routingComponents)
         ]
       },
-   
+
       {
         path: "/user/v1/get_match_by_tournament",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.get_match_tournament.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/point_table",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.pointTable.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/socrecard",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.getsocrecard.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/player",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.players.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/playerImage",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.playersImage.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/get_commentory",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           this.apiValidation.validateQueryData(commentory),
           routingComponents.getcommentory.bind(routingComponents)
         ]
       },
-     // not use
+      // not use
       {
         path: "/user/v1/fantasy_match_point",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.fantasy.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/fantasy_point",
-        component : [
+        component: [
+          //  this.tokenController.auth(["user"]),
           this.apiValidation.validateQueryData(commentory),
           routingComponents.fantasy_points.bind(routingComponents)
         ]
       },
       {
-         path: "/user/v1/getNews",
-         component : [
+        path: "/user/v1/getNews",
+        component: [
           // this.tokenController.verifyToken,
+          //  this.tokenController.auth(["user"]),
           routingComponents.getNews.bind(routingComponents)
-         ]
+        ]
       },
-     
-     {
-      path: "/user/v1/getTeam",
-      component : [
-       routingComponents.getTeam.bind(routingComponents)
-      ]
-   },
-  
+
+      {
+        path: "/user/v1/getTeam",
+        component: [
+          //  this.tokenController.auth(["user"]),
+          routingComponents.getTeam.bind(routingComponents)
+        ]
+      },
+
       {
         path: "*",
         component: [
@@ -257,7 +286,7 @@ export class AppRoutes {
       {
         path: "/user/v1/test",
         component: [
-
+          //  this.tokenController.auth(["user"]),
           routingComponents.testAPI.bind(routingComponents)
         ]
       },
@@ -265,29 +294,33 @@ export class AppRoutes {
       {
         path: "/user/v1/updateuser/profile",
         component: [
-           this.tokenController.verifyToken,
+          //  this.tokenController.verifyToken,
+          this.tokenController.auth(["user"]),
           routingComponents.updateUserByAuth.bind(routingComponents)
         ]
 
       },
-   
+
       {
         path: "/user/v1/updateuser/profile/image",
         component: [
-           this.tokenController.verifyToken,
-           this.upload.array('docs' , 1),
+          //  this.tokenController.verifyToken,
+          this.tokenController.auth(["user"]),
+          this.upload.array('docs', 1),
           routingComponents.updateUserImage.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/deleteuser/:u_id",
         component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.deleteUser.bind(routingComponents)
         ]
       },
       {
         path: "/user/v1/updatetheme/:theme_id",
         component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.updateTheme.bind(routingComponents)
         ]
       },
@@ -305,12 +338,14 @@ export class AppRoutes {
       {
         path: "/user/v1/deletethemes",
         component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.deleteThemes.bind(routingComponents)
         ]
       },
       {
         path: "*",
         component: [
+          //  this.tokenController.auth(["user"]),
           routingComponents.pageNotFound.bind(routingComponents)
         ]
       }

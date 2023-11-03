@@ -5,9 +5,9 @@ export const validData = {
     Date: Joi.date().raw().required(),
     comments: Joi.string().min(30).max(1500).required(),
     email: Joi.string().email().required(),
-    mobile : Joi.string().regex(/^[0-9]{10}$/).required(),
-    birth_year: Joi.number().integer() .min(1900) .max(2013),
-    string : Joi.string(),
-    limit : Joi.number().integer(),
-    Json : Joi.object()
+    mobile: Joi.string().regex(/^[0-9]{10}$/).required(),
+    birth_year: Joi.number().integer().min(1900).max(2013),
+    string: Joi.string(),
+    limit: Joi.number().integer(),
+    Json: Joi.object()
 }
