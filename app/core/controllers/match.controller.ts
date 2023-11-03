@@ -1,13 +1,23 @@
 
 import { connection } from "../../config/dbConf";
 import { ResponseInterceptor } from "../utilities/response-interceptor";
-
+const detail_match = "update  cricket_match set play =?, players=?, data_review=?, squad = ?, estimated_end_date = ?, completed_date_approximate = ? where match_key = ?";
 export class match extends ResponseInterceptor{
     connection : connection
     constructor(){
         super()
         this.connection = new connection()
     }
+ // up date live data 
+   async update_live_match(data){
+    await this.connection.write.query(detail_match , [JSON.stringify(data.play) ,JSON.stringify(data.player) , JSON.stringify(data.data_review) , JSON.stringify(data.squad) , new Date(data.estimated_end_date * 1000) ,  new Date(data.completed_date_approximate * 1000) , data.key])
+ return true
+    }
+
+
+
+
+
 ///  find get Match Data from  database
     async getMatchData(sql : string , limit: number , offset : number){
       try{

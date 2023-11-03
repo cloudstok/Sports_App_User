@@ -3,24 +3,15 @@ import { io } from '../../socket/socket';
 import {RedisOperations} from '../../redis/redis'
 import { json } from 'stream/consumers';
 const redis = new RedisOperations()
-export const score = async(data)=> {
-    let scoreData = data.data
-    let finalObj = {}
-    finalObj['innings'] = scoreData.play.innings;
-    finalObj['live'] = scoreData.play.live
-    io.to(scoreData.key).emit("score" , finalObj)
-    await redis.setRedis(scoreData.key+"score" , JSON.stringify(finalObj))
-    // console.log(scoreData.key , await redis.getRedis(scoreData.key) )
+export const score = async(data , key)=> {
+    io.to(key).emit("score" , data)
+    await redis.setRedis(key+"score" , JSON.stringify(data))
     return true
 }
 
-export const commentary = async(data)=> {
-    let scoreData = data.data
-    let finalObj = {}
-    finalObj['commentory'] = Object.values(scoreData.play.related_balls);
-    finalObj['live'] = scoreData.play.live
-    io.to(scoreData.key).emit("commentory" , finalObj)
-    await redis.setRedis(scoreData.key+"commentory" , JSON.stringify(finalObj))
+export const commentary = async(data , key)=> {
+    io.to(key).emit("commentory" , data)
+    await redis.setRedis(key+"commentory" , JSON.stringify(data))
     return true
 } 
 
