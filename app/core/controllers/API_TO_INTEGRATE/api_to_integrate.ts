@@ -61,9 +61,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
   }
 
 
-  //     update tournament whith tournament key
-
-
+  //   update tournament whith tournament key
 
   async update_tournaments(req: any, res: any) {
     try {

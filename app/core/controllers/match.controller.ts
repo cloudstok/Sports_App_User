@@ -10,7 +10,8 @@ export class match extends ResponseInterceptor {
   }
   // up date live data 
   async update_live_match(data) {
-    await this.connection.write.query(detail_match, [JSON.stringify(data.play), JSON.stringify(data.player), JSON.stringify(data.data_review), JSON.stringify(data.squad), new Date(data.estimated_end_date * 1000), new Date(data.completed_date_approximate * 1000), data.key])
+  // console.log(Object.keys(data))
+    await this.connection.write.query(detail_match, [JSON.stringify(data.play), JSON.stringify(data.players), JSON.stringify(data.data_review), JSON.stringify(data.squad), new Date(data.estimated_end_date * 1000), new Date(data.completed_date_approximate * 1000), data.key])
     return true
   }
 
