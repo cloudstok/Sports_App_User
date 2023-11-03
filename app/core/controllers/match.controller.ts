@@ -85,19 +85,21 @@ export class match extends ResponseInterceptor{
     async get_match(req:any, res: any){
         try{
           let {limit, offset} = req.query;
-          let date = new Date().toISOString().split('T')[0]
-          // let start_at = new Date(date+' 00:00:01').toISOString()
-          // let end_at= new Date(date+' 23:59:59').toISOString()
-          // start_at = start_at.replace("T", " ").slice(0, start_at.length-5)
-          // end_at = end_at.replace("T", " ").slice(0, end_at.length-5)
-          let sql_get_match = `select * from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date())  order by status desc limit ? offset ?`;
+          let a = new Date()
+          let b = new Date()
+          let endDate = new Date(a.setDate(a.getDate() + 1)).toISOString()
+          let startDate = new Date(b.setDate(b.getDate() - 2)).toISOString()        
+          startDate = startDate.replace("T", " ").slice(0, startDate.length-5)
+          endDate = endDate.replace("T", " ").slice(0, endDate.length-5)
+          let sql_get_match = `select * from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date())  and start_at between '${startDate}' and '${endDate}' order by match_key desc limit ? offset ?`;
           let tournament: any = await this.getMatchData(sql_get_match ,limit , offset);
           if(tournament.length > 0){
             return this.sendSuccess(res, {data: tournament})
           }
         }
         catch(err){
-              console.log(err)
+          console.error(err)
+          this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
     
@@ -118,7 +120,8 @@ export class match extends ResponseInterceptor{
         return this.sendSuccess(res, { data: tournament })
       }
       catch(err){
-            console.log(err)
+        console.error(err)
+        this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
       }
   }
     async imageURL(code){
@@ -151,7 +154,8 @@ export class match extends ResponseInterceptor{
           return this.sendSuccess(res, { data: table })
         }
         catch(err){
-              console.log(err)
+          console.error(err)
+          this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
 
@@ -191,13 +195,20 @@ export class match extends ResponseInterceptor{
       return this.sendSuccess(res, { data: points })
     }
     catch(err){
-          console.log(err)
+      console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+async findMatchBy_tou_id(req , res){
+try{
 
+}catch(err){
+  console.error(err);
+}
+}
 
 
 

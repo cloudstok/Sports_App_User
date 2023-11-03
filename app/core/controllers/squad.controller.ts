@@ -75,6 +75,7 @@ connection : connection
       return this.sendSuccess(res, { data: data })
     }catch(err){
       console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
  

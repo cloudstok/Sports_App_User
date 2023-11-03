@@ -42,7 +42,8 @@ connection : connection
       return this.sendSuccess(res, { data: stats })
     }
     catch(err){
-          console.log(err)
+      console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
 }
   

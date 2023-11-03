@@ -21,8 +21,8 @@ export class ThemeController extends ResponseInterceptor {
             return this.sendSuccess(res, {message: "Theme add successfully"})
         }
         catch (err) {
-            console.log(err)
-            this.sendBadRequest(res, "Something went wrong")
+            console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
 
     }
@@ -33,8 +33,8 @@ export class ThemeController extends ResponseInterceptor {
             return this.sendSuccess(res, {message: "Theme list fetched successfully", data: themeList})
         }
         catch (err) {
-            console.log(err)
-             this.sendBadRequest(res, "Something went wrong")
+            console.error(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
 
     }
@@ -46,8 +46,8 @@ export class ThemeController extends ResponseInterceptor {
             return this.sendSuccess(res, { message: "Theme updated successfully", data: theme})
         }
         catch (err) {
-            console.log(err)
-            this.sendBadRequest(res, "Something went wrong")
+            console.error(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
 
     }
@@ -59,8 +59,8 @@ export class ThemeController extends ResponseInterceptor {
             return this.sendSuccess(res, { message: "Theme delete successfully"} )
         }
         catch (err) {
-            console.log(err)
-            this.sendBadRequest(res, "Something went wrong")
+            console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
 
     }

@@ -25,7 +25,7 @@ export class admin extends ResponseInterceptor {
             return this.sendSuccess(res, { message: "admin Insert Successfully" })
         }
         catch (err) {
-            console.log(err)
+            console.error(err)
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
         }
 

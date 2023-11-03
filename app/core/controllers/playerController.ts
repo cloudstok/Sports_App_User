@@ -94,6 +94,7 @@ uploads3 : uploads3
       this.sendSuccess(res, {message: "Player Stats inserted successfully" })
     }catch(err){
       console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
 

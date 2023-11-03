@@ -76,7 +76,7 @@ export class playerController extends ResponseInterceptor{
           return this.sendSuccess(res, { data:data })
         }   
         catch(err){
-            console.log(err)
+            console.error(err)
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
         }
     }
@@ -116,7 +116,8 @@ export class playerController extends ResponseInterceptor{
           return this.sendSuccess(res, { data: image })
         }
         catch(err){
-              console.log(err)
+            console.error(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
 }

@@ -41,8 +41,8 @@ async findTournamentByAss(req, res){
     return this.sendSuccess(res, { data: tournamentData })
    
   }catch(err){
-    console.log(`Err while getting tournament data is::`, err)
-    this.sendBadRequest(err)
+    console.error(`Err while getting tournament data is::`, err)
+    this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
   }
 }
 
@@ -72,7 +72,7 @@ async findMonthWiseTournament(req, res){
     return this.sendSuccess(res, { data: finalData })
   }catch(err){
     console.log(`Err while getting tournament data is::`, err)
-    this.sendBadRequest(err)
+    this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
   }
 }
 
@@ -103,7 +103,7 @@ async findMonthWiseTournament(req, res){
       return this.sendSuccess(res, { data: tournament })
     }
     catch (err) {
-      console.log(err)
+      console.error(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
@@ -263,16 +263,11 @@ if(finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points){
       return this.sendSuccess(res, { data: finalData })
     }
     catch (err) {
-      console.log(err)
+      console.error(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
 
-
-
-
-
-  // ==============
 
 }
 

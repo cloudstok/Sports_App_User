@@ -16,7 +16,8 @@ export class News extends ResponseInterceptor{
             const [news] = await this.connection.write.query(SQL_SHOW_NEWS , [+PageLimit , +PageOffset]);
             return this.sendSuccess(res, {data: news})
         }catch(err){
-            this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
+            console.error(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
 
@@ -25,7 +26,8 @@ export class News extends ResponseInterceptor{
             const [news] = await this.connection.write.query(SQL_SHOW_NEWS_BY_ID, [req.params.news_id]);
             this.sendSuccess(res, {data: news})
         }catch(err){
-            this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
+            console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
 
@@ -53,7 +55,8 @@ export class News extends ResponseInterceptor{
             const [news] = await this.connection.write.query(SQL_UPDATE_NEWS, [reqBody, req.params.news_id]);
             this.sendSuccess(res, { msg: "News updated successfully", data: news})
         }catch(err){
-            this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
+            console.error(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }   
 
@@ -62,7 +65,8 @@ export class News extends ResponseInterceptor{
             const [news]: any = await this.connection.write.query(SQL_DELETE_NEWS, [req.query.news_id]);
             return this.sendSuccess(res, { message: "News deleted Successfully", data : news })
         }catch(err){
-            this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
+            console.error(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
 }

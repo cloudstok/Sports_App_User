@@ -18,7 +18,8 @@ export class teamController extends ResponseInterceptor{
           return this.sendSuccess(res, { data: teams })
         }
         catch(err){
-              console.log(err)
+            console.error(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
 

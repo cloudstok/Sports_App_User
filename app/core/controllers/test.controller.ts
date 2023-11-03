@@ -33,18 +33,4 @@ match : match
     }
     
   }
-
-  async register(req :any, res : any){
-    try{
-      let [sql] = await this.connection.read.query("select * from signup") 
-       return this.sendResponse(res ,200 , {data : sql}) 
-    }
-    catch(err){
-      console.log(err)
-
-    }
-  }
-
-
-  
 }

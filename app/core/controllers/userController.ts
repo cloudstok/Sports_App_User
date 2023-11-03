@@ -40,6 +40,7 @@ export class user extends ResponseInterceptor {
             return this.sendSuccess(res, { message: "User Insert Successfully" })
         }
         catch (err) {
+            console.error(err)
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
         }
     }
@@ -59,6 +60,7 @@ export class user extends ResponseInterceptor {
             return this.sendSuccess(res, { message: "Login Successfully", token: token , userData : user[0] })
         }
         catch (err) {
+            console.error(err)
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
         }
     }
@@ -69,6 +71,7 @@ export class user extends ResponseInterceptor {
         return this.sendSuccess(res, { message: "All User List ", data : user })
     }
     catch(err){
+        console.error(err)
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
@@ -82,7 +85,8 @@ export class user extends ResponseInterceptor {
 
     }
     catch(err){
-        this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
+        console.error(err)
+            this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
 // Update user Profile Image
@@ -97,6 +101,7 @@ export class user extends ResponseInterceptor {
 
     }
     catch(err){
+        console.error(err)
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
@@ -107,7 +112,8 @@ export class user extends ResponseInterceptor {
         return this.sendSuccess(res, { message: "User delete Successfully", data : user })
     }
     catch(err){
-        this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
+        console.error(err)
+            this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
    //    find user By Id  from users
@@ -118,6 +124,7 @@ export class user extends ResponseInterceptor {
         return this.sendSuccess(res, { data : user[0] })
     }
     catch(err){
+        console.error(err)
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
   
@@ -136,6 +143,7 @@ export class user extends ResponseInterceptor {
         return this.sendSuccess(res, { message: "User updated Successfully" ,user : user })
     }
     catch(err){
+        console.error(err)
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
@@ -149,49 +157,9 @@ export class user extends ResponseInterceptor {
         return this.sendSuccess(res, { data : user[0] })
     }
     catch(err){
+        console.error(err)
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
 
-//    async profileImage(req : any, res : any){
-//     try{
-//         const {phone} = res.locals.auth.user
-//         const files = req.files
-//         const url:any =  await this.uploads3.uploadImage(files)
-//         // console.log(url.Location ,phone)
-//         await this.connection.write.query("update user_profile set image = ? where phone = ? limit 1" , [url.Location, phone]);
-//         return this.sendSuccess(res, { message: "User Image upload  Successfully" ,user : url.location })
-
-//     }
-//     catch(err){
-//         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
-//     }
-//    }
- 
-
-//    async findAllUsers(req : any, res : any){
-//     try{
-//         const [user]: any = await this.connection.write.query(SQL_ALL_USER);
-//         return this.sendSuccess(res, { message: "All User List ", data : user })
-//     }
-//     catch(err){
-//         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
-//     }
-//    }
-// update Profile Data
-
-// Update user Profile Image
-
-  // delete user from users tables
-//    async DeleteUser(req : any, res : any){
-//     try{
-//         const [user]: any = await this.connection.write.query(SQL_DELETE_USER, [req.params.u_id]);
-//         return this.sendSuccess(res, { message: "User delete Successfully", data : user })
-//     }
-//     catch(err){
-//         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
-//     }
-//    }
-   //    find user By Id  from users
- 
 }

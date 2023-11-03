@@ -62,7 +62,9 @@ export class otpController extends ResponseInterceptor {
         let data :any = await this.add_otp(otp , req.query.phone);
          return this.sendSuccess(res, { OTP : otp , otp_id : data.insertId})
     }catch(err){
+       
         console.error(err)
+        this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
  } 
  async verifyOtp(req :any ,res : any){
@@ -78,7 +80,8 @@ export class otpController extends ResponseInterceptor {
       this.update_otp({ status : 'USED'} , otp_id)
       return this.sendSuccess(res, { message: "OTP Verify Successfully" })
     }catch(err){
-        console.error(err)
+      console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
  } 
 
