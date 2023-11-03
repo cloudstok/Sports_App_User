@@ -13,6 +13,8 @@ export class admin extends ResponseInterceptor {
         this.encryptionDecryption = new EncryptionDecryption()
         this.tokenController = new tokenController()
     }
+
+    // Admin Register 
     async register(req: any, res: any) {
         try {
             const { phone, password } = req.body
@@ -30,6 +32,8 @@ export class admin extends ResponseInterceptor {
         }
 
     }
+ 
+// <------------------------login Admin --------------------------------------------------------------->
 
     async login(req: any, res: any) {
         try {
@@ -50,6 +54,8 @@ export class admin extends ResponseInterceptor {
             this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
         }
     }
+ 
+// <-------------------------------------------- Find All Admin -------------------------------------->
    async findAllAdmin(req : any, res : any){
     try{
         const [user]: any = await this.connection.write.query(SQL_ALL_ADMIN);
@@ -59,7 +65,10 @@ export class admin extends ResponseInterceptor {
         this.sendBadRequest(res, `${err}` , this.BAD_REQUEST)
     }
    }
+ 
 
+// <--------------------------  update Admin ---------------------------->
+   
    async updateAllAdmin(req : any, res : any){
     try{
         const { phone, password } = req.body
