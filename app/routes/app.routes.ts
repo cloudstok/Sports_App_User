@@ -114,6 +114,13 @@ export class AppRoutes {
         ]
       },
       {
+        path: "/user/v1/match/key",
+        component: [
+          //  this.tokenController.auth(["user"]),
+          routingComponents.get_matchbykey.bind(routingComponents)
+        ]
+      },
+      {
         path: "/user/v1/test",
         component: [
           //  this.tokenController.auth(["user"]),

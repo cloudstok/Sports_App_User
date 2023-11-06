@@ -36,11 +36,11 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
         const [check]: any = await this.connection.write.query("SELECT * FROM sport_app.tournament where tou_key = ?", [x.key])
         if (check.length > 0) {
           updateDate.push([
-            x.name, x?.short_name ?? "", x?.countries[0]?.code, new Date(x.start_date * 1000), x.gender, x.point_system, JSON.stringify(x?.competition ?? {}), x.metric_group, x.sport, x.is_date_confirmed, x.is_venue_confirmed, new Date(x.last_scheduled_match_date * 1000), JSON.stringify(x.formats), x.key,
+            x.name, x?.short_name ?? "", x?.countries[0]?.code, x.start_date, x.gender, x.point_system, JSON.stringify(x?.competition ?? {}), x.metric_group, x.sport, x.is_date_confirmed, x.is_venue_confirmed, x.last_scheduled_match_date, JSON.stringify(x.formats), x.key,
           ])
         } else {
           finalData.push([
-            x.key, x.name, x?.short_name ?? "", x?.countries[0]?.code, new Date(x.start_date * 1000), x.gender, x.point_system, JSON.stringify(x?.competition ?? {}), x.association_key, x.metric_group, x.sport, x.is_date_confirmed, x.is_venue_confirmed, new Date(x.last_scheduled_match_date * 1000), JSON.stringify(x.formats)
+            x.key, x.name, x?.short_name ?? "", x?.countries[0]?.code, x.start_date , x.gender, x.point_system, JSON.stringify(x?.competition ?? {}), x.association_key, x.metric_group, x.sport, x.is_date_confirmed, x.is_venue_confirmed, x.last_scheduled_match_date, JSON.stringify(x.formats)
           ])
         }
       }
@@ -94,7 +94,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
       // if(match_data?.data && match_data?.data?.matches){}
       for (let x of match_data?.data?.matches) {
         finalData.push([
-          x.key, x.name, x.short_name, x.sub_title, x.status, new Date(x.start_at * 1000), x.tournament.key, x.tournament.name, x.tournament.short_name, x.metric_group, x.sport, x.winner, JSON.stringify(x.teams), JSON.stringify(x.venue), JSON.stringify(x.association), JSON.stringify(x.messages), x.gender, x.format
+          x.key, x.name, x.short_name, x.sub_title, x.status, x.start_at, x.tournament.key, x.tournament.name, x.tournament.short_name, x.metric_group, x.sport, x.winner, JSON.stringify(x.teams), JSON.stringify(x.venue), JSON.stringify(x.association), JSON.stringify(x.messages), x.gender, x.format
         ])
       }
       await this.connection.write.query(add_matches, [finalData])
@@ -111,7 +111,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
       // let finalData = []
       for (let x of match_data.data?.matches) {
         let finalData = [
-          x.name, x.short_name, x.sub_title, x.status, new Date(x.start_at * 1000), x.tournament.key, x.tournament.name, x.tournament.short_name, x.metric_group, x.sport, x.winner, JSON.stringify(x.teams), JSON.stringify(x.venue), JSON.stringify(x.association), JSON.stringify(x.messages), x.gender, x.format, x.key
+          x.name, x.short_name, x.sub_title, x.status, x.start_at , x.tournament.key, x.tournament.name, x.tournament.short_name, x.metric_group, x.sport, x.winner, JSON.stringify(x.teams), JSON.stringify(x.venue), JSON.stringify(x.association), JSON.stringify(x.messages), x.gender, x.format, x.key
         ]
         await this.connection.write.query(update_match, finalData)
       }
@@ -128,7 +128,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
       let match_detail: any = await this.cricketapi.detail_match(req.query.match_key);
       let { toss, play, players, notes, data_review, squad, estimated_end_date, completed_date_approximate, umpires, weather } = match_detail?.data;
       estimated_end_date = estimated_end_date && estimated_end_date !== undefined ? estimated_end_date : 0;
-      await this.connection.write.query(detail_match, [JSON.stringify(toss), JSON.stringify(play), JSON.stringify(players), JSON.stringify(notes), JSON.stringify(data_review), JSON.stringify(squad), new Date(estimated_end_date * 1000), new Date(completed_date_approximate * 1000), JSON.stringify(umpires), weather, req.query.match_key]);
+      await this.connection.write.query(detail_match, [JSON.stringify(toss), JSON.stringify(play), JSON.stringify(players), JSON.stringify(notes), JSON.stringify(data_review), JSON.stringify(squad), estimated_end_date, completed_date_approximate , JSON.stringify(umpires), weather, req.query.match_key]);
       this.sendSuccess(res, { status: true, msg: "Match details updated successfully" })
 
     } catch (err) {
@@ -172,13 +172,12 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
 
       let fantasy: any = await this.cricketapi.get_fantasy_matchPoints(req.query.match_key);
       let { match, overrides, metrics, players, teams, last_updated, points } = fantasy.data;
-      last_updated = new Date(last_updated * 1000)
       const fantasy_sql = "INSERT IGNORE INTO fantasy( match_key , overrides, metrics, players, teams, last_updated) values( ?,?,?,?,?,?)";
       const point_sql = "INSERT IGNORE INTO fantasy_points( match_key , ranks, points, player_key, points_str, last_updated , tournament_points , points_breakup) values ?"
-      let b = points.map(e => ([req.query.match_key, e.rank, e.points, e.player_key, e.points_str, new Date(e.last_updated * 1000), e.tournament_points, JSON.stringify(e.points_breakup)]))
+      let b = points.map(e => ([req.query.match_key, e.rank, e.points, e.player_key, e.points_str,e.last_updated, e.tournament_points, JSON.stringify(e.points_breakup)]))
       overrides = overrides ? overrides : {}
       await this.connection.write.query(point_sql, [b])
-      await this.connection.write.query(fantasy_sql, [req.query.match_key, JSON.stringify(overrides), JSON.stringify(metrics), JSON.stringify(players), JSON.stringify(teams), new Date(last_updated * 1000)]);
+      await this.connection.write.query(fantasy_sql, [req.query.match_key, JSON.stringify(overrides), JSON.stringify(metrics), JSON.stringify(players), JSON.stringify(teams), last_updated]);
       this.sendSuccess(res, { status: true, msg: "Fantasy points data inserted successfully" });
     } catch (err) {
       console.error(err)

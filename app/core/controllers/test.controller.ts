@@ -19,6 +19,7 @@ export class TestController extends ResponseInterceptor {
       console.log("live")
       this.connection.write.query("insert into logs (body,query,header) values (?,?,?)", [JSON.stringify(req.body), JSON.stringify(req.query), JSON.stringify(req.headers)])
       let data = req?.body?.data
+      // console.log(data.status)
       // ====================  for score commentory 
         let   player = await  this.playerController.socrcard([{play : data.play , players : data.players ,team : data.teams}])
         let commentaryData = {}

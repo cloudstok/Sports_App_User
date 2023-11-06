@@ -13,7 +13,7 @@ export const io = new Server(8084, {   cors: {
 export const firstSUb = async(clientId , roomNo)=>{
   try{
    
-    io.to(clientId).emit('score', JSON.parse(await redis.getRedis(roomNo+"commentory")));
+    io.to(clientId).emit('commentory', JSON.parse(await redis.getRedis(roomNo+"commentory")));
     io.to(clientId).emit('score', JSON.parse(await redis.getRedis(roomNo+"score")));
   }catch(err){
   

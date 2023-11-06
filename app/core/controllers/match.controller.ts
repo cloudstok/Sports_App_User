@@ -1,7 +1,7 @@
 
 import { connection } from "../../config/dbConf";
 import { ResponseInterceptor } from "../utilities/response-interceptor";
-const detail_match = "update  cricket_match set play =?, players=?, data_review=?, squad = ?, estimated_end_date = ?, completed_date_approximate = ? where match_key = ?";
+const detail_match = "update  cricket_match set status = ?, play =?, players=?, data_review=?, squad = ?, estimated_end_date = ?, completed_date_approximate = ? where match_key = ?";
 export class match extends ResponseInterceptor {
   connection: connection
   constructor() {
@@ -11,7 +11,7 @@ export class match extends ResponseInterceptor {
   // up date live data 
   async update_live_match(data) {
   // console.log(Object.keys(data))
-    await this.connection.write.query(detail_match, [JSON.stringify(data.play), JSON.stringify(data.players), JSON.stringify(data.data_review), JSON.stringify(data.squad), new Date(data.estimated_end_date * 1000), new Date(data.completed_date_approximate * 1000), data.key])
+    await this.connection.write.query(detail_match, [ data.status, JSON.stringify(data.play), JSON.stringify(data.players), JSON.stringify(data.data_review), JSON.stringify(data.squad), data.estimated_end_date, data.completed_date_approximate, data.key])
     return true
   }
 
@@ -31,7 +31,7 @@ export class match extends ResponseInterceptor {
         }
         x.team.a.url = await this.imageURL(x.team?.a?.name) || process.env.country
         x.team.b.url = await this.imageURL(x.team?.b?.name) || process.env.country
-        x.start_at = new Date(x.start_at).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+        x.start_at =x.start_at
         if (x.play) {
           play.live = x?.play?.live;
           play.result = x?.play?.result;
@@ -68,11 +68,11 @@ export class match extends ResponseInterceptor {
     try {
       let { limit, offset, date } = req.query
       //  console.log(limit, offset ,date  , req.query)
-      let start_at = new Date(date + ' 00:00:01').toISOString()
-      let end_at = new Date(date + ' 23:59:59').toISOString()
-      start_at = start_at.replace("T", " ").slice(0, start_at.length - 5)
-      end_at = end_at.replace("T", " ").slice(0, end_at.length - 5)
-      let sql_MatchFxitures = `select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, gender, format, toss, play, estimated_end_date, completed_date_approximate, tou_key, tou_name, tou_short_name from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date()) and start_at between '${start_at}' and '${end_at}' order by status desc limit ? offset ?`;
+      // let start_at = new Date(date + ' 00:00:01').toISOString()
+      // let end_at = new Date(date + ' 23:59:59').toISOString()
+      // start_at = start_at.replace("T", " ").slice(0, start_at.length - 5)
+      // end_at = end_at.replace("T", " ").slice(0, end_at.length - 5)
+      let sql_MatchFxitures = `select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, gender, format, toss, play, estimated_end_date, completed_date_approximate, tou_key, tou_name, tou_short_name from cricket_match  order by start_at desc limit ? offset ?`;
       let matchData = await this.getMatchData(sql_MatchFxitures, limit, offset);
       if (matchData.length > 0) {
         this.sendSuccess(res, { data: matchData })
@@ -86,13 +86,15 @@ export class match extends ResponseInterceptor {
   async get_match(req: any, res: any) {
     try {
       let { limit, offset } = req.query;
-      let a = new Date()
-      let b = new Date()
-      let endDate = new Date(a.setDate(a.getDate() + 1)).toISOString()
-      let startDate = new Date(b.setDate(b.getDate() - 2)).toISOString()
-      startDate = startDate.replace("T", " ").slice(0, startDate.length - 5)
-      endDate = endDate.replace("T", " ").slice(0, endDate.length - 5)
-      let sql_get_match = `select * from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date())  and start_at between '${startDate}' and '${endDate}' order by match_key desc limit ? offset ?`;
+      // let a = new Date()
+      // let b = new Date()
+      // let endDate = new Date(a.setDate(a.getDate() + 1)).toISOString()
+      // let startDate = new Date(b.setDate(b.getDate() - 2)).toISOString()
+      // startDate = startDate.replace("T", " ").slice(0, startDate.length - 5)
+      // endDate = endDate.replace("T", " ").slice(0, endDate.length - 5)
+      // let sql_get_match = `select * from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date())  and start_at between '${startDate}' and '${endDate}' order by match_key desc limit ? offset ?`;
+      
+ let sql_get_match = `select * from cricket_match  order by start_at desc limit ? offset ?`;
       let tournament: any = await this.getMatchData(sql_get_match, limit, offset);
       if (tournament.length > 0) {
         return this.sendSuccess(res, { data: tournament })
@@ -203,13 +205,20 @@ export class match extends ResponseInterceptor {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  async findMatchBy_tou_id(req, res) {
+  async finddetailsby_match_key(req, res) {
     try {
-
+      let sql =`select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, venue, association, messages, gender, format, toss, play,  estimated_end_date, completed_date_approximate, umpires, weather, tou_key, tou_name, tou_short_name FROM cricket_match where match_key = ?`
+  let  [match] : any = await this.connection.write.query(sql , [req.query.match_key]) 
+   match  = match[0]
+   match.team.a.url = await this.imageURL(match.team?.a?.name) || process.env.country
+   match.team.b.url = await this.imageURL(match.team?.b?.name) || process.env.country
+  return this.sendSuccess(res, { data: match })
     } catch (err) {
       console.error(err);
     }
   }
+
+
 
 
 

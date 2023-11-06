@@ -55,7 +55,8 @@ export class tournament extends ResponseInterceptor {
         "August", "September", "October", "November", "December"];
       // var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
       tournamentData.map(e => {
-        let key = month[new Date(e.start_date).getMonth() + 1] + " " + new Date(e.start_date).getFullYear();
+        let date = new Date(e.start_date * 1000)
+        let key = month[new Date(date).getMonth() + 1] + " " + new Date(date).getFullYear();
         let finalObj = {
           "month": key,
           "data": [e]
@@ -66,7 +67,6 @@ export class tournament extends ResponseInterceptor {
         } else {
           finalData.push(finalObj)
         }
-
       })
 
       return this.sendSuccess(res, { data: finalData })
@@ -75,8 +75,6 @@ export class tournament extends ResponseInterceptor {
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
-
-
 
   async addImageTournament(req: any, res: any) {
     try {
@@ -98,7 +96,8 @@ export class tournament extends ResponseInterceptor {
 
   async get_tournament(req: any, res: any) {
     try {
-      let sql = "select  * from tournament where last_scheduled_match_date >=  current_date() order by tou_key desc"
+      // let sql = "select  * from tournament where last_scheduled_match_date >=  current_date() order by tou_key desc"
+      let sql = "select  * from tournament  start_date order by tou_key desc"
       let [tournament] = await this.connection.write.query(sql);
       return this.sendSuccess(res, { data: tournament })
     }
@@ -190,7 +189,7 @@ export class tournament extends ResponseInterceptor {
           finalData['tournamentName'] = element?.tou_name ?? ""
         finalData['shortName'] = element?.short_name ?? "",
           finalData['countries'] = element?.countries ?? ""
-        finalData['startDate'] = new Date(element.start_date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+        finalData['startDate'] =element.start_date,
           finalData['gender'] = element?.gender ?? "",
           finalData['pointSystem'] = element?.point_system ?? ""
         finalData['competition'] = element?.competition ?? "",
@@ -198,7 +197,7 @@ export class tournament extends ResponseInterceptor {
           finalData['sport'] = element?.sport ?? "",
           finalData['isDateConfirmed'] = element?.is_date_confirmed ?? "",
           finalData['isVenueConfirmed'] = element?.is_venue_confirmed ?? "",
-          finalData['lastScheduledMatchDate'] = new Date(element?.last_scheduled_match_date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+          finalData['lastScheduledMatchDate'] =element?.last_scheduled_match_date,
           finalData['formats'] = element?.formats,
           finalData['teamsDetails'] = {
             // teams: Object.values(element?.teams?? {}),
@@ -224,7 +223,7 @@ export class tournament extends ResponseInterceptor {
           match_key: element?.match_key ?? "",
           subTitle: element?.sub_title ?? "",
           status: element?.status ?? "",
-          start_at: new Date(element.start_at).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+          start_at: element.start_at,
           winner: element?.winner ?? "",
           team: element?.team ?? "",
           venue: element?.venue ?? "",

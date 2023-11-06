@@ -146,6 +146,10 @@ export class RoutingComponents {
   get_match(req: any, res: any) {
     this.match.get_match(req, res)
   }
+
+  get_matchbykey(req: any, res: any) {
+    this.match.finddetailsby_match_key(req, res)
+  }
   getMatchFixtures(req: any, res: any) {
     this.match.getMatchFxitures(req, res)
   }
