@@ -143,6 +143,9 @@ export class RoutingComponents {
   getTournamentById(req: any, res: any) {
     this.tournament.getTournamentById(req, res)
   }
+  deleteTournamentById(req: any, res: any) {
+    this.tournament.deleteTournamentById(req, res)
+  }
   get_match(req: any, res: any) {
     this.match.get_match(req, res)
   }

@@ -210,8 +210,15 @@ export class match extends ResponseInterceptor {
       let sql =`select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, venue, association, messages, gender, format, toss, play,  estimated_end_date, completed_date_approximate, umpires, weather, tou_key, tou_name, tou_short_name FROM cricket_match where match_key = ?`
   let  [match] : any = await this.connection.write.query(sql , [req.query.match_key]) 
    match  = match[0]
-   match.team.a.url = await this.imageURL(match.team?.a?.name) || process.env.country
-   match.team.b.url = await this.imageURL(match.team?.b?.name) || process.env.country
+   if(typeof match === 'object'){
+     if((Object.keys(match)).length > 0){
+      match.team.a.url = await this.imageURL(match.team?.a?.name) || process.env.country
+      match.team.b.url = await this.imageURL(match.team?.b?.name) || process.env.country
+     }
+   }else{
+    return this.sendBadRequest(res, 'Match data not found')
+   }
+  
   return this.sendSuccess(res, { data: match })
     } catch (err) {
       console.error(err);

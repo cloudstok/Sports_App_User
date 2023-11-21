@@ -58,18 +58,8 @@ class App {
                 await socket.join(ev);
                 console.log(ev, socket.id, typeof ev[0],)
                 await firstSUb(socket.id, ev)
-
-
-                // setTimeout(async ()=>{
-                // io.to(socket.id).emit('score', "hello world");
-                // } ,1000)
-
             })
-
         });
-
-
-
     }
 
     private config(): void {
@@ -107,5 +97,3 @@ class App {
 
 
 export default new App().app;
-
-

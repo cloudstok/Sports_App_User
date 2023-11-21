@@ -72,6 +72,13 @@ export class AdminAppRoutes {
         ]
       },
       {
+        path: "/admin/v1/delete/tournaments/:tou_key",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.deleteTournamentById.bind(routingComponents)
+        ]
+      },
+      {
         path: "/admin/v1/add/fanstasy/points",
         component: [
           //  this.tokenController.auth(["admin"]),

@@ -26,7 +26,7 @@ export class tournament extends ResponseInterceptor {
 
   async findTournamentbyAssKey(PageLimit, PageOffset, ass_key) {
     try {
-      let [allTournament] = await this.connection.write.query('SELECT * FROM tournament where association_key = ?  limit ? offset ?', [ass_key, +PageLimit, +PageOffset]);
+      let [allTournament] = await this.connection.write.query('SELECT * FROM tournament where association_key = ? and is_deleted = 0  limit ? offset ?', [ass_key, +PageLimit, +PageOffset]);
       return allTournament
     } catch (err) {
       console.log(`Err while getting data from DB is::`, err)
@@ -97,7 +97,7 @@ export class tournament extends ResponseInterceptor {
   async get_tournament(req: any, res: any) {
     try {
       // let sql = "select  * from tournament where last_scheduled_match_date >=  current_date() order by tou_key desc"
-      let sql = "select  * from tournament  start_date order by tou_key desc"
+      let sql = "SELECT * FROM sport_app.tournament where is_deleted = 0 order by last_scheduled_match_date DESC;"
       let [tournament] = await this.connection.write.query(sql);
       return this.sendSuccess(res, { data: tournament })
     }
@@ -123,7 +123,6 @@ export class tournament extends ResponseInterceptor {
     try {
       let sql = "select  image from players where player_key = ?"
       let [image]: any = await this.connection.write.query(sql, [player_key]);
-
       return image[0]?.image
     }
     catch (err) {
@@ -133,7 +132,6 @@ export class tournament extends ResponseInterceptor {
 
 
   async createTeam(t, p) {
-
     try {
       t = Object.values(t)
       t = [...new Map(t.map(item => [item['key'], item])).values()]
@@ -174,6 +172,16 @@ export class tournament extends ResponseInterceptor {
     }
   }
 
+  async deleteTournamentById(req: any, res: any){
+    try{
+      await this.connection.write.query(`UPDATE tournament SET is_deleted = 1 WHERE tou_key = '${req.params.tou_key}'`);
+      return this.sendSuccess(res, {status: 'success', msg: "Tournament deleted successful"})
+      
+    }catch(err){
+      console.error(`Error while deleting tournament is::::`, err);
+      return this.sendInternalError(res, 'Something went wrong with the request')
+    }
+  }
 
   async getTournamentById(req: any, res: any) {
     try {
@@ -204,12 +212,19 @@ export class tournament extends ResponseInterceptor {
             rounds: element?.rounds ?? "",
             tournamentPoints: element?.tou_points ?? "",
           };
-
+          // console.log(element.tou_points)
         if (finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
           for (let e of finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
             e.team.url = await this.imageURL(e?.team?.code) || process.env.country
           }
         }
+
+        for(let x of finalData['teamsDetails']['tournamentPoints']){
+            if(x.tournament_round.name === 'Knockout'){
+              finalData['teamsDetails']['tournamentPoints'].shift()
+            }
+        }
+
         // if(element.play){
 
         // }
