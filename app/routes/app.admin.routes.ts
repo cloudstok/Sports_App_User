@@ -71,13 +71,7 @@ export class AdminAppRoutes {
           routingComponents.add_tournaments_stats.bind(routingComponents)
         ]
       },
-      {
-        path: "/admin/v1/delete/tournaments/:tou_key",
-        component: [
-          //  this.tokenController.auth(["admin"]),
-          routingComponents.deleteTournamentById.bind(routingComponents)
-        ]
-      },
+    
       {
         path: "/admin/v1/add/fanstasy/points",
         component: [
@@ -297,6 +291,29 @@ export class AdminAppRoutes {
     // update  request
     this.AppUpdateRoutes = [
       // 404
+
+      {
+        path: "/admin/v1/delete/tournaments/:tou_key",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.deleteTournamentById.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/admin/v1/deleteReel",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.deleteReel.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/admin/v1/deleteuser/:u_id",
+        component: [
+          //  this.tokenController.auth(["user"]),
+          routingComponents.deleteUser.bind(routingComponents)
+        ]
+      },
+    
       {
         path: "/admin/v1/updateuser/:phone",
         component: [
@@ -338,13 +355,7 @@ export class AdminAppRoutes {
         ]
       },
 
-      {
-        path: "/admin/v1/deleteReel",
-        component: [
-          //  this.tokenController.auth(["admin"]),
-          routingComponents.deleteReel.bind(routingComponents)
-        ]
-      }
+  
       // {
       //   path: "*",
       //   component: [

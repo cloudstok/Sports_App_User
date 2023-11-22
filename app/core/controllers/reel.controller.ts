@@ -99,12 +99,13 @@ export class reel extends ResponseInterceptor {
     // -----------admin----------------------
     async addReel(req: any, res: any) {
         try {
+            const { title ,sub_title} = req.body
             let url = '';
             if (req.files && req.files.length > 0) {
                 let imageUrl = await this.upload.uploadImage(req.files)
                 url = imageUrl.Location
             }
-            const [addingReel]: any = await this.connection.write.query(SQL_ADD_REELS, [url])
+            const [addingReel]: any = await this.connection.write.query(SQL_ADD_REELS, [url , title , sub_title])
             return this.sendSuccess(res, { msg: "Reels added Successfully" })
 
         }
@@ -128,12 +129,15 @@ export class reel extends ResponseInterceptor {
     //
     async deleteReel(req: any, res: any) {
         try {
-            const [showsReel] = await this.connection.read.query("delete from reels where reel_id = ?", [req.query.reel_id]);
+            const [showsReel] = await this.connection.read.query("UPDATE reels SET is_deleted = 1 WHERE reel_id = ?"
+            , [req.query.reel_id]);
             return this.sendSuccess(res, { data: showsReel })
         }
         catch (err) {
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
+
+    
 
 }

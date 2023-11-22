@@ -317,13 +317,7 @@ export class AppRoutes {
           routingComponents.updateUserImage.bind(routingComponents)
         ]
       },
-      {
-        path: "/user/v1/deleteuser/:u_id",
-        component: [
-          //  this.tokenController.auth(["user"]),
-          routingComponents.deleteUser.bind(routingComponents)
-        ]
-      },
+   
       {
         path: "/user/v1/updatetheme/:theme_id",
         component: [

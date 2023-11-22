@@ -1,7 +1,7 @@
 // <<<<-----------------------  user_profile Table sql query ----------------------------------------<<<<
 export const SQL_CHECK_USER: string = "select * from user_profile where phone = ? limit 1";
 export const SQL_INSERT_USER: string = "insert into user_profile(phone, password) values (?,?)";
-export const SQL_ALL_USER: string = "select * from user_profile order by u_id DESC";
+export const SQL_ALL_USER: string = "select * from user_profile where is_deleted = 0 order by u_id DESC";
 export const SQL_UPDATE_USER: string = "update user_profile set fname = ? ,mname = ? ,lname = ?  , email = ? where phone = ? limit 1 ";
 export const SQL_DELETE_USER: string = "update user_profile set is_deleted = 1 where u_id = ? limit 1 ";
 // <<<<------------------------- themes table  sql Query  --------------------------------------------<<<<
@@ -27,7 +27,7 @@ export const SQL_GET_TEAM : string = "select * from team";
 
 //<<<<---------------------------Player--------------------------------->>>>
 
-export const SQL_GET_PLAYER : string = "select players , play , status , team from cricket_match where match_key = ?";
+export const SQL_GET_PLAYER : string = "select players , play , status , squad, team from cricket_match where match_key = ?";
 
 
 ////===================== admin =====================
@@ -36,7 +36,7 @@ export const SQL_INSERT_ADMIN: string = `insert into admin_profile(phone, passwo
 export const SQL_ALL_ADMIN: string = `select * from admin_profile`;
 export const SQL_UPDATE_ADMIN: string = `update admin_profile set  password= ? where phone = ? limit 1 `;
 export const SQL_DELETE_ADMIN: string = `update admin_profile set is_deleted = 1 where phone = ? limit 1 `;
-export const SQL_ADD_REELS : string = `insert into reels(url) values (?)`;
+export const SQL_ADD_REELS : string = `insert into reels(url ,title , sub_title) values (? , ? , ?)`;
 // export const SQL_SHOW_REELS : string = `select * from reels where is_deleted = 0`;
 export const SQL_INSERT_NEWS: string = `INSERT INTO news (heading, sub_heading, cover_image, created_by, url, content) values(?,?,?,?,?,?)`;
 // export const SQL_SHOW_NEWS: string = `SELECT * from news where is_deleted = 0`;

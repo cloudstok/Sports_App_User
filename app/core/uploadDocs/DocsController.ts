@@ -14,7 +14,7 @@ let mimetype = file.mimetype == "image/png" ||
            }
            cb(null, true)
     },
-   //  limits:{fileSize : 1024 * 1}	      
+    limits:{fileSize : 1024 * 7}	      
 })   
 
 

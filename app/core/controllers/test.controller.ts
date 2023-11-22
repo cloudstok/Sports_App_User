@@ -21,7 +21,9 @@ export class TestController extends ResponseInterceptor {
       let data = req?.body?.data
       // console.log(data.status)
       // ====================  for score commentory 
-        let   player = await  this.playerController.socrcard([{play : data.play , players : data.players ,team : data.teams}])
+      let player_Data =[{play : data.play , players : data.players ,team : data.teams, squad: data.squad}]
+      // console.log(data.teams)
+        let   player = await  this.playerController.socrcard(player_Data)
         let commentaryData = {}
         commentaryData['commentory'] = Object.values(data?.play?.related_balls);
         commentaryData['live'] = data?.play?.live

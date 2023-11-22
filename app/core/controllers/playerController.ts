@@ -115,7 +115,6 @@ export class players extends ResponseInterceptor {
         let imageUrl = await this.uploads3.uploadImage(req.files)
         url = imageUrl.Location
       }
-      console.log(url, "vinay")
       const sql = "UPDATE  players SET image = ?  where player_name = ?"
       await this.connection.write.query(sql, [url, req.query.p_key])
       this.sendSuccess(res, { status: true, msg: ' image uploaded  successfully ' })

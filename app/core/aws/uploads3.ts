@@ -17,6 +17,7 @@ export class uploads3{
              const Key = `${Date.now()}_${files[0].originalname.trim()}`;
              const params = { Bucket: bucketName, Key: Key, Body: files[0].buffer, ContentType: files[0].mimetype};
              const urlData = await s3.upload(params).promise()
+             
              return urlData
     }
 

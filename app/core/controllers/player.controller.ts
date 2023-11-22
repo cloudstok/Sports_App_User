@@ -63,8 +63,15 @@ async socrcard(player){
     let teamA = player[0]?.team?.a
     let teamB = player[0]?.team?.b
     let players = Object.values(player[0]?.players)
-    let teamAplayer = players?.filter((e: any) => e?.player?.nationality?.code == teamA.country_code)
-    let teamBplayer = players?.filter((e: any) => e?.player?.nationality?.code == teamB.country_code)
+//    console.log(team , "team")
+let squadA=  player[0].squad.a.playing_xi ||   player[0].squad.a.player_keys
+  let squadB=  player[0].squad.b.playing_xi ||   player[0].squad.b.player_keys
+    // let teamAplayer = players?.filter((e: any) => e?.player?.nationality?.code == teamA.country_code)
+    // let teamBplayer = players?.filter((e: any) => e?.player?.nationality?.code == teamB.country_code)
+
+    let teamAplayer = players?.filter((e:any) =>(squadA.includes(e.player?.key)))
+    let teamBplayer = players?.filter((e:any) =>(squadB.includes(e.player?.key)))
+    
 
     player[0].team.a.score = player[0]?.play?.innings['a_1']
     player[0].team.b.score = player[0]?.play?.innings['b_1']
