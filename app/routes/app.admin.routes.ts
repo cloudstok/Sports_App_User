@@ -291,6 +291,13 @@ export class AdminAppRoutes {
     // update  request
     this.AppUpdateRoutes = [
       // 404
+      {
+        path: "/admin/v1/delete/association",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.deleteAssociation.bind(routingComponents)
+        ]
+      },
 
       {
         path: "/admin/v1/delete/tournaments/:tou_key",

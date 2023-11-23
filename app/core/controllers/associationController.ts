@@ -15,8 +15,21 @@ export class Association extends ResponseInterceptor {
     }
     async associationList(req, res) {
         try {
-            let [associationList] = await this.connection.write.query("Select * from associations");
+            let [associationList] = await this.connection.write.query("Select * from associations where is_deleted = 0");
             return res.send(associationList);
+
+        } catch (err) {
+            console.log(`Err while getting assocation data is::`, err)
+            this.sendBadRequest(err)
+        }
+    }
+
+
+    // delete assoceation 
+    async deleteAssociation(req, res) {
+        try {
+            let [associationList] = await this.connection.write.query("UPDATE associations SET is_deleted = 1 WHERE ass_key = ?" , [req.query.ass_key]);
+            return this.sendSuccess(res, { message: "Assoceation deleted successfully" })
 
         } catch (err) {
             console.log(`Err while getting assocation data is::`, err)

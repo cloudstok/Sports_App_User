@@ -302,6 +302,11 @@ export class RoutingComponents {
     this.association.associationList(req, res)
   }
 
+  deleteAssociation(req: any, res: any) {
+    this.association.deleteAssociation(req, res)
+  }
+
+
   getNewsById(req: any, res: any) {
     this.news.getNewsById(req, res)
   }

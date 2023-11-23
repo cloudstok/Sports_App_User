@@ -4,7 +4,7 @@ import { AppRoutes } from "./routes/app.routes";
 import { AdminAppRoutes } from "./routes/app.admin.routes";
 import { ResponseInterceptor } from "./core/utilities/response-interceptor"
 import { io, firstSUb } from './core/socket/socket';
-
+import { cronJob} from './core/controllers/node-cron';
 import * as cors from 'cors';
 var getRawBody = require('raw-body');
 var zlib = require('zlib');
@@ -13,17 +13,20 @@ class App {
     public app: express.Application;
     private PORT: number = appConfig.server.port;
     responseInterceptor: ResponseInterceptor;
+    public cron: cronJob
 
 
     constructor() {
         this.app = express();
         this.config();
+        this.cron = new cronJob()
         this.responseInterceptor = new ResponseInterceptor();
         this.app.listen(this.PORT, () => {
             console.log(`server listening @ port ${appConfig.server.port} `);
         });
         const admin_appRoutes = new AdminAppRoutes();
         const appRoutes = new AppRoutes();
+        this.cron.cron()
 
 
         let AllGetRoutes = [...admin_appRoutes.AppGetRoutes, ...appRoutes.AppGetRoutes]
