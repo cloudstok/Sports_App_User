@@ -82,6 +82,7 @@ export class tournament extends ResponseInterceptor {
       if (req.files && req.files.length > 0) {
         let imageUrl = await this.uploads3.uploadImage(req.files)
         url = imageUrl.Location
+        console.log(url)
       }
       console.log(url, req.query.tou_key)
       const sql = "UPDATE tournament SET imgURl = ?  where tou_key = ?"
