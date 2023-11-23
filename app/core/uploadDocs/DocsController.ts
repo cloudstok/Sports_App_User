@@ -9,7 +9,7 @@ let mimetype = file.mimetype == "image/png" ||
                file.mimetype =='application/pdf' ||
                file.mimetype == "image/jpeg" ||
                file.mimetype == "video/mp4" 
-        if(!mimetype && fileSize <= 22282810){
+        if(!mimetype && fileSize <= 1048576){
             cb(null, false)
             console.log("only png & jpg & pdf file supported")
            }
