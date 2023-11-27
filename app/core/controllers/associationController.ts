@@ -37,4 +37,19 @@ export class Association extends ResponseInterceptor {
         }
     }
 
+    async Activeassociations(req: any, res: any){
+        try{
+          const {value , tou_key} = req.query  
+          await this.connection.write.query('UPDATE associations SET is_active = ? WHERE tou_key = ?',[value , tou_key]);
+          if(value){
+            return this.sendSuccess(res, {status: 'success', msg: "associations Active successful"})
+          }else{
+            return this.sendSuccess(res, {status: 'success', msg: "associations deActive successful"})
+          }
+        }catch(err){
+        //   console.error(`Error while deleting tournament is::::`, err);
+          return this.sendInternalError(res, 'Something went wrong with the request')
+        }
+      }
+
 }

@@ -26,7 +26,7 @@ class App {
         });
         const admin_appRoutes = new AdminAppRoutes();
         const appRoutes = new AppRoutes();
-        this.cron.cron()
+        // this.cron.cron()
 
 
         let AllGetRoutes = [...admin_appRoutes.AppGetRoutes, ...appRoutes.AppGetRoutes]

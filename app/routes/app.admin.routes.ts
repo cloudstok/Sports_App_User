@@ -197,8 +197,13 @@ export class AdminAppRoutes {
           routingComponents.get_tournament.bind(routingComponents)
         ]
       },
-
-
+      {
+        path: "/admin/v1/getmatchbytournament/:tou_key",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.getMatchByTournament.bind(routingComponents)
+        ]
+      },
       {
         path: "/admin/v1/get_tournament_by_assocation",
         component: [
@@ -304,6 +309,13 @@ export class AdminAppRoutes {
         component: [
           //  this.tokenController.auth(["admin"]),
           routingComponents.deleteTournamentById.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/admin/v1/active/tournaments",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.ActiveTournament.bind(routingComponents)
         ]
       },
       {

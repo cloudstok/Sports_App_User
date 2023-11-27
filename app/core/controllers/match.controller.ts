@@ -15,6 +15,11 @@ export class match extends ResponseInterceptor {
     return true
   }
 
+  async getMatchByTournament(req: any, res: any){
+    const [data] = await this.connection.write.query('SELECT * from cricket_match where tou_key = ?', [req.params.tou_key])
+    this.sendSuccess(res, {data: data})
+  }
+
 
 
 
@@ -225,7 +230,20 @@ export class match extends ResponseInterceptor {
     }
   }
 
-
+  async ActiveMatch(req: any, res: any){
+    try{
+      const {value , tou_key} = req.query  
+      await this.connection.write.query('UPDATE cricket_match SET is_active = ? WHERE tou_key = ?',[value , tou_key]);
+      if(+value){
+        return this.sendSuccess(res, {status: 'success', msg: "cricket_match Active successful"})
+      }else{
+        return this.sendSuccess(res, {status: 'success', msg: "cricket_match deActive successful"})
+      }
+    }catch(err){
+      // console.error(`Error while deleting tournament is::::`, err);
+      return this.sendInternalError(res, 'Something went wrong with the request')
+    }
+  }
 
 
 

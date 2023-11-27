@@ -11,7 +11,7 @@ export class cronJob{
     try{
       cron.schedule('* * * * * *', ()=> {
         console.log('cron running every second')
-        this.auto.subscribe()
+        // this.auto.subscribe()
 
       })
     }catch(err){

@@ -53,10 +53,14 @@ export class tournament extends ResponseInterceptor {
       let finalData = [];
       var month = ["January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"];
+        let years = []
       // var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
       tournamentData.map(e => {
         let date = new Date(e.start_date * 1000)
         let key = month[new Date(date).getMonth() + 1] + " " + new Date(date).getFullYear();
+        if(!years.includes(new Date(date).getFullYear())){
+          years.push(new Date(date).getFullYear())
+        }
         let finalObj = {
           "month": key,
           "data": [e]
@@ -68,8 +72,7 @@ export class tournament extends ResponseInterceptor {
           finalData.push(finalObj)
         }
       })
-
-      return this.sendSuccess(res, { data: finalData })
+      return this.sendSuccess(res, { data: finalData, years: years })
     } catch (err) {
       console.log(`Err while getting tournament data is::`, err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
@@ -183,6 +186,25 @@ export class tournament extends ResponseInterceptor {
       return this.sendInternalError(res, 'Something went wrong with the request')
     }
   }
+
+
+  async ActiveTournament(req: any, res: any){
+    try{
+      const {value , tou_key} = req.query 
+      console.log(value, tou_key) 
+      await this.connection.write.query(`UPDATE tournament SET is_Active = ${value} WHERE tou_key = ${tou_key}`);
+      if(+value){
+        return this.sendSuccess(res, {status: 'success', msg: "Tournament Active successful"})
+      }else{
+        return this.sendSuccess(res, {status: 'success', msg: "Tournament deActive successful"})
+      }
+    }catch(err){
+      console.error(`Error while deleting tournament is::::`, err);
+      return this.sendInternalError(res, 'Something went wrong with the request')
+    }
+  }
+
+
 
   async getTournamentById(req: any, res: any) {
     try {

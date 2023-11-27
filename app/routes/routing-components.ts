@@ -80,6 +80,11 @@ export class RoutingComponents {
   testAPI(req: any, res: any) {
     this.test.test(req, res,)
   }
+
+  
+  contact(req: any, res: any) {
+    this.test.contacts(req, res,)
+  }
   UseRregister(req: any, res: any) {
     this.user.register(req, res)
   }
@@ -146,6 +151,11 @@ export class RoutingComponents {
   deleteTournamentById(req: any, res: any) {
     this.tournament.deleteTournamentById(req, res)
   }
+
+  ActiveTournament(req: any, res: any) {
+    this.tournament.ActiveTournament(req, res)
+  }
+
   get_match(req: any, res: any) {
     this.match.get_match(req, res)
   }
@@ -228,6 +238,9 @@ export class RoutingComponents {
   add_association(req: any, res: any) {
     this.static_data.add_association(req, res)
   }
+  getMatchByTournament(req: any, res: any) {
+    this.match.getMatchByTournament(req, res)
+  }
   add_venues(req: any, res: any) {
     this.static_data.add_venues(req, res)
   }
@@ -306,6 +319,7 @@ export class RoutingComponents {
     this.association.deleteAssociation(req, res)
   }
 
+ 
 
   getNewsById(req: any, res: any) {
     this.news.getNewsById(req, res)

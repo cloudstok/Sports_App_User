@@ -21,6 +21,12 @@ export class AppRoutes {
     /* Post calls */
     this.AppPostRoutes = [
       //DEPOSIT
+      {
+        path: "/user/v1/contact",
+        component: [
+          routingComponents.contact.bind(routingComponents)
+        ]
+      },
 
       {
         path: "/user/v1/test",
@@ -106,6 +112,7 @@ export class AppRoutes {
           routingComponents.findAllUSer.bind(routingComponents)
         ]
       },
+    
       {
         path: "/user/v1/get_tournament_by_month",
         component: [
