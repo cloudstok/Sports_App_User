@@ -25,9 +25,9 @@ export class match extends ResponseInterceptor {
 
 
   ///  find get Match Data from  database
-  async getMatchData(sql: string, limit: number, offset: number) {
+  async getMatchData(sql: string) {
     try {
-      let [tournament]: any = await this.connection.write.query(sql, [+limit, +offset]);
+      let [tournament]: any = await this.connection.write.query(sql);
       for (let x of tournament) {
         let play: any = {}
 
@@ -77,8 +77,8 @@ export class match extends ResponseInterceptor {
       // let end_at = new Date(date + ' 23:59:59').toISOString()
       // start_at = start_at.replace("T", " ").slice(0, start_at.length - 5)
       // end_at = end_at.replace("T", " ").slice(0, end_at.length - 5)
-      let sql_MatchFxitures = `select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, gender, format, toss, play, estimated_end_date, completed_date_approximate, tou_key, tou_name, tou_short_name from cricket_match  order by start_at desc limit ? offset ?`;
-      let matchData = await this.getMatchData(sql_MatchFxitures, limit, offset);
+      let sql_MatchFxitures = `select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, gender, format, toss, play, estimated_end_date, completed_date_approximate, tou_key, tou_name, tou_short_name from cricket_match  order by start_at desc ?`;
+      let matchData = await this.getMatchData(sql_MatchFxitures);
       if (matchData.length > 0) {
         this.sendSuccess(res, { data: matchData })
       }
@@ -100,7 +100,7 @@ export class match extends ResponseInterceptor {
       // let sql_get_match = `select * from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date())  and start_at between '${startDate}' and '${endDate}' order by match_key desc limit ? offset ?`;
       
  let sql_get_match = `select * from cricket_match  order by start_at desc limit ? offset ?`;
-      let tournament: any = await this.getMatchData(sql_get_match, limit, offset);
+      let tournament: any = await this.getMatchData(sql_get_match);
       if (tournament.length > 0) {
         return this.sendSuccess(res, { data: tournament })
       }

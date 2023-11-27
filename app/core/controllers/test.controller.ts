@@ -72,6 +72,7 @@ const msg = [
     </strong>`,
     }
   ]
+  
 
   const sql = "INSERT INTO employees (name, company_name, designation, mobile, email) VALUES (? , ? ,? ,?,? )"
   await this.connection.write.query(sql, [name, company_name, designation, mobile, email])
