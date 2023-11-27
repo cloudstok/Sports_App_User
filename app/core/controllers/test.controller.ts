@@ -73,6 +73,21 @@ const msg = [
     }
   ]
 
+  for(let i of msg){
+    (async () => {
+      try {
+        await sgMail.send(i);
+        console.log(`email sent successfully with options::`, i)
+      } catch (error) {
+        console.error(error);
+    
+        if (error.response) {
+          console.error(error.response.body)
+        }
+      }
+    })();
+  }
+
   const sql = "INSERT INTO employees (name, company_name, designation, mobile, email) VALUES (? , ? ,? ,?,? )"
   await this.connection.write.query(sql, [name, company_name, designation, mobile, email])
   return res.status(200).send({status: true, message: 'Thankyou for reaching Cloudstok'})
