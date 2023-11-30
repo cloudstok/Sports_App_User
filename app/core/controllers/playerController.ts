@@ -2,18 +2,20 @@ import { ResponseInterceptor } from "../utilities/response-interceptor";
 import { connection } from "../../config/dbConf";
 import { cricketApi } from "./thirdPartyApi/thirdPartyApi";
 import { uploads3 } from "../aws/uploads3";
+import { countries } from './countries'
 const vinay = "https://jaunpur123.s3.ap-south-1.amazonaws.com/1697093979829_vinay.jpeg"
 
 export class players extends ResponseInterceptor {
   connection: connection
   cricketApi: cricketApi
   uploads3: uploads3
+  countries: countries
   constructor() {
     super();
     this.connection = new connection()
     this.cricketApi = new cricketApi()
     this.uploads3 = new uploads3()
-
+    this.countries = new countries()
   }
 
   async addStats(req: any, res: any) {
@@ -99,6 +101,8 @@ export class players extends ResponseInterceptor {
   }
 
 
+
+
   async addPlayer(data) {
     try {
       await this.connection.write.query("insert  IGNORE into  players(player_key, player_name , jersey_name, legal_name ,  gender , date_of_birth , nationality) values ? ", [data])
@@ -121,6 +125,46 @@ export class players extends ResponseInterceptor {
     } catch (err) {
       console.error(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+    }
+  }
+
+
+  async getPlayer(player) {
+    try {
+      let sql = `select * from players where player_key in (?)`;
+      const [data] = await this.connection.write.query(sql, [player])
+      return data
+    } catch (e) {
+      console.log(e)
+    }
+
+  }
+
+  async getTeamPlayer(req: any, res: any) {
+    try {
+      const sql = "select team, squad from cricket_match where match_key = ? "
+      let [player]: any = await this.connection.write.query(sql, [req.query.match_key])
+      for (let x of player) {
+        x.team.a.url = await this.countries.teamImageURL(x.team.a.code)
+        x.team.b.url = await this.countries.teamImageURL(x.team.b.code)
+        if (x.squad.a.playing_xi) {
+          x.team.a.player = await this.getPlayer(x.squad.a.playing_xi)
+          x.team.b.player = await this.getPlayer(x.squad.b.playing_xi)
+          delete x.squad.a.player_keys
+          delete x.squad.b.player_keys
+        } else {
+          x.team.a.player = await this.getPlayer(x.squad.a.player_keys)
+          x.team.b.player = await this.getPlayer(x.squad.b.player_keys)
+        }
+        delete x.squad
+      }
+      // console.log(player)
+      player = Object.values(player[0]?.team)
+
+      return this.sendSuccess(res, { data: player })
+    } catch (err) {
+      console.error(`Error while Find Team Player is::::`, err);
+      return this.sendInternalError(res, 'Something went wrong with the request')
     }
   }
 

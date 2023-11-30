@@ -5,7 +5,7 @@ import { cricketApi } from "../thirdPartyApi/thirdPartyApi";
 import { commonFunctions } from "../../utilities/common-functions.bin";
 
 const add_tournaments = "insert IGNORE into tournament(tou_key ,name , short_name , countries , start_date , gender , point_system ,competition , association_key , metric_group , sport , is_date_confirmed , is_venue_confirmed , last_scheduled_match_date ,formats ) VALUEs ?"
-const update_tournament = "update tournament set name = ? , short_name = ?, countries = ?, start_date = ? , gender= ? , point_system =?,competition =? , metric_group = ?, sport = ?  , is_date_confirmed = ?, is_venue_confirmed = ?, last_scheduled_match_date= ? ,formats= ? where tou_key = ? "
+const update_tournament = "update tournament set name = ? , short_name = ?, countries = ?, start_date = ? , gender= ? , point_system =?,competition =? , metric_group = ?, sport = ?  , is_date_confirmed = ?, is_venue_confirmed = ?, last_scheduled_match_date= ? ,formats= ?  , is_deleted = 1 where tou_key = ? "
 const update_tournaments = "update tournament set teams = ? , rounds = ? where tou_key = ? "
 const add_matches = "insert ignore into cricket_match(match_key,name,short_name,sub_title,status,start_at,tou_key,tou_name,tou_short_name,metric_group,sport,winner,team,venue,association,messages,gender,format) values ?"
 const detail_match = "update  cricket_match set toss = ?, play =?, players=?, notes = ?, data_review=?, squad = ?, estimated_end_date = ?, completed_date_approximate = ?, umpires=?, weather = ? where match_key = ?";

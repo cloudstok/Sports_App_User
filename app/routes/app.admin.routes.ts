@@ -1,4 +1,4 @@
-import { login, register } from "../core/validation/schema";
+import { login, match, register } from "../core/validation/schema";
 import { RoutingComponents } from "./routing-components";
 import { apiValidation } from "../core/validation/apiValidation";
 import { tokenController } from "../core/jwt/jsonwebtoken";
@@ -55,6 +55,15 @@ export class AdminAppRoutes {
         component: [
           //  this.tokenController.auth(["admin"]),
           routingComponents.add_countries.bind(routingComponents)
+        ]
+      },
+
+      {
+        path: "/admin/v1/teams/image",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          this.upload.array("docs", 1),
+          routingComponents.teamImage.bind(routingComponents)
         ]
       },
       {
@@ -147,7 +156,7 @@ export class AdminAppRoutes {
 
       },
       {
-        path: "/admin/v1/countriesImage",
+        path: "/admin/v1/update/teams/image",
         component: [
           //  this.tokenController.auth(["admin"]),
           this.upload.array("docs", 1),
@@ -198,6 +207,21 @@ export class AdminAppRoutes {
         ]
       },
       {
+        path: "/admin/v1/match/team/player",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.getTeamPlayer.bind(routingComponents)
+        ]
+      },
+
+      {
+        path: "/admin/v1/tournament/teams",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.tournamentTeams.bind(routingComponents)
+        ]
+      },
+      {
         path: "/admin/v1/getmatchbytournament/:tou_key",
         component: [
           //  this.tokenController.auth(["admin"]),
@@ -215,6 +239,7 @@ export class AdminAppRoutes {
         path: "/admin/v1/association_list",
         component: [
           //  this.tokenController.auth(["admin"]),
+          // this.apiValidation.validateQueryData(match),
           routingComponents.getAssociationList.bind(routingComponents)
         ]
       },

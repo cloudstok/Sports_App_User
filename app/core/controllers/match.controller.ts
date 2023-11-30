@@ -10,14 +10,14 @@ export class match extends ResponseInterceptor {
   }
   // up date live data 
   async update_live_match(data) {
-  // console.log(Object.keys(data))
-    await this.connection.write.query(detail_match, [ data.status, JSON.stringify(data.play), JSON.stringify(data.players), JSON.stringify(data.data_review), JSON.stringify(data.squad), data.estimated_end_date, data.completed_date_approximate, data.key])
+    // console.log(Object.keys(data))
+    await this.connection.write.query(detail_match, [data.status, JSON.stringify(data.play), JSON.stringify(data.players), JSON.stringify(data.data_review), JSON.stringify(data.squad), data.estimated_end_date, data.completed_date_approximate, data.key])
     return true
   }
 
-  async getMatchByTournament(req: any, res: any){
+  async getMatchByTournament(req: any, res: any) {
     const [data] = await this.connection.write.query('SELECT * from cricket_match where tou_key = ?', [req.params.tou_key])
-    this.sendSuccess(res, {data: data})
+    this.sendSuccess(res, { data: data })
   }
 
 
@@ -36,7 +36,7 @@ export class match extends ResponseInterceptor {
         }
         x.team.a.url = await this.imageURL(x.team?.a?.name) || process.env.country
         x.team.b.url = await this.imageURL(x.team?.b?.name) || process.env.country
-        x.start_at =x.start_at
+        x.start_at = x.start_at
         if (x.play) {
           play.live = x?.play?.live;
           play.result = x?.play?.result;
@@ -72,36 +72,41 @@ export class match extends ResponseInterceptor {
   async getMatchFxitures(req: any, res: any) {
     try {
       let { limit, offset, date } = req.query
-      //  console.log(limit, offset ,date  , req.query)
-      // let start_at = new Date(date + ' 00:00:01').toISOString()
-      // let end_at = new Date(date + ' 23:59:59').toISOString()
-      // start_at = start_at.replace("T", " ").slice(0, start_at.length - 5)
-      // end_at = end_at.replace("T", " ").slice(0, end_at.length - 5)
-      let sql_MatchFxitures = `select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, gender, format, toss, play, estimated_end_date, completed_date_approximate, tou_key, tou_name, tou_short_name from cricket_match  order by start_at desc ?`;
+
+      let sql_MatchFxitures = `select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, gender, format, toss, play, estimated_end_date, completed_date_approximate, tou_key, tou_name, tou_short_name from cricket_match  order by start_at desc `;
       let matchData = await this.getMatchData(sql_MatchFxitures);
-      if (matchData.length > 0) {
-        this.sendSuccess(res, { data: matchData })
+      let finalData = []
+      for (let x of matchData) {
+        let key = new Date(x?.start_at * 1000).toISOString().split('T')[0];
+        let matchObj = {
+          date: key,
+          matches: [x]
+        }
+        let keyCheck = finalData.find(e => e.date === key)
+        if (keyCheck) {
+          keyCheck.matches.push(x)
+        } else {
+          finalData.push(matchObj)
+        }
+      }
+      if (finalData.length > 0) {
+        this.sendSuccess(res, { data: finalData })
       }
     } catch (err) {
       console.error('error while getting fixtues data is:::', err)
       this.sendBadRequest(res, err)
     }
   }
+
+
   // modified data for  match data
   async get_match(req: any, res: any) {
     try {
       let { limit, offset } = req.query;
-      // let a = new Date()
-      // let b = new Date()
-      // let endDate = new Date(a.setDate(a.getDate() + 1)).toISOString()
-      // let startDate = new Date(b.setDate(b.getDate() - 2)).toISOString()
-      // startDate = startDate.replace("T", " ").slice(0, startDate.length - 5)
-      // endDate = endDate.replace("T", " ").slice(0, endDate.length - 5)
-      // let sql_get_match = `select * from cricket_match where tou_key in (SELECT tou_key FROM sport_app.tournament where last_scheduled_match_date >  current_date())  and start_at between '${startDate}' and '${endDate}' order by match_key desc limit ? offset ?`;
-      
- let sql_get_match = `select * from cricket_match  order by start_at desc limit ? offset ?`;
+
+      let sql_get_match = `select * from cricket_match where is_deleted = 1 order by start_at desc`;
       let tournament: any = await this.getMatchData(sql_get_match);
-      if (tournament.length > 0) {
+      if (tournament && tournament.length > 0) {
         return this.sendSuccess(res, { data: tournament })
       }
     }
@@ -115,7 +120,7 @@ export class match extends ResponseInterceptor {
 
   async get_match_tournament(req: any, res: any) {
     try {
-      let sql = "select match_key,name , short_name, sub_title,  start_at , status , metric_group , winner , gender , data_review , format, toss , format , venue,  team , squad, weather,   umpires ,  estimated_end_date , completed_date_approximate , association from cricket_match where tou_key = ?"
+      let sql = "select match_key,name , short_name, sub_title,  start_at , status , metric_group , winner , gender , data_review , format, toss , format , venue,  team , squad, weather,   umpires ,  estimated_end_date , completed_date_approximate , association from cricket_match where tou_key = ?  and is_deleted = 1"
       let [tournament]: any = await this.connection.write.query(sql, [req.query.tou_key]);
 
       for (let x of tournament) {
@@ -212,34 +217,34 @@ export class match extends ResponseInterceptor {
 
   async finddetailsby_match_key(req, res) {
     try {
-      let sql =`select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, venue, association, messages, gender, format, toss, play,  estimated_end_date, completed_date_approximate, umpires, weather, tou_key, tou_name, tou_short_name FROM cricket_match where match_key = ?`
-  let  [match] : any = await this.connection.write.query(sql , [req.query.match_key]) 
-   match  = match[0]
-   if(typeof match === 'object'){
-     if((Object.keys(match)).length > 0){
-      match.team.a.url = await this.imageURL(match.team?.a?.name) || process.env.country
-      match.team.b.url = await this.imageURL(match.team?.b?.name) || process.env.country
-     }
-   }else{
-    return this.sendBadRequest(res, 'Match data not found')
-   }
-  
-  return this.sendSuccess(res, { data: match })
+      let sql = `select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, venue, association, messages, gender, format, toss, play,  estimated_end_date, completed_date_approximate, umpires, weather, tou_key, tou_name, tou_short_name FROM cricket_match where match_key = ?`
+      let [match]: any = await this.connection.write.query(sql, [req.query.match_key])
+      match = match[0]
+      if (typeof match === 'object') {
+        if ((Object.keys(match)).length > 0) {
+          match.team.a.url = await this.imageURL(match.team?.a?.name) || process.env.country
+          match.team.b.url = await this.imageURL(match.team?.b?.name) || process.env.country
+        }
+      } else {
+        return this.sendBadRequest(res, 'Match data not found')
+      }
+
+      return this.sendSuccess(res, { data: match })
     } catch (err) {
       console.error(err);
     }
   }
 
-  async ActiveMatch(req: any, res: any){
-    try{
-      const {value , tou_key} = req.query  
-      await this.connection.write.query('UPDATE cricket_match SET is_active = ? WHERE tou_key = ?',[value , tou_key]);
-      if(+value){
-        return this.sendSuccess(res, {status: 'success', msg: "cricket_match Active successful"})
-      }else{
-        return this.sendSuccess(res, {status: 'success', msg: "cricket_match deActive successful"})
+  async ActiveMatch(req: any, res: any) {
+    try {
+      const { value, tou_key } = req.query
+      await this.connection.write.query('UPDATE cricket_match SET is_active = ? WHERE tou_key = ?', [value, tou_key]);
+      if (+value) {
+        return this.sendSuccess(res, { status: 'success', msg: "cricket_match Active successful" })
+      } else {
+        return this.sendSuccess(res, { status: 'success', msg: "cricket_match deActive successful" })
       }
-    }catch(err){
+    } catch (err) {
       // console.error(`Error while deleting tournament is::::`, err);
       return this.sendInternalError(res, 'Something went wrong with the request')
     }

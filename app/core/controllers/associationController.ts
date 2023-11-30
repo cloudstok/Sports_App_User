@@ -15,12 +15,13 @@ export class Association extends ResponseInterceptor {
     }
     async associationList(req, res) {
         try {
-            let [associationList] = await this.connection.write.query("Select * from associations where is_deleted = 0");
-            return res.send(associationList);
+          const {PageLimit , PageOffset} = req.query
+            let [associationList] = await this.connection.write.query("Select * from associations where is_deleted = 1 ");
+            return res.status(200).send(associationList );
 
         } catch (err) {
             console.log(`Err while getting assocation data is::`, err)
-            this.sendBadRequest(err)
+            this.sendBadRequest(res, err)
         }
     }
 

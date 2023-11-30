@@ -132,8 +132,14 @@ export class RoutingComponents {
   showReel(req: any, res: any) {
     this.reel.showReel(req, res)
   }
-  addUpdateReelStatus(req: any, res: any) {
-    this.reel.addUpdateReelStatus(req, res)
+  // addUpdateReelStatus(req: any, res: any) {
+  //   this.reel.addUpdateReelStatus(req, res)
+  // }
+  likeReel(req: any, res: any) {
+    this.reel.updateLikeReel(req, res)
+  }
+  commentReel(req: any, res: any) {
+    this.reel.updateCommentReel(req, res)
   }
   //--------------------News------------------------>
   // getNews(req:any, res: any){
@@ -142,6 +148,11 @@ export class RoutingComponents {
   getTeam(req: any, res: any) {
     this.teamController.get_team(req, res)
   }
+
+  teamImage(req: any, res: any) {
+    this.countries.addTeamImage(req, res)
+  }
+
   get_tournament(req: any, res: any) {
     this.tournament.get_tournament(req, res)
   }
@@ -179,6 +190,7 @@ export class RoutingComponents {
   getcommentory(req: any, res: any) {
     this.player.getcommentory(req, res)
   }
+
   getsocrecard(req: any, res: any) {
     this.player.getsocrecard(req, res)
   }
@@ -253,6 +265,11 @@ export class RoutingComponents {
   playerImage(req: any, res: any) {
     this.playerslist.addplayerImage(req, res)
   }
+  
+  getTeamPlayer(req: any, res: any) {
+    this.playerslist.getTeamPlayer(req, res)
+  }
+
   tournamentImage(req: any, res: any) {
     this.tournament.addImageTournament(req, res)
   }
@@ -309,6 +326,9 @@ export class RoutingComponents {
   }
   getTournamentByAss(req: any, res: any) {
     this.tournament.findTournamentByAss(req, res)
+  }
+  tournamentTeams(req: any, res: any) {
+    this.tournament.tournamentTeams(req, res)
   }
 
   getAssociationList(req: any, res: any) {

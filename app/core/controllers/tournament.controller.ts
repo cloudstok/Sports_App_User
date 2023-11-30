@@ -26,7 +26,18 @@ export class tournament extends ResponseInterceptor {
 
   async findTournamentbyAssKey(PageLimit, PageOffset, ass_key) {
     try {
-      let [allTournament] = await this.connection.write.query('SELECT * FROM tournament where association_key = ? and is_deleted = 0  limit ? offset ?', [ass_key, +PageLimit, +PageOffset]);
+      let [allTournament] :any= await this.connection.write.query('SELECT * FROM tournament where association_key = ? and is_deleted = 1  limit ? offset ?', [ass_key, +PageLimit, +PageOffset]);
+
+      for(let x of allTournament){
+        if(new Date(x.start_date*1000) <= new Date() && new Date(x.last_scheduled_match_date*1000) >= new Date()){
+          x.is_end = true
+          console.log(true)
+      }else{
+        x.is_end = false
+          console.log(false)
+      } 
+
+      }
       return allTournament
     } catch (err) {
       console.log(`Err while getting data from DB is::`, err)
@@ -78,7 +89,6 @@ export class tournament extends ResponseInterceptor {
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
-
   async addImageTournament(req: any, res: any) {
     try {
       let url = '';
@@ -87,7 +97,7 @@ export class tournament extends ResponseInterceptor {
         url = imageUrl.Location
         console.log(url)
       }
-      console.log(url, req.query.tou_key)
+      // console.log(url, req.query.tou_key)
       const sql = "UPDATE tournament SET imgURl = ?  where tou_key = ?"
       await this.connection.write.query(sql, [url, req.query.tou_key])
       this.sendSuccess(res, { status: true, msg: ' image uploaded  successfully' })
@@ -101,7 +111,7 @@ export class tournament extends ResponseInterceptor {
   async get_tournament(req: any, res: any) {
     try {
       // let sql = "select  * from tournament where last_scheduled_match_date >=  current_date() order by tou_key desc"
-      let sql = "SELECT * FROM sport_app.tournament where is_deleted = 0 order by last_scheduled_match_date DESC;"
+      let sql = "SELECT * FROM tournament where is_deleted = 1  and is_Active = 1 order by last_scheduled_match_date DESC"
       let [tournament] = await this.connection.write.query(sql);
       return this.sendSuccess(res, { data: tournament })
     }
@@ -178,8 +188,11 @@ export class tournament extends ResponseInterceptor {
 
   async deleteTournamentById(req: any, res: any){
     try{
-      await this.connection.write.query(`UPDATE tournament SET is_deleted = 1 WHERE tou_key = '${req.params.tou_key}'`);
-      return this.sendSuccess(res, {status: 'success', msg: "Tournament deleted successful"})
+      await this.connection.write.query(`UPDATE tournament SET is_deleted = 0 WHERE tou_key = '${req.params.tou_key}'`);
+
+      await this.connection.write.query(`  UPDATE cricket_match SET is_deleted = 0 WHERE tou_key = '${req.params.tou_key}'`);
+
+      return this.sendSuccess(res, {status: 'success', msg: "Tournament & match deleted successful"})
       
     }catch(err){
       console.error(`Error while deleting tournament is::::`, err);
@@ -191,12 +204,12 @@ export class tournament extends ResponseInterceptor {
   async ActiveTournament(req: any, res: any){
     try{
       const {value , tou_key} = req.query 
-      console.log(value, tou_key) 
-      await this.connection.write.query(`UPDATE tournament SET is_Active = ${value} WHERE tou_key = ${tou_key}`);
+      // console.log(value, tou_key) 
+      await this.connection.write.query(`UPDATE tournament SET is_Active = ${value} WHERE tou_key = '${tou_key}'`);
       if(+value){
         return this.sendSuccess(res, {status: 'success', msg: "Tournament Active successful"})
       }else{
-        return this.sendSuccess(res, {status: 'success', msg: "Tournament deActive successful"})
+        return this.sendSuccess(res, {status: 'success', msg: "Tournament Deactive successful"})
       }
     }catch(err){
       console.error(`Error while deleting tournament is::::`, err);
@@ -236,11 +249,17 @@ export class tournament extends ResponseInterceptor {
             tournamentPoints: element?.tou_points ?? "",
           };
           // console.log(element.tou_points)
-        if (finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
-          for (let e of finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
-            e.team.url = await this.imageURL(e?.team?.code) || process.env.country
-          }
-        }
+        // if (finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
+        //   console.log(finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points)
+        //   for (let e of finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
+        //     // console.log(e)
+        //     let url = await this.imageURL(e?.team?.code) || process.env.country || "vishal"
+        //     e.team.url = url
+        //       // delete e.team
+         
+        //   }
+        // }
+        // console.log(finalData['teamsDetails']['tournamentPoints'][0]?.groups[0].points)
 
         for(let x of finalData['teamsDetails']['tournamentPoints']){
             if(x.tournament_round.name === 'Knockout'){
@@ -298,7 +317,12 @@ export class tournament extends ResponseInterceptor {
         finalData['teamsDetails']['teams'] = team
       }
       finalData['teamsDetails'] ? finalData['teamsDetails']['matches'] = matchData : {}
-
+       if (finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
+          for (let e of finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
+            let url = await this.imageURL(e?.team?.code) || process.env.country || "vishal"
+            e.team.url = url         
+          }
+        }
       return this.sendSuccess(res, { data: finalData })
     }
     catch (err) {
@@ -307,6 +331,29 @@ export class tournament extends ResponseInterceptor {
     }
   }
 
+
+async tournamentTeams(req :any , res : any){
+  try{
+    const sql = "SELECT teams FROM tournament where tou_key = ?  and is_deleted = ?"
+   
+    let [team] :any = await this.connection.write.query(sql , [req.query.tou_key , 1])
+
+  team = team[0].teams
+    if(team != null){
+      team = Object.values(team)
+      for(let x of team){
+
+        x.imageURL = await this.imageURL(x.code)
+      }
+    }
+   
+    return this.sendSuccess(res, { data: team })
+
+  }catch(err){
+    console.error(`Error while deleting tournament is::::`, err);
+      return this.sendInternalError(res, 'Something went wrong with the request')
+  }
+}
 
 }
 

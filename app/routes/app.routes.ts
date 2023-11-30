@@ -77,16 +77,37 @@ export class AppRoutes {
           routingComponents.addThemes.bind(routingComponents)
         ]
       },
+      // {
+      //   path: "/user/v1/addUpdateReelStatus/:reel_id",
+      //   component: [
+      //     // this.tokenController.verifyToken,
+      //     this.tokenController.auth(["user"]),
+      //     this.apiValidation.validateBodyData(reelsUpdateBody),
+      //     this.apiValidation.validateParamsData(reelsUpdateParams),
+      //     routingComponents.addUpdateReelStatus.bind(routingComponents)
+      //   ]
+      // },
       {
-        path: "/user/v1/addUpdateReelStatus/:reel_id",
+        path: "/user/v1/reel/like",
         component: [
           // this.tokenController.verifyToken,
           this.tokenController.auth(["user"]),
-          this.apiValidation.validateBodyData(reelsUpdateBody),
-          this.apiValidation.validateParamsData(reelsUpdateParams),
-          routingComponents.addUpdateReelStatus.bind(routingComponents)
+          // this.apiValidation.validateBodyData(reelsUpdateBody),
+          // this.apiValidation.validateParamsData(reelsUpdateParams),
+          routingComponents.likeReel.bind(routingComponents)
         ]
       },
+      {
+        path: "/user/v1/reel/comment",
+        component: [
+          // this.tokenController.verifyToken,
+          this.tokenController.auth(["user"]),
+          // this.apiValidation.validateBodyData(reelsUpdateBody),
+          // this.apiValidation.validateParamsData(reelsUpdateParams),
+          routingComponents.commentReel.bind(routingComponents)
+        ]
+      },
+
 
 
       // 404

@@ -3,6 +3,7 @@ import { connection } from '../../config/dbConf';
 import { uploads3 } from '../../core/aws/uploads3';
 // import { SQL_ADD_REELS, SQL_SHOW_REELS } from '../query/query';
 import { SQL_ADD_REELS, SQL_SHOW_NEWS, SQL_SHOW_REELS, SQL_UPDATE_REALS } from '../query/query';
+import { count } from 'console';
 
 
 export class reel extends ResponseInterceptor {
@@ -36,29 +37,19 @@ export class reel extends ResponseInterceptor {
             let { PageLimit, PageOffset } = req.query
             let userId = res.locals.auth.user?.user_id
             const [showsReel]: any = await this.connection.write.query(SQL_SHOW_REELS, [+PageLimit, +PageOffset]);
-
-            for (let x of showsReel) {
-                x.likeCount = 0
-                x.dislikeCount = 0
-                x.commentCount = 0
-                x.currentStatus = {}
-                if (x.meta_data !== null && Array.isArray(x.meta_data)) {
-                    for (let y of x.meta_data) {
-                        if (y.status && y.status === "like") {
-                            x.like += 1;
-                        }
-                        if (y.status && y.status === "dislike") {
-                            x.like += 1;
-                        }
-                        if (y.comments && y.comments.length > 0) {
-                            x.commentCount += y.comments.length
-                        }
-                        if (y.userId == userId) {
-                            x.currentStatus = y
-                        }
-                    }
-                }
-
+            for(let x of showsReel){
+                 if(x?.like_data){
+                    x.likeCount = (x?.like_data?.filter(e=>e.status === "like")).length
+                 }else{
+                    x.likeCount = 0
+                 }
+                 if(x.comments_data){
+                    x.commentount = x?.comments_data?.length
+                 }else{
+                    x.commentount = 0
+                 }
+                 delete x.like_data
+                 delete x.comments_data
             }
             return this.sendSuccess(res, { data: showsReel })
         }
@@ -67,34 +58,82 @@ export class reel extends ResponseInterceptor {
         }
     }
 
-
-
-
-    async addUpdateReelStatus(req: any, res: any) {
+    async updateLikeReel(req: any, res: any) {
         try {
-            const { reel_id } = req.params;
-            const { meta_data } = req.body;
-            let userId = res.locals.auth.user?.user_id
-            meta_data.userId = userId
-            let data = await this.findMetaData(reel_id);
-            if (data.meta_data === null) {
-                data.meta_data = [meta_data]
-            } else {
-                let check = data.meta_data.findIndex(e => e.userId === userId)
-                if (check !== -1) {
-                    data.meta_data[check] = meta_data
-                } else {
-                    data.meta_data.push(meta_data)
+            const { status, reel_id , user_id } = req.query
+            const reel = "SELECT like_data FROM sport_app.reels where reel_id = ?"
+            const updateReeel = "update reels set like_data  = ? where reel_id = ?"
+            const [showsReel] = await this.connection.read.query(reel, [+reel_id]);
+            let likeCount = 0;
+            let disLikeCount = 0;
+            if(showsReel[0]?.like_data){
+                for(let x of showsReel[0].like_data){
+                    if(x.status === "like"){
+                        likeCount++
+                    }
+                    if(x.status === "dislike"){
+                        disLikeCount++
+                    }
                 }
             }
-            await this.updateMetaData({ "meta_data": JSON.stringify(data.meta_data) }, reel_id);
-            return this.sendSuccess(res, { message: `${meta_data.status} updated successfully`, data: meta_data })
+            delete req.query.reel_id
+            if(showsReel[0].like_data === null){
+                req.query.like_id = 1
+                if(status === 'like'){
+                    likeCount++
+                }
+                if(status === 'dislike'){
+                    disLikeCount++
+                }
+               await this.connection.read.query(updateReeel, [JSON.stringify([req.query]) , +reel_id]);  
+            }else{
+                let dataLike = showsReel[0].like_data.find(e=>e.user_id===user_id)
+                if(dataLike){
+                    if(dataLike.status !== status){
+                        status === "like" ? likeCount++ : likeCount--;
+                        status === 'dislike' ? disLikeCount++ : disLikeCount--;
+                    }
+                    Object.assign(dataLike, req.query)
+                    await this.connection.read.query(updateReeel, [JSON.stringify(showsReel[0].like_data) , +reel_id]); 
+                }else{
+                    req.query.like_id =  showsReel[0].like_data.length + 1
+                    showsReel[0].like_data.push(req.query)
+                    status === "like" ? likeCount++ : likeCount;
+                    status === "dislike" ? disLikeCount++ : disLikeCount;
+                    await this.connection.read.query(updateReeel, [JSON.stringify(showsReel[0].like_data), +reel_id]);  
+                }
+            }
+            
+            return this.sendSuccess(res, {  likeCount, disLikeCount })
         }
         catch (err) {
+            console.log(err)
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
-
+// comment reeel
+    async updateCommentReel(req: any, res: any) {
+        try {
+            const { comment, reel_id , user_id } = req.query
+            const reel = "SELECT comments_data FROM sport_app.reels where reel_id = ?"
+            const updateReeel = "update reels set comments_data  = ? where reel_id = ?"
+            const [showsReel] = await this.connection.read.query(reel, [+reel_id]);
+            delete req.query.reel_id
+            if(showsReel[0].comments_data === null){
+                req.query.like_id = 1
+               await this.connection.read.query(updateReeel, [JSON.stringify([req.query]) , +reel_id]);  
+            }else{
+                    req.query.like_id =  showsReel[0].comments_data.length + 1
+                    showsReel[0].comments_data.push(req.query)
+                    await this.connection.read.query(updateReeel, [JSON.stringify(showsReel[0].comments_data), +reel_id]);    
+            }
+            return this.sendSuccess(res, { showsReel})
+        }
+        catch (err) {
+            console.log(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+        }
+    }
 
     // -----------admin----------------------
     async addReel(req: any, res: any) {
@@ -117,7 +156,21 @@ export class reel extends ResponseInterceptor {
     async showReels(req: any, res: any) {
         try {
             const { PageLimit, PageOffset } = req.query
-            const [showsReel] = await this.connection.read.query(SQL_SHOW_REELS, [+PageLimit, +PageOffset]);
+            const [showsReel] : any = await this.connection.read.query(SQL_SHOW_REELS, [+PageLimit, +PageOffset]);
+            for(let x of showsReel){
+                if(x?.like_data){
+                   x.likeCount = (x?.like_data?.filter(e=>e.status === "like")).length
+                }else{
+                   x.likeCount = 0
+                }
+                if(x.comments_data){
+                   x.commentount = x?.comments_data?.length
+                }else{
+                   x.commentount = 0
+                }
+                delete x.like_data
+                delete x.comments_data
+           }
             return this.sendSuccess(res, { data: showsReel })
         }
         catch (err) {
@@ -139,5 +192,8 @@ export class reel extends ResponseInterceptor {
     }
 
     
+
+
+
 
 }
