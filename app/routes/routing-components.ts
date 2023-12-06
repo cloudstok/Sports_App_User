@@ -25,6 +25,7 @@ import { countries } from "../core/controllers/countries";
 // import { tournament } from "../core/controllers/tournament.controller";
 import { players } from "../core/controllers/playerController";
 // import {user} from '../core/controllers/userController'
+import { subscribe } from "../core/controllers/subscribe";
 export class RoutingComponents {
   responseInterceptor: ResponseInterceptor;
   test: TestController
@@ -46,6 +47,7 @@ export class RoutingComponents {
   API_TO_INTEGRATE: API_TO_INTEGRATE
   countries: countries
   association: Association;
+  subscribe: subscribe;
   constructor() {
     this.responseInterceptor = new ResponseInterceptor();
     this.test = new TestController();
@@ -71,6 +73,7 @@ export class RoutingComponents {
     this.playerslist = new players();
     this.user = new user();
     this.association = new Association();
+    this.subscribe = new subscribe();
   }
 
   /**
@@ -183,6 +186,9 @@ export class RoutingComponents {
   get_stats(req: any, res: any) {
     this.stats.get_stats(req, res)
   }
+  get_association_stats(req: any, res: any) {
+    this.stats.get_association_stats(req, res)
+  }
 
   get_match_tournament(req: any, res: any) {
     this.match.get_match_tournament(req, res)
@@ -253,6 +259,9 @@ export class RoutingComponents {
   getMatchByTournament(req: any, res: any) {
     this.match.getMatchByTournament(req, res)
   }
+  subscribeMatch(req: any, res: any) {
+    this.subscribe.subscribeMatches(req, res)
+  }
   add_venues(req: any, res: any) {
     this.static_data.add_venues(req, res)
   }
@@ -266,9 +275,9 @@ export class RoutingComponents {
     this.playerslist.addplayerImage(req, res)
   }
   
-  getTeamPlayer(req: any, res: any) {
-    this.playerslist.getTeamPlayer(req, res)
-  }
+  // getTeamPlayer(req: any, res: any) {
+  //   this.playerslist.getTeamPlayer(req, res)
+  // }
 
   tournamentImage(req: any, res: any) {
     this.tournament.addImageTournament(req, res)
@@ -288,6 +297,9 @@ export class RoutingComponents {
   tournament_point(req: any, res: any) {
     this.API_TO_INTEGRATE.tournaments_point_table(req, res)
   }
+  get_association_player_stats(req: any, res: any) {
+    this.API_TO_INTEGRATE.get_association_player_stats(req, res)
+  }
   add_matches(req: any, res: any) {
     this.API_TO_INTEGRATE.add_matches(req, res)
   }
@@ -303,6 +315,7 @@ export class RoutingComponents {
   table(req: any, res: any) {
     this.API_TO_INTEGRATE.table(req, res)
   }
+  
   //<---------------reels---------------->
 
   addReel(req: any, res: any) {

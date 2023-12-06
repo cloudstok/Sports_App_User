@@ -1,17 +1,23 @@
 
 import { appConfig } from "../../../config/appConf";
-import axios from "axios";
+import axios, { all } from "axios";
 import tournamentDetail from "interfaces/apiRequest/tournamentDetailsInterface";
 import FeaturedTournaments from "interfaces/apiRequest/featured_tournamentInterface";
 import association from "interfaces/apiRequest/associationInterface";
 import countries from "interfaces/apiRequest/countriesInterface";
 import liveMatchOdd from "interfaces/apiRequest/liveMatchOddInterface";
 import statsInterface from "interfaces/apiRequest/statsInterface";
+import { RedisOperations } from '../../redis/redis'
+import { json } from "stream/consumers";
+import { promiseHooks } from "v8";
+const redis = new RedisOperations()
+
 
 let options = {
   'method': 'GET',
   'url': "",
   'headers': {
+   
     'rs-token': appConfig.RS_TOKEN,
     'Content-Type': 'application/json'
   },
@@ -20,6 +26,9 @@ let options = {
   })
 
 };
+
+ 
+
 export class cricketApi {
   //========================================  Association Endpoints ==================================
   //  async fetchDataFromSource(option){
@@ -34,6 +43,8 @@ export class cricketApi {
 
   async fetchDataFromSource(option) {
     try {
+      options.headers['rs-token'] = JSON.parse(await redis.getRedis("token")).token
+      console.log(option.headers)
       return new Promise((resolve, reject) => {
         axios(option).then(response => {
           resolve(response.data)
@@ -256,9 +267,11 @@ export class cricketApi {
   }
 
 
-  async get_association_player_stats(associationKey, playerKey, competition) {
+  async get_association_player_stats(associationKey, playerKey) {
     try {
-      options.url = `https://api.sports.roanuz.com/v5/cricket/${appConfig.PROJECT_KEY}/association/${associationKey}/player/${playerKey}/stats/?competition=${competition}`;
+      options.url =`https://api.sports.roanuz.com/v5/cricket/${appConfig.PROJECT_KEY}/association/${associationKey}/player/${playerKey}/stats/`
+      //`https://api.sports.roanuz.com/v5/cricket/${appConfig.PROJECT_KEY}/association/${associationKey}/player/${playerKey}/stats/`;
+      
       return await this.fetchDataFromSource(options)
     } catch (err) {
       console.error(err)

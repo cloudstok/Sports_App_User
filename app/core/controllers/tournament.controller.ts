@@ -31,10 +31,10 @@ export class tournament extends ResponseInterceptor {
       for(let x of allTournament){
         if(new Date(x.start_date*1000) <= new Date() && new Date(x.last_scheduled_match_date*1000) >= new Date()){
           x.is_end = true
-          console.log(true)
+       //   console.log(true)
       }else{
         x.is_end = false
-          console.log(false)
+//console.log(false)
       } 
 
       }
@@ -95,7 +95,7 @@ export class tournament extends ResponseInterceptor {
       if (req.files && req.files.length > 0) {
         let imageUrl = await this.uploads3.uploadImage(req.files)
         url = imageUrl.Location
-        console.log(url)
+       // console.log(url)
       }
       // console.log(url, req.query.tou_key)
       const sql = "UPDATE tournament SET imgURl = ?  where tou_key = ?"
@@ -206,6 +206,7 @@ export class tournament extends ResponseInterceptor {
       const {value , tou_key} = req.query 
       // console.log(value, tou_key) 
       await this.connection.write.query(`UPDATE tournament SET is_Active = ${value} WHERE tou_key = '${tou_key}'`);
+      await this.connection.write.query(`  UPDATE cricket_match SET is_Active = ${value} WHERE tou_key = '${tou_key}'`);
       if(+value){
         return this.sendSuccess(res, {status: 'success', msg: "Tournament Active successful"})
       }else{

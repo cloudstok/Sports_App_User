@@ -225,6 +225,13 @@ export class AppRoutes {
         ]
       },
       {
+        path: "/user/v1/association/stats",
+        component: [
+          //  this.tokenController.auth(["user"]),
+          routingComponents.get_association_stats.bind(routingComponents)
+        ]
+      },
+      {
         path: "/user/v1/get_stats",
         component: [
           //  this.tokenController.auth(["user"]),

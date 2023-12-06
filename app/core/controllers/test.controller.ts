@@ -22,7 +22,7 @@ export class TestController extends ResponseInterceptor {
       this.connection.write.query("insert into logs (body,query,header) values (?,?,?)", [JSON.stringify(req.body), JSON.stringify(req.query), JSON.stringify(req.headers)])
       let data = req?.body?.data
       let last_ball_key
-      if(data.play.live){
+      if(data?.play?.live){
         last_ball_key = data?.play?.related_balls[data?.play?.live?.last_ball_key]
       }
       
@@ -30,7 +30,14 @@ export class TestController extends ResponseInterceptor {
       // ====================  for score commentory 
       let player_Data =[{play : data.play , players : data.players ,team : data.teams, squad: data.squad}]
       // console.log(data.teams)
-        let   player = await  this.playerController.socrcard(player_Data)
+      let player
+      // console.log(data.format , "gggg")
+      if(data.format !== "test"){
+         player = await  this.playerController.socrcard(player_Data)
+      }else{
+         player = await this.playerController.testmatchsocrcard(player_Data)
+      }
+    
 
         let commentaryData = {}
         commentaryData['commentory'] = Object.values(data?.play?.related_balls);

@@ -19,11 +19,11 @@ export class countries extends ResponseInterceptor {
         let imageUrl = await this.uploads3.uploadImage(req.files)
         url = imageUrl.Location
       }
-       console.log(url , "image")
+      // console.log(url , "image")
 
       const sql = "UPDATE  countries SET imgURl = ?  where code = ?"
         let data =  await this.connection.write.query(sql, [url, req.query.code])
-        console.log(data)
+//console.log(data)
       this.sendSuccess(res, { status: true, msg: ' image uploaded  successfully' })
     } catch (err) {
       console.error(err)
@@ -37,7 +37,7 @@ async addTeamImage(req:any , res :any){
     let url = '';
     if (req.files && req.files.length > 0) {
       let imageUrl = await this.uploads3.uploadImage(req.files)
-      console.log(imageUrl)
+   //   console.log(imageUrl)
       url = imageUrl.Location
     }
     //  console.log(url , "image")

@@ -44,6 +44,13 @@ export class AdminAppRoutes {
         ]
       },
       {
+        path: "/admin/v1/association/player/stats",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.get_association_player_stats.bind(routingComponents)
+        ]
+      },
+      {
         path: "/admin/v1/add_venues",
         component: [
           //  this.tokenController.auth(["admin"]),
@@ -206,13 +213,13 @@ export class AdminAppRoutes {
           routingComponents.get_tournament.bind(routingComponents)
         ]
       },
-      {
-        path: "/admin/v1/match/team/player",
-        component: [
-          //  this.tokenController.auth(["admin"]),
-          routingComponents.getTeamPlayer.bind(routingComponents)
-        ]
-      },
+      // {
+      //   path: "/admin/v1/match/team/player",
+      //   component: [
+      //     //  this.tokenController.auth(["admin"]),
+      //     routingComponents.getTeamPlayer.bind(routingComponents)
+      //   ]
+      // },
 
       {
         path: "/admin/v1/tournament/teams",
@@ -226,6 +233,13 @@ export class AdminAppRoutes {
         component: [
           //  this.tokenController.auth(["admin"]),
           routingComponents.getMatchByTournament.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/admin/v1/subscribe/match/:match_key",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.subscribeMatch.bind(routingComponents)
         ]
       },
       {
@@ -376,6 +390,7 @@ export class AdminAppRoutes {
         path: "/admin/v1/updateNews/:news_id",
         component: [
           //  this.tokenController.auth(["admin"]),
+          this.upload.array("docs", 1),
           routingComponents.updateNews.bind(routingComponents)
         ]
       }

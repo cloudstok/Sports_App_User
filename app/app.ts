@@ -6,6 +6,8 @@ import { ResponseInterceptor } from "./core/utilities/response-interceptor"
 import { io, firstSUb } from './core/socket/socket';
 import { cronJob} from './core/controllers/node-cron';
 import * as cors from 'cors';
+import { token } from "./core/controllers/genrateToken";
+
 var getRawBody = require('raw-body');
 var zlib = require('zlib');
 
@@ -15,18 +17,23 @@ class App {
     responseInterceptor: ResponseInterceptor;
     public cron: cronJob
 
-
+     token : token
     constructor() {
         this.app = express();
         this.config();
         this.cron = new cronJob()
+        this.token = new token
         this.responseInterceptor = new ResponseInterceptor();
         this.app.listen(this.PORT, () => {
             console.log(`server listening @ port ${appConfig.server.port} `);
+
         });
         const admin_appRoutes = new AdminAppRoutes();
         const appRoutes = new AppRoutes();
-        // this.cron.cron()
+        // this.cron.genrateToken()
+
+      // this.token.genrateToken()
+
 
 
         let AllGetRoutes = [...admin_appRoutes.AppGetRoutes, ...appRoutes.AppGetRoutes]
@@ -59,14 +66,14 @@ class App {
             console.log('socket connected');
             socket.on("sub", async (...ev) => {
                 await socket.join(ev);
-                console.log(ev, socket.id, typeof ev[0],)
+             //   console.log(ev, socket.id, typeof ev[0],)
                 await firstSUb(socket.id, ev)
             })
         });
     }
 
     private config(): void {
-        this.app.use(express.json());
+        this.app.use(express.json({ limit: "50mb"}));
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cors());
         // this.app.use(initSocket());

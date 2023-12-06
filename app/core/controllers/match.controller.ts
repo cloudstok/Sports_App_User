@@ -1,12 +1,18 @@
 
 import { connection } from "../../config/dbConf";
+import { countries } from './countries'
+import { players } from "./playerController";
 import { ResponseInterceptor } from "../utilities/response-interceptor";
 const detail_match = "update  cricket_match set status = ?, play =?, players=?, data_review=?, squad = ?, estimated_end_date = ?, completed_date_approximate = ? where match_key = ?";
 export class match extends ResponseInterceptor {
   connection: connection
+  countries: countries
+  players : players
   constructor() {
     super()
     this.connection = new connection()
+    this.countries = new countries()
+    this.players = new players()
   }
   // up date live data 
   async update_live_match(data) {
@@ -16,11 +22,51 @@ export class match extends ResponseInterceptor {
   }
 
   async getMatchByTournament(req: any, res: any) {
-    const [data] = await this.connection.write.query('SELECT * from cricket_match where tou_key = ?', [req.params.tou_key])
+    const [data]:any = await this.connection.write.query('SELECT match_key ,   team, squad , name, is_subscribe ,short_name, sub_title, status, start_at ,is_deleted,is_Active , tou_key from cricket_match where tou_key = ?', [req.params.tou_key])
+    for(let x of data){
+    // console.log( x.match_key)
+     x.teams  = await this.getTeamPlayer(x.team , x.squad)
+     delete x.team;
+     delete x.squad
+      let start_at = new Date(x.start_at*1000)
+      let current_Date = new Date()
+      let afterDate = new Date(new Date().setHours(new Date().getHours() + 8))
+
+      if(current_Date <= start_at && afterDate >= start_at){
+        x.in_Houre = true
+      //  console.log(true)
+      }else{
+       x.in_Houre = false
+      }
+      // console.log(start_at , current_Date , afterDate)
+    }
     this.sendSuccess(res, { data: data })
   }
 
+  
 
+  async getTeamPlayer(team , squad) {
+    try {
+        team.a.url = await this.countries.teamImageURL(team.a.code)
+        team.b.url = await this.countries.teamImageURL(team.b.code)
+       if(squad){
+        if (squad.a.playing_xi) {
+          team.a.player = await this.players.getPlayer(squad.a.playing_xi)
+          team.b.player = await this.players.getPlayer(squad.b.playing_xi)
+          delete squad.a.player_keys
+          delete squad.b.player_keys
+        } else {
+          team.a.player = await this.players.getPlayer(squad.a.player_keys)
+          team.b.player = await this.players.getPlayer(squad.b.player_keys)
+        }
+      }
+      team = Object.values(team)
+      return team
+    } catch (err) {
+      console.error(`Error while Find Team Player is::::`, err);
+     return false
+    }
+  }
 
 
 
@@ -100,11 +146,12 @@ export class match extends ResponseInterceptor {
 
 
   // modified data for  match data
+
   async get_match(req: any, res: any) {
     try {
       let { limit, offset } = req.query;
 
-      let sql_get_match = `select * from cricket_match where is_deleted = 1 order by start_at desc`;
+      let sql_get_match = `select * from cricket_match where is_deleted = 1 and is_Active = 1 order by start_at desc`;
       let tournament: any = await this.getMatchData(sql_get_match);
       if (tournament && tournament.length > 0) {
         return this.sendSuccess(res, { data: tournament })

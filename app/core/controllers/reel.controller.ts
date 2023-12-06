@@ -184,7 +184,7 @@ export class reel extends ResponseInterceptor {
         try {
             const [showsReel] = await this.connection.read.query("UPDATE reels SET is_deleted = 1 WHERE reel_id = ?"
             , [req.query.reel_id]);
-            return this.sendSuccess(res, { data: showsReel })
+            return this.sendSuccess(res, {   data: "delete Reel successfully" })
         }
         catch (err) {
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)

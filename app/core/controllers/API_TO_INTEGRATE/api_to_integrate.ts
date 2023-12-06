@@ -44,7 +44,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
           ])
         }
       }
-      console.log(updateDate.length, "updateDate", finalData.length, "finalData")
+   //   console.log(updateDate.length, "updateDate", finalData.length, "finalData")
       if (updateDate.length > 0) {
         for (let x of updateDate) {
           await this.connection.write.query(update_tournament, x)
@@ -181,6 +181,34 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
       this.sendSuccess(res, { status: true, msg: "Fantasy points data inserted successfully" });
     } catch (err) {
       console.error(err)
+      this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+    }
+  }
+
+
+
+  async get_association_player_stats(req ,res){
+    try{
+      const {ass_key , player_key , competition} = req.query
+      let associatino_stats : any = await this.cricketapi.get_association_player_stats(ass_key , player_key)
+      let {stats , player , recent_teams} = associatino_stats.data
+      let formet = Object.keys(stats)
+      let {key ,code ,name} :any = Object.values(recent_teams)[0]
+
+      let finaledata =[]
+      for(let x of formet){
+       finaledata.push(Object.assign({"formet" : x} ,stats[x]))
+      }
+      const add_sql = "INSERT INTO `association_stats`(`ass_key`, `player_key`, `player_name`, `team_key`, `team_name`, `team_code`, `stats`) VALUES (?,?,?,?,?,?,?)"
+         let [check] : any = await this.connection.write.query("SELECT * FROM association_stats where ass_key = ? and player_key =?" , [ass_key , player_key]) 
+         if(!check[0]){
+          await this.connection.write.query(add_sql , [ass_key , player_key , player.name , key , code ,name  , JSON.stringify(finaledata)])
+          this.sendSuccess(res, { status: true, msg: "add association status" });
+         }else{
+          this.sendSuccess(res, { status: true, msg: "already exist association status" });
+         }
+  }catch(err){
+      console.log(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }

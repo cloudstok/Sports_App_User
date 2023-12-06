@@ -3,6 +3,7 @@ import { connection } from "../../config/dbConf";
 import { cricketApi } from "./thirdPartyApi/thirdPartyApi";
 import { uploads3 } from "../aws/uploads3";
 import { countries } from './countries'
+
 const vinay = "https://jaunpur123.s3.ap-south-1.amazonaws.com/1697093979829_vinay.jpeg"
 
 export class players extends ResponseInterceptor {
@@ -91,8 +92,6 @@ export class players extends ResponseInterceptor {
         await this.connection.write.query(sql_addStats, [d])
       }
 
-
-
       this.sendSuccess(res, { message: "Player Stats inserted successfully" })
     } catch (err) {
       console.error(err)
@@ -119,7 +118,7 @@ export class players extends ResponseInterceptor {
         let imageUrl = await this.uploads3.uploadImage(req.files)
         url = imageUrl.Location
       }
-      const sql = "UPDATE  players SET image = ?  where player_name = ?"
+      const sql = "UPDATE  players SET image = ?  where player_key = ?"
       await this.connection.write.query(sql, [url, req.query.p_key])
       this.sendSuccess(res, { status: true, msg: ' image uploaded  successfully ' })
     } catch (err) {
@@ -140,33 +139,33 @@ export class players extends ResponseInterceptor {
 
   }
 
-  async getTeamPlayer(req: any, res: any) {
-    try {
-      const sql = "select team, squad from cricket_match where match_key = ? "
-      let [player]: any = await this.connection.write.query(sql, [req.query.match_key])
-      for (let x of player) {
-        x.team.a.url = await this.countries.teamImageURL(x.team.a.code)
-        x.team.b.url = await this.countries.teamImageURL(x.team.b.code)
-        if (x.squad.a.playing_xi) {
-          x.team.a.player = await this.getPlayer(x.squad.a.playing_xi)
-          x.team.b.player = await this.getPlayer(x.squad.b.playing_xi)
-          delete x.squad.a.player_keys
-          delete x.squad.b.player_keys
-        } else {
-          x.team.a.player = await this.getPlayer(x.squad.a.player_keys)
-          x.team.b.player = await this.getPlayer(x.squad.b.player_keys)
-        }
-        delete x.squad
-      }
-      // console.log(player)
-      player = Object.values(player[0]?.team)
+  // async getTeamPlayer(req: any, res: any) {
+  //   try {
+  //     const sql = "select team, squad from cricket_match where match_key = ? "
+  //     let [player]: any = await this.connection.write.query(sql, [req.query.match_key])
+  //     for (let x of player) {
+  //       x.team.a.url = await this.countries.teamImageURL(x.team.a.code)
+  //       x.team.b.url = await this.countries.teamImageURL(x.team.b.code)
+  //       if (x.squad.a.playing_xi) {
+  //         x.team.a.player = await this.getPlayer(x.squad.a.playing_xi)
+  //         x.team.b.player = await this.getPlayer(x.squad.b.playing_xi)
+  //         delete x.squad.a.player_keys
+  //         delete x.squad.b.player_keys
+  //       } else {
+  //         x.team.a.player = await this.getPlayer(x.squad.a.player_keys)
+  //         x.team.b.player = await this.getPlayer(x.squad.b.player_keys)
+  //       }
+  //       delete x.squad
+  //     }
+  //     // console.log(player)
+  //     player = Object.values(player[0]?.team)
 
-      return this.sendSuccess(res, { data: player })
-    } catch (err) {
-      console.error(`Error while Find Team Player is::::`, err);
-      return this.sendInternalError(res, 'Something went wrong with the request')
-    }
-  }
+  //     return this.sendSuccess(res, { data: player })
+  //   } catch (err) {
+  //     console.error(`Error while Find Team Player is::::`, err);
+  //     return this.sendInternalError(res, 'Something went wrong with the request')
+  //   }
+  // }
 
 }
 

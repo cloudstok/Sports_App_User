@@ -21,9 +21,10 @@ export  class RedisOperations{
      this.redis = redis
     }
  // Set a key-value pair in Redis
-   async setRedis( key , value){
+   async setRedis( key , value, ttl){
     try{
        const setData =  await this.redis.set(key, value);
+       await this.redis.expire(key ,ttl)
        return setData
     }catch(err){
         console.error(err)
@@ -33,6 +34,7 @@ export  class RedisOperations{
     async getRedis(key){
         try{
             const value = await this.redis.get(key);
+
             return value
         }catch(err){
             console.error(err)

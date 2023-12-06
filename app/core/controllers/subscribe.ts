@@ -1,68 +1,61 @@
 import { ResponseInterceptor } from "../utilities/response-interceptor";
 import { connection } from "../../config/dbConf";
 import { appConfig } from "../../config/appConf";
-const axios = require('axios');
+import axios from 'axios';
+import { RedisOperations } from "../../core/redis/redis";
+const redis = new RedisOperations()
 
-let data = JSON.stringify({
-    "method": "web_hook"
-  });
-  
-  let config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-   url : '',
-    headers: { 
-      'rs-token': appConfig.RS_TOKEN, 
-      'Content-Type': 'application/json'
-    },
-    data : data
-  };
-
-export class auto  {
+export class subscribe {
   connection: connection
   constructor() {
     this.connection = new connection()
   }
 
-  async subscribe() {
-    try {
-        const sql = "SELECT match_key ,start_at FROM cricket_match  where status = 'not_started'"
-      const [data]: any =   await this.connection.write.query(sql)
-      let s = data.filter(e=> {
-        const date= new Date()
-        let  a = date.getTime()+(5.5*60*60*1000)
-        const b = +e.start_at * 1000;
-        const c = a + (24*60*60*1000)
-        if(c >= b && a <= b){
-          e.date = new Date(b)
-          let url = `https://api.sports.roanuz.com/v5/cricket/${appConfig.PROJECT_KEY}/match/'${e.match_key}'/subscribe/`
-          this.subscribe_match(url)
-           return e
-        }
-    })
-    console.log(s)
-
-   
-    } catch (err) {
-      console.error(err);
-    }
-
+  async subscribeMatches(req, res) {
+      let data : any = await this.subscribe(req.params.match_key)
+       // console.log(data)
+       res.send(data)  
   }
+    
+async subscribe (match_key){
+  return new Promise(async (resolve, reject)=> {
+    try{
+      var myHeaders = new Headers();
+      const creds = JSON.parse(await redis.getRedis("token"))
+      myHeaders.append("rs-token", creds?.token);
+      myHeaders.append("Content-Type", "application/json");
+      var raw = JSON.stringify({
+        "method": "web_hook"
+      });
+      fetch(`https://api.sports.roanuz.com/v5/cricket/${creds.project_key}/match/${match_key}/subscribe/`, {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      })
+        .then(response => response.text())
+        .then( (result) => {
+           this.connection.write.query("update  cricket_match set is_subscribe = 1 where match_key = ?" , [match_key])
+          resolve({ status : true , msg: JSON.parse(result)});
+        })
+        .catch(error =>{
 
-
-  // ----------------------------
-
-async subscribe_match(url){ 
-    config.url = url
-    console.log(config)
-// axios.request(config)
-// .then((response) => {
-//   console.log(JSON.stringify(response.data));
-// })
-// .catch((error) => {
-//   console.log(error);
-// });
-
+          reject({ status : false , msg: JSON.parse(error) })
+        });
+    }catch(err){
+      reject({ status : false , msg: err});
+    }
+  })
 }
+
+async subscribeMatchCron (){
+  try{
+    
+
+  }catch(err){
+    
+  }
+}
+
 
 }

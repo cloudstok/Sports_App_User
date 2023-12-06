@@ -75,6 +75,7 @@ let squadA=  player[0].squad.a.playing_xi ||   player[0].squad.a.player_keys
 
     player[0].team.a.score = player[0]?.play?.innings['a_1']
     player[0].team.b.score = player[0]?.play?.innings['b_1']
+    
     let o = {
         'batting_order_A': player[0]?.play?.innings['a_1']?.batting_order,
         'batting_order_B': player[0]?.play?.innings['b_1']?.batting_order,
@@ -90,6 +91,56 @@ let squadA=  player[0].squad.a.playing_xi ||   player[0].squad.a.player_keys
     data.teamA.partnerships = partnerships1
     data.teamA.extraRun = data?.nationality[0]?.score?.extra_runs
     data.teamB.extraRun = data?.nationality[1]?.score?.extra_runs
+    delete data?.nationality[0]?.score?.extra_runs;
+    delete data?.nationality[1]?.score?.extra_runs;
+      return data
+}
+
+
+//test match
+async testmatchsocrcard(player){
+    let data: any = {}
+    let players = Object.values(player[0]?.players)
+//    console.log(team , "team")
+let squadA=  player[0].squad.a.playing_xi ||   player[0].squad.a.player_keys
+  let squadB=  player[0].squad.b.playing_xi ||   player[0].squad.b.player_keys
+    let teamAplayer = players?.filter((e:any) =>(squadA.includes(e.player?.key)))
+    let teamBplayer = players?.filter((e:any) =>(squadB.includes(e.player?.key)))
+    
+
+    player[0].team.a.score = player[0]?.play?.innings['a_1']
+    player[0].team.b.score = player[0]?.play?.innings['b_1']
+    player[0].team.a.score_a2 = player[0]?.play?.innings['a_2']
+    player[0].team.b.score_b2 = player[0]?.play?.innings['b_2']
+    //  console.log( player[0].team.b.score)
+    let o = {
+        'batting_order_A': player[0]?.play?.innings['a_1']?.batting_order,
+        'batting_order_B': player[0]?.play?.innings['b_1']?.batting_order,
+        'bowling_order_A': player[0]?.play?.innings['a_1']?.bowling_order,
+        'bowling_order_B': player[0]?.play?.innings['b_1']?.bowling_order,
+
+        'batting_order_C': player[0]?.play?.innings['a_2']?.batting_order,
+        'batting_order_D': player[0]?.play?.innings['b_2']?.batting_order,
+        'bowling_order_C': player[0]?.play?.innings['a_2']?.bowling_order,
+        'bowling_order_D': player[0]?.play?.innings['b_2']?.bowling_order,
+    }
+    data.nationality = Object.values(player[0].team);
+    let partnershipsa_1: any = player[0]?.play?.innings['a_1']['partnerships']
+    let partnershipsb_1: any = player[0]?.play?.innings['b_1']['partnerships']
+    let partnershipsa_2: any = player[0]?.play?.innings['a_2']['partnerships']
+    let partnershipsb_2: any = player[0]?.play?.innings['b_2']['partnerships']
+    data.teamA = await this.getPlayerByRoles(teamAplayer, o.batting_order_A, o.bowling_order_A)
+    data.teamB = await this.getPlayerByRoles(teamBplayer, o.batting_order_B, o.bowling_order_B)
+    data.teamC = await this.getPlayerByRoles(teamAplayer, o.batting_order_C, o.bowling_order_C)
+    data.teamD = await this.getPlayerByRoles(teamBplayer, o.batting_order_D, o.bowling_order_D)
+    data.teamB.partnerships = partnershipsb_1
+    data.teamA.partnerships = partnershipsa_1
+    data.teamD.partnerships = partnershipsb_2
+    data.teamC.partnerships = partnershipsa_2
+    data.teamA.extraRun = data?.nationality[0]?.score?.extra_runs
+    data.teamB.extraRun = data?.nationality[1]?.score?.extra_runs
+    data.teamC.extraRun = data?.nationality[0]?.score?.extra_runs
+    data.teamD.extraRun = data?.nationality[1]?.score?.extra_runs
     delete data?.nationality[0]?.score?.extra_runs;
     delete data?.nationality[1]?.score?.extra_runs;
       return data
