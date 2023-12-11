@@ -4,7 +4,7 @@ import { AppRoutes } from "./routes/app.routes";
 import { AdminAppRoutes } from "./routes/app.admin.routes";
 import { ResponseInterceptor } from "./core/utilities/response-interceptor"
 import { io, firstSUb } from './core/socket/socket';
-import { cronJob} from './core/controllers/node-cron';
+import { cronJob } from './core/controllers/node-cron';
 import * as cors from 'cors';
 import { token } from "./core/controllers/genrateToken";
 
@@ -17,7 +17,7 @@ class App {
     responseInterceptor: ResponseInterceptor;
     public cron: cronJob
 
-     token : token
+    token: token
     constructor() {
         this.app = express();
         this.config();
@@ -30,9 +30,10 @@ class App {
         });
         const admin_appRoutes = new AdminAppRoutes();
         const appRoutes = new AppRoutes();
-        // this.cron.genrateToken()
+        // this.cron.subscribe()
 
-      // this.token.genrateToken()
+        //   this.token.genrateToken()
+
 
 
 
@@ -66,14 +67,14 @@ class App {
             console.log('socket connected');
             socket.on("sub", async (...ev) => {
                 await socket.join(ev);
-             //   console.log(ev, socket.id, typeof ev[0],)
+                //   console.log(ev, socket.id, typeof ev[0],)
                 await firstSUb(socket.id, ev)
             })
         });
     }
 
     private config(): void {
-        this.app.use(express.json({ limit: "50mb"}));
+        this.app.use(express.json({ limit: "50mb" }));
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cors());
         // this.app.use(initSocket());
@@ -81,12 +82,12 @@ class App {
             if (req.headers['content-type'] === 'application/octet-stream') {
                 getRawBody(req, {
                     length: req.headers['content-length'],
-                }, function (err, string) {
+                }, function (err: any, string: any) {
                     if (err) {
                         console.log(err);
                         return next(err);
                     }
-                    zlib.gunzip(string, function (err, dezipped: Buffer) {
+                    zlib.gunzip(string, function (err: any, dezipped: Buffer) {
                         if (err) {
                             console.log(err);
                             next(err);
@@ -109,6 +110,6 @@ class App {
 export default new App().app;
 
 
-    
 
-   
+
+

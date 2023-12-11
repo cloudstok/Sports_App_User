@@ -21,7 +21,7 @@ let API_KEY = verifyenv("API_KEY") || ""
 
 
 
-function verifyenv(env_key) {
+function verifyenv(env_key : string) {
   if (process.env[env_key] == undefined) {
     console.log(`[ENV] DEFAULT VALUE has taken for ${env_key}`);
     return undefined;

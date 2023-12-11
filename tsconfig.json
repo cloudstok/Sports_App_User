@@ -10,7 +10,8 @@
         "baseUrl": "app",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        // "strict": true
     },
     "include": [
         "app/**/*.ts"

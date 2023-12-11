@@ -32,8 +32,8 @@ export class admin extends ResponseInterceptor {
         }
 
     }
- 
-// <------------------------login Admin --------------------------------------------------------------->
+
+    // <------------------------login Admin --------------------------------------------------------------->
 
     async login(req: any, res: any) {
         try {
@@ -47,13 +47,14 @@ export class admin extends ResponseInterceptor {
                 return this.sendBadRequest(res, "Wrong Password", this.BAD_REQUEST,)
             }
             const token = await this.tokenController.generateToken(user[0], res)
-            return this.sendSuccess(res, { message: "Login Successfully", token: token  , user :user[0]})
+            return this.sendSuccess(res, { message: "Login Successfully", token: token, user: user[0] })
         }
         catch (err) {
             console.log(err)
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
+    //  ----------------  find All Admmin ------------------------------------------------------------------>
     async findAllAdmin(req: any, res: any) {
         try {
             const [user]: any = await this.connection.write.query(SQL_ALL_ADMIN);
@@ -63,6 +64,7 @@ export class admin extends ResponseInterceptor {
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
+    // ----------------------- update admin Data ------------------------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>
     async updateAllAdmin(req: any, res: any) {
         try {
             const { phone, password } = req.body
@@ -73,6 +75,7 @@ export class admin extends ResponseInterceptor {
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
+    // --------------------------Delete Admin ......................................................>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     async DeleteAdmin(req: any, res: any) {
         try {
             const [user]: any = await this.connection.write.query(SQL_DELETE_ADMIN, [req.params.phone]);
@@ -83,6 +86,7 @@ export class admin extends ResponseInterceptor {
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
     }
+    // ........................... Admin find by Id ----------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>
     async findById(req: any, res: any) {
         try {
 

@@ -27,7 +27,7 @@ export class user extends ResponseInterceptor {
             if (check.status != "USED") {
                 return this.sendBadRequest(res, "phone Number is Not verify", this.BAD_REQUEST)
             }
-       //     console.log(check.phone, phone, typeof check.phone, typeof phone)
+            //     console.log(check.phone, phone, typeof check.phone, typeof phone)
             if (check.phone != phone) {
                 return this.sendBadRequest(res, "invalid phone Number", this.BAD_REQUEST)
             }
@@ -152,7 +152,7 @@ export class user extends ResponseInterceptor {
     async findByIds(req: any, res: any) {
         try {
             const { phone } = req.query
-        //    console.log(phone)
+            //    console.log(phone)
             const [user]: any = await this.connection.write.query("select * from user_profile where phone = ?", [phone]);
             return this.sendSuccess(res, { data: user[0] })
         }

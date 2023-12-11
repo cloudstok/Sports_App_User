@@ -275,9 +275,9 @@ export class RoutingComponents {
     this.playerslist.addplayerImage(req, res)
   }
   
-  // getTeamPlayer(req: any, res: any) {
-  //   this.playerslist.getTeamPlayer(req, res)
-  // }
+  getTeamPlayer(req: any, res: any) {
+    this.playerslist.getTeamPlayer(req, res)
+  }
 
   tournamentImage(req: any, res: any) {
     this.tournament.addImageTournament(req, res)

@@ -50,8 +50,8 @@ export class token extends ResponseInterceptor {
     data = JSON.parse(data)
     data.data.project_key = appConfig.PROJECT_KEY
     data.data.api_key = appConfig.API_KEY
-    await redis.setRedis("token", JSON.stringify(data?.data), 23*3600)
-   // console.log(await redis.getRedis("token"), "token")
+    await redis.setRedis("token", JSON.stringify(data?.data), 23 * 3600)
+    // console.log(await redis.getRedis("token"), "token")
   }
 
   async insertToken(data) {
@@ -61,4 +61,17 @@ export class token extends ResponseInterceptor {
     let { token, expires } = data?.data;
     await this.connection.write.query(`INSERT INTO credentials (rs_token, project_key, api_key, token_expiry) VALUES(?, ?, ?, ?)`, [token, appConfig.PROJECT_KEY, appConfig.API_KEY, expires]);
   }
+
+  async getToken() {
+    let token = JSON.parse(await redis.getRedis("token"))
+    //  console.log(token)
+    if (token === null) {
+      let [data]: any = await this.connection.write.query("SELECT * FROM sport_app.credentials where  is_active = 1  order by id desc limit 1")
+      // console.log(data)
+      data[0].token = data[0].rs_token
+      await redis.setRedis("token", JSON.stringify(data[0]), 23 * 6300)
+    }
+  }
+
+
 }

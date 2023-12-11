@@ -12,7 +12,7 @@ export const SQL_DELETE_THEME: string = "Delete from themes where themes_id = ?"
 // <<<<--------------------------- news Table  sql query ---------------------------------------------<<<<
 export const SQL_SHOW_NEWS: string = "SELECT * from news where is_deleted = 0 limit ? offset ?";
 //  <<<<-------------------------- Reels Table  sql Query ------------------------------------------<<<<
-export const SQL_SHOW_REELS : string = "select * from reels where is_deleted = 0 limit ? offset ?";
+export const SQL_SHOW_REELS : string = "select * from reels where is_deleted = 1 limit ? offset ?";
 // export const SQL_ADD_REELS : string = "select * from reels where reel_id = ? and is_deleted=0 limit 1";
 export const SQL_UPDATE_REALS :  string = "UPDATE reels set ? where reel_id = ?";
 

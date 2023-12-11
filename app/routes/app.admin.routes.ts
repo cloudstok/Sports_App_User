@@ -213,13 +213,13 @@ export class AdminAppRoutes {
           routingComponents.get_tournament.bind(routingComponents)
         ]
       },
-      // {
-      //   path: "/admin/v1/match/team/player",
-      //   component: [
-      //     //  this.tokenController.auth(["admin"]),
-      //     routingComponents.getTeamPlayer.bind(routingComponents)
-      //   ]
-      // },
+      {
+        path: "/admin/v1/match/team/player",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.getTeamPlayer.bind(routingComponents)
+        ]
+      },
 
       {
         path: "/admin/v1/tournament/teams",

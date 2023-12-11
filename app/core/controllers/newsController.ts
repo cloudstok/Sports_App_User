@@ -33,7 +33,7 @@ export class News extends ResponseInterceptor {
 
     async insertNews(req: any, res: any) {
         try {
-           // console.log(req.files)
+            // console.log(req.files)
             if (req?.files?.length > 0) {
                 req.body.cover_image = (await this.uploads3.uploadImage(req.files)).Location
             }
@@ -50,7 +50,7 @@ export class News extends ResponseInterceptor {
         try {
             const reqBody = req.body;
             delete req.body.docs
-          //  console.log(req.files)
+            //  console.log(req.files)
             if (req?.files?.length > 0) {
                 req.body.cover_image = (await this.uploads3.uploadImage(req.files)).Location
             }
