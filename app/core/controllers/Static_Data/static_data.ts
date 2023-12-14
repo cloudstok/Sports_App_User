@@ -12,7 +12,7 @@ export class static_data extends ResponseInterceptor {
 
   async add_association(req: any, res: any) {
     try {
-      let result: any = await this.cricketapi.get_associations();
+      let result: any = await this.cricketapi.get_associations(res);
       let finalData = []
       for (let x of result?.data?.associations) {
         finalData.push([
@@ -30,7 +30,7 @@ export class static_data extends ResponseInterceptor {
   }
   async add_venues(req: any, res: any) {
     try {
-      let result: any = await this.cricketapi.venues(1);
+      let result: any = await this.cricketapi.venues(1 , res);
       let finalData = []
       for (let x of result?.data?.venues) {
         finalData.push([
@@ -48,7 +48,7 @@ export class static_data extends ResponseInterceptor {
 
   async add_countries(req: any, res: any) {
     try {
-      let result: any = await this.cricketapi.countries();
+      let result: any = await this.cricketapi.countries(res);
       let finalData = []
       for (let x of result?.data?.countries) {
         finalData.push([

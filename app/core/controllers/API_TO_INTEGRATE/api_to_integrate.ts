@@ -29,7 +29,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
 
   async add_tournaments(req: any, res: any) {
     try {
-      let result: any = await this.cricketapi.Featured_Tournaments(req.query.ass_key);
+      let result: any = await this.cricketapi.Featured_Tournaments(req.query.ass_key , res);
       let finalData = []
       let updateDate = []
       for (let x of result?.data?.tournaments) {
@@ -65,7 +65,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
 
   async update_tournaments(req: any, res: any) {
     try {
-      let detail_tournament: any = await this.cricketapi?.get_tournament(req?.query?.tou_key)
+      let detail_tournament: any = await this.cricketapi?.get_tournament(req?.query?.tou_key , res)
       await this.connection.write?.query(update_tournaments, [JSON.stringify(detail_tournament?.data?.teams), JSON.stringify(detail_tournament?.data?.rounds), req?.query?.tou_key])
       this.sendSuccess(res, { status: true, msg: 'tournaments detail inserted successfully' })
     } catch (err) {
@@ -75,7 +75,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
   }
   async tournaments_point_table(req: any, res: any) {
     try {
-      let detail_tournament: any = await this.cricketapi.get_tournament_tables(req?.query?.tou_key)
+      let detail_tournament: any = await this.cricketapi.get_tournament_tables(req?.query?.tou_key , res)
       await this.connection.write?.query("update tournament set tou_points = ? where tou_key = ?", [JSON.stringify(detail_tournament?.data?.rounds), req?.query?.tou_key])
       this.sendSuccess(res, { status: true, msg: 'tournaments detail inserted successfully' })
     } catch (err) {
@@ -89,7 +89,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
 
   async add_matches(req: any, res: any) {
     try {
-      let match_data: any = await this.cricketapi.featured_matches(req?.query?.tou_key);
+      let match_data: any = await this.cricketapi.featured_matches(req?.query?.tou_key , res);
       let finalData = []
       // if(match_data?.data && match_data?.data?.matches){}
       for (let x of match_data?.data?.matches) {
@@ -107,7 +107,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
   }
   async update_matches(req: any, res: any) {
     try {
-      let match_data: any = await this.cricketapi.featured_matches(req?.query?.tou_key);
+      let match_data: any = await this.cricketapi.featured_matches(req?.query?.tou_key , res);
       // let finalData = []
       for (let x of match_data?.data?.matches) {
         let finalData = [
@@ -125,7 +125,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
 
   async detail_match(req: any, res: any) {
     try {
-      let match_detail: any = await this.cricketapi.detail_match(req.query.match_key);
+      let match_detail: any = await this.cricketapi.detail_match(req.query.match_key , res);
       let { toss, play, players, notes, data_review, squad, estimated_end_date, completed_date_approximate, umpires, weather } = match_detail?.data;
       estimated_end_date = estimated_end_date && estimated_end_date !== undefined ? estimated_end_date : 0;
       await this.connection.write?.query(detail_match, [JSON.stringify(toss), JSON.stringify(play), JSON.stringify(players), JSON.stringify(notes), JSON.stringify(data_review), JSON.stringify(squad), estimated_end_date, completed_date_approximate, JSON.stringify(umpires), weather, req.query.match_key]);
@@ -140,7 +140,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
   async add_teams(req: any, res: any) {
     try {
 
-      let team_data: any = await this.cricketapi.get_tournament_team(req.query.tou_key, req.query.team_key)
+      let team_data: any = await this.cricketapi.get_tournament_team(req.query.tou_key, req.query.team_key , res)
       await this.connection.write?.query(add_teams, [JSON.stringify(team_data.data.team), JSON.stringify(team_data.data.tournament), JSON.stringify(team_data.data.tournament_team)])
       this.sendSuccess(res, { status: true, msg: 'matches inserted successfully' })
     } catch (err) {
@@ -151,7 +151,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
 
   async table(req: any, res: any) {
     try {
-      let tableData: any = await this.cricketapi.get_tournament_tables(req.query.tou_key)
+      let tableData: any = await this.cricketapi.get_tournament_tables(req.query.tou_key , res)
       let data = [tableData.data.tournament.key, tableData.data.tournament.name, JSON.stringify(tableData.data.rounds)]
       let [check]: any = await this.connection.write?.query(table, data)
       if (check.insertId == 0) {
@@ -170,7 +170,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
   async fantasy_matchPoints(req: any, res: any) {
     try {
 
-      let fantasy: any = await this.cricketapi.get_fantasy_matchPoints(req.query.match_key);
+      let fantasy: any = await this.cricketapi.get_fantasy_matchPoints(req.query.match_key , res);
       let { match, overrides, metrics, players, teams, last_updated, points } = fantasy.data;
       const fantasy_sql = "INSERT IGNORE INTO fantasy( match_key , overrides, metrics, players, teams, last_updated) values( ?,?,?,?,?,?)";
       const point_sql = "INSERT IGNORE INTO fantasy_points( match_key , ranks, points, player_key, points_str, last_updated , tournament_points , points_breakup) values ?"
@@ -190,7 +190,7 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
   async get_association_player_stats(req, res) {
     try {
       const { ass_key, player_key, competition } = req.query
-      let associatino_stats: any = await this.cricketapi.get_association_player_stats(ass_key, player_key)
+      let associatino_stats: any = await this.cricketapi.get_association_player_stats(ass_key, player_key , res)
       let { stats, player, recent_teams } = associatino_stats.data
       let formet = Object.keys(stats)
       let { key, code, name }: any = Object.values(recent_teams)[0]

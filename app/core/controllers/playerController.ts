@@ -22,7 +22,7 @@ export class players extends ResponseInterceptor {
   async addStats(req: any, res: any) {
     try {
 
-      let stats: any = await this.cricketApi?.get_tournament_stats(req?.params?.tou_key);
+      let stats: any = await this.cricketApi?.get_tournament_stats(req?.params?.tou_key , res);
       stats = stats.data
       stats.players = Object.values(stats.players)
       stats.teams = Object.values(stats.teams)

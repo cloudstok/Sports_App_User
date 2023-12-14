@@ -32,7 +32,7 @@ class App {
         const appRoutes = new AppRoutes();
         // this.cron.subscribe()
 
-        //   this.token.genrateToken()
+        // this.token.genrateToken()
 
 
 
