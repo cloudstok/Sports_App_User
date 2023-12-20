@@ -164,15 +164,15 @@ export class tournament extends ResponseInterceptor {
         // x.image = await this.imageURL(x.code)
         for (let y of p) {
           y.image = await this.playerImage(y.key) || process.env.vinay
-          if (x.country_code === y.nationality.code) {
-            if (y.role[0] === "batsman") {
+          if (x?.country_code === y?.nationality?.code) {
+            if (y?.role[0] === "batsman") {
               sp.bt.push(y)
-            } if (y.role[0] === "all_rounder") {
+            } if (y?.role[0] === "all_rounder") {
               sp.ar.push(y)
-            } if (y.role[0] === "bowler") {
+            } if (y?.role[0] === "bowler") {
               sp.bo.push(y)
             }
-            if (y.role[0] === "keeper") {
+            if (y?.role[0] === "keeper") {
               sp.wc.push(y)
             }
           }

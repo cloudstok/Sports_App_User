@@ -153,6 +153,14 @@ export class AdminAppRoutes {
           routingComponents.addReel.bind(routingComponents)
         ]
       },
+
+      {
+        path: "/admin/v1/send/notification",
+        component: [
+          routingComponents.adminSendNitification.bind(routingComponents)
+        ]
+      },
+
       {
         path: "/admin/v1/insertNews",
         component: [

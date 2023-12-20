@@ -40,7 +40,7 @@ export class TestController extends ResponseInterceptor {
 
 
       let commentaryData: any = {}
-      commentaryData['commentory'] = Object.values(data?.play?.related_balls);
+      commentaryData['commentory'] = Object?.values(data?.play?.related_balls);
       commentaryData['live'] = data?.play?.live
       commentaryData['last_ball_key'] = last_ball_key || ""
       await commentary(commentaryData, data?.key);
@@ -70,13 +70,13 @@ export class TestController extends ResponseInterceptor {
       console.log(name, company_name, designation, mobile, email)
       let email1 = {
         to: email, // Change to your recipient
-        from: 'deepak.chauhan@cloudstok.com', // Change to your verified sender
+        from: 'admin@techplusmedia.com', // Change to your verified sender
         subject: 'Cloudstok Sales',
         html: '<strong>Thankyou for reaching Cloudstok, our executive will get in touch with you Shortly..!!</strong>',
       }
       let email2 = {
         to: 'shashank@cloudstok.com', // Change to your recipient
-        from: 'deepak.chauhan@cloudstok.com', // Change to your verified sender
+        from: 'admin@techplusmedia.com', // Change to your verified sender
         subject: 'New Ticket',
         html: `Please find the details of the customer below- <br/>
  <strong> 
@@ -89,7 +89,7 @@ export class TestController extends ResponseInterceptor {
       }
       let email3 = {
         to: 'mgt@cloudstok.com', // Change to your recipient
-        from: 'deepak.chauhan@cloudstok.com', // Change to your verified sender
+        from: 'admin@techplusmedia.com', // Change to your verified sender
         subject: 'New Ticket',
         html: `Please find the details of the customer below- <br/>
  <strong> 
@@ -101,10 +101,41 @@ export class TestController extends ResponseInterceptor {
  </strong>`,
       }
 
+//       let email4 = {
+//         to: 'vishal.kumar@cloudstok.com', // Change to your recipient
+//         from: 'admin@techplusmedia.com', // Change to your verified sender
+//         subject: 'New Ticket',
+//         html: `Please find the details of the customer below- <br/>
+//  <strong> 
+//  Name: ${name} <br/> 
+//  Company Name: ${company_name} <br/> 
+//  Designation: ${designation}<br/> 
+//  Mobile Number: ${mobile} <br/> 
+//  Email ID: ${email}
+//  </strong>`,
+//       }
+
+//       let email5 = {
+//         to: 'prashant.gupta@cloudstok.com', // Change to your recipient
+//         from: 'admin@techplusmedia.com', // Change to your verified sender
+//         subject: 'New Ticket',
+//         html: `Please find the details of the customer below- <br/>
+//  <strong> 
+//  Name: ${name} <br/> 
+//  Company Name: ${company_name} <br/> 
+//  Designation: ${designation}<br/> 
+//  Mobile Number: ${mobile} <br/> 
+//  Email ID: ${email}
+//  </strong>`,
+//       }
+
+
       const msg = [
         email1,
         email2,
         email3
+        // email4,
+        // email5
       ]
 
       for (let i of msg) {

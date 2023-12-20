@@ -151,8 +151,9 @@ export class match extends ResponseInterceptor {
     try {
       let { limit, offset } = req.query;
 
-      let sql_get_match = `select * from cricket_match where is_deleted = 1 and is_Active = 1 order by start_at desc`;
+      let sql_get_match = `select  match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, venue, association, messages, gender, format, toss, play, notes, data_review, estimated_end_date, completed_date_approximate, umpires, weather, tou_key, tou_name, tou_short_name, created_at, updated_at, is_deleted, is_Active, is_subscribe from cricket_match where is_deleted = 1 and is_Active = 1 order by start_at desc`;
       let tournament: any = await this.getMatchData(sql_get_match);
+
       if (tournament && tournament.length > 0) {
         return this.sendSuccess(res, { data: tournament })
       }

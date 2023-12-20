@@ -11,7 +11,7 @@ import { playerController } from "../core/controllers/player.controller";
 import { statsController } from "../core/controllers/stats.controller";
 import { Association } from "../core/controllers/associationController";
 import { squadController } from "../core/controllers/squad.controller";
-
+import { NotificationController } from "../core/notification/notification";
 //.admin
 // import { ResponseInterceptor } from "../core/utilities/response-interceptor";
 // import { TestController } from "../core/controllers/test.controller";
@@ -48,6 +48,7 @@ export class RoutingComponents {
   countries: countries
   association: Association;
   subscribe: subscribe;
+  notification : NotificationController
   constructor() {
     this.responseInterceptor = new ResponseInterceptor();
     this.test = new TestController();
@@ -74,6 +75,7 @@ export class RoutingComponents {
     this.user = new user();
     this.association = new Association();
     this.subscribe = new subscribe();
+    this.notification =  new NotificationController()
   }
 
   /**
@@ -370,9 +372,11 @@ export class RoutingComponents {
     this.news.deleteNews(req, res)
   }
 
-  // <------------------Series------------------->
-
-
+  // <------------------notification------------------->
+  // adminSendNitification
+  adminSendNitification(req: any, res: any) {
+    this.notification.adminSendNitification(req, res)
+  }
 
 
 
