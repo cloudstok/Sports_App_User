@@ -12,12 +12,15 @@ export const upload = multer({
 
                file.mimetype == "video/mp4" ||
                file.mimetype == "image/avif" 
+
+
         if(!mimetype && fileSize >= 22282810){
             cb(null, false)
             console.log("only png / jpg / pdf / jpeg / mp4 / avif file supported")
            return res.send({mgg : "only png & jpg & pdf file supported"})
             
            }else{
+          //  console.log("only png / jpg / pdf / jpeg / mp4 / avif file supported")
                cb(null, true);
            }
     },

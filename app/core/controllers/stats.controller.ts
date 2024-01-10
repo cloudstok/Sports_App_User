@@ -56,7 +56,7 @@ export class statsController extends ResponseInterceptor {
       let [player]: any = await this.connection.write.query(player_stats, [player_key]);
       let [stats]: any = await this.connection.write.query(sql, [ass_key, player_key]);
 
-      let data = { player: player[0], stats: stats[0].stats }
+      let data = { player: player[0], stats: stats[0]?.stats }
 
 
       return this.sendSuccess(res, { data: data })

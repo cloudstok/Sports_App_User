@@ -30,12 +30,9 @@ class App {
         });
         const admin_appRoutes = new AdminAppRoutes();
         const appRoutes = new AppRoutes();
-        // this.cron.subscribe()
+        this.cron.subscribe()
 
         // this.token.genrateToken()
-// 
-
-
 
         let AllGetRoutes = [...admin_appRoutes.AppGetRoutes, ...appRoutes.AppGetRoutes]
         let AllPostRoutes = [...admin_appRoutes.AppPostRoutes, ...appRoutes.AppPostRoutes]
@@ -48,8 +45,6 @@ class App {
         }
         for (var postRoute = 0; postRoute < AllPostRoutes.length; postRoute++) {
             let postPath = AllPostRoutes[postRoute].path
-            // postPath = postPath !== '*' ? appConfig.adminpath  + postPath : postPath 
-            // console.log(postPath)
             this.app.post(postPath, [AllPostRoutes[postRoute].component]);
         }
         for (var putRoute = 0; putRoute < AllUpdateRoutes.length; putRoute++) {

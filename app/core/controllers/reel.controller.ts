@@ -3,7 +3,6 @@ import { connection } from '../../config/dbConf';
 import { uploads3 } from '../../core/aws/uploads3';
 // import { SQL_ADD_REELS, SQL_SHOW_REELS } from '../query/query';
 import { SQL_ADD_REELS, SQL_SHOW_NEWS, SQL_SHOW_REELS, SQL_UPDATE_REALS } from '../query/query';
-import { count } from 'console';
 
 
 export class reel extends ResponseInterceptor {
@@ -31,11 +30,9 @@ export class reel extends ResponseInterceptor {
             console.log(err)
         }
     }
-
-    async showReel(req: any, res: any) {
+    async getAllReels(PageLimit, PageOffset) {
         try {
-            let { PageLimit, PageOffset } = req.query
-            let userId = res.locals.auth.user?.user_id
+            // let { PageLimit, PageOffset } = req.query
             const [showsReel]: any = await this.connection.write.query(SQL_SHOW_REELS, [+PageLimit, +PageOffset]);
             for (let x of showsReel) {
                 if (x?.like_data) {
@@ -48,10 +45,44 @@ export class reel extends ResponseInterceptor {
                 } else {
                     x.commentount = 0
                 }
-                delete x.like_data
-                delete x.comments_data
+                // delete x.like_data
+                // delete x.comments_data
             }
-            return this.sendSuccess(res, { data: showsReel })
+            return { data: showsReel }
+        }
+        catch (err) {
+            return false
+        }
+    }
+    // useing user with out  token
+    async getReelUnauthorized(req: any, res: any) {
+        try {
+            let { PageLimit, PageOffset } = req.query
+            let data = await this.getAllReels(PageLimit, PageOffset)
+            return this.sendSuccess(res, data)
+        }
+        catch (err) {
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+        }
+    }
+    //  useing user with token
+    async getReelAuthorized(req: any, res: any) {
+        try {
+            let { PageLimit, PageOffset } = req.query
+            let userId = res.locals.auth.user?.user_id
+            let data = await this.getAllReels(PageLimit, PageOffset)
+            return this.sendSuccess(res, data)
+        }
+        catch (err) {
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+        }
+    }
+    // usering admin
+    async showReels(req: any, res: any) {
+        try {
+            const { PageLimit, PageOffset } = req.query
+            let data = await this.getAllReels(PageLimit, PageOffset)
+            return this.sendSuccess(res, data)
         }
         catch (err) {
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
@@ -127,9 +158,28 @@ export class reel extends ResponseInterceptor {
                 showsReel[0].comments_data.push(req.query)
                 await this.connection.read.query(updateReeel, [JSON.stringify(showsReel[0].comments_data), +reel_id]);
             }
+
             return this.sendSuccess(res, { showsReel })
         }
         catch (err) {
+            console.log(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+        }
+    }
+
+    async getCommentByReelId(req, res) {
+        try {
+            const { reel_id } = req.query;
+            const reel = "SELECT comments_data FROM sport_app.reels where reel_id = ?"
+            let [getComments]: any = await this.connection.read.query(reel, [+reel_id]);
+            if (Array.isArray(getComments[0]?.comments_data)) {
+                for (let x of getComments[0]?.comments_data) {
+                    let [user] = await this.connection.read.query("SELECT phone , name ,image FROM sport_app.user_profile where phone = ?", [x.user_id])
+                    Object.assign(x, user[0])
+                }
+            }
+            return this.sendSuccess(res, { status: true, data: getComments[0].comments_data })
+        } catch (err) {
             console.log(err)
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }
@@ -153,30 +203,7 @@ export class reel extends ResponseInterceptor {
         }
     }
 
-    async showReels(req: any, res: any) {
-        try {
-            const { PageLimit, PageOffset } = req.query
-            const [showsReel]: any = await this.connection.read.query(SQL_SHOW_REELS, [+PageLimit, +PageOffset]);
-            for (let x of showsReel) {
-                if (x?.like_data) {
-                    x.likeCount = (x?.like_data?.filter(e => e.status === "like")).length
-                } else {
-                    x.likeCount = 0
-                }
-                if (x.comments_data) {
-                    x.commentount = x?.comments_data?.length
-                } else {
-                    x.commentount = 0
-                }
-                delete x.like_data
-                delete x.comments_data
-            }
-            return this.sendSuccess(res, { data: showsReel })
-        }
-        catch (err) {
-            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
-        }
-    }
+
 
 
     //
@@ -191,6 +218,19 @@ export class reel extends ResponseInterceptor {
         }
     }
 
+
+
+    async deleteComment(req: any, res: any) {
+        try {
+            console.log(req.body , req.query.reel_id)
+            let data = await this.updateMetaData({ comments_data: JSON.stringify(req.body) }, req.query.reel_id)
+            if (data) {
+                return this.sendSuccess(res, { data: req.body })
+            }
+        } catch (err) {
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+        }
+    }
 
 
 

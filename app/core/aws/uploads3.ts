@@ -12,6 +12,7 @@ export class uploads3{
     }
     async uploadImage(files :any){
         // req.files = files
+        // console.log(files)
            const s3 = new AWS.S3();
              const bucketName = appConfig.aws.AWS_S3_BUCKET_NAME;
              const Key = `${Date.now()}_${files[0].originalname.trim()}`;

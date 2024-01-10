@@ -42,7 +42,7 @@ export class ResponseInterceptor {
         }
         return this.sendResponse(res, statusCode, response);
     }
-    sendBadRequest(res : any, message?: string , status? : number) {
+    sendBadRequest(res : any, message?: string , status? : number, req?) {
         let responseBody = {
             version : appConfig.ver,
             timeSamp: new Date(), 
@@ -50,6 +50,10 @@ export class ResponseInterceptor {
             status : false,
             errCode: this.BAD_MESSAGE,
             errMsg: message ? message : 'Bad Request',
+
+        }
+        if(req){
+            responseBody['path'] = req.path
         }
         return this.sendResponse(res, this.BAD_REQUEST, responseBody);
     }

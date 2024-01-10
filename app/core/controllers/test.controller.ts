@@ -40,8 +40,12 @@ export class TestController extends ResponseInterceptor {
 
 
       let commentaryData: any = {}
-      commentaryData['commentory'] = Object?.values(data?.play?.related_balls);
-      commentaryData['live'] = data?.play?.live
+      if(data?.play){
+        commentaryData['commentory'] = Object?.values(data?.play?.related_balls);
+        commentaryData['live'] = data?.play?.live
+      }
+     
+     
       commentaryData['last_ball_key'] = last_ball_key || ""
       await commentary(commentaryData, data?.key);
 

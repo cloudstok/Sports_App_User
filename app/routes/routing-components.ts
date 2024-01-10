@@ -12,6 +12,8 @@ import { statsController } from "../core/controllers/stats.controller";
 import { Association } from "../core/controllers/associationController";
 import { squadController } from "../core/controllers/squad.controller";
 import { NotificationController } from "../core/notification/notification";
+import {contact} from '../core/controllers/contact'
+
 //.admin
 // import { ResponseInterceptor } from "../core/utilities/response-interceptor";
 // import { TestController } from "../core/controllers/test.controller";
@@ -49,6 +51,8 @@ export class RoutingComponents {
   association: Association;
   subscribe: subscribe;
   notification : NotificationController
+  contacts :contact
+  
   constructor() {
     this.responseInterceptor = new ResponseInterceptor();
     this.test = new TestController();
@@ -76,6 +80,8 @@ export class RoutingComponents {
     this.association = new Association();
     this.subscribe = new subscribe();
     this.notification =  new NotificationController()
+    this.contacts = new contact()
+  
   }
 
   /**
@@ -90,9 +96,20 @@ export class RoutingComponents {
   contact(req: any, res: any) {
     this.test.contacts(req, res,)
   }
+
+
+  postQuery(req: any, res: any) {
+    this.contacts.postQuery(req, res,)
+  }  
+
   UseRregister(req: any, res: any) {
     this.user.register(req, res)
   }
+ 
+  notificationData(req: any, res: any) {
+    this.user.notificationData(req, res)
+  }
+
   genrateOtp(req: any, res: any) {
     this.otpController.genrateOtp(req, res)
   }
@@ -135,7 +152,11 @@ export class RoutingComponents {
 
   //-------------------reels------------------------->
   showReel(req: any, res: any) {
-    this.reel.showReel(req, res)
+    this.reel.getReelAuthorized(req, res)
+  }
+
+  getReel(req: any, res: any) {
+    this.reel.getReelUnauthorized(req, res)
   }
   // addUpdateReelStatus(req: any, res: any) {
   //   this.reel.addUpdateReelStatus(req, res)
@@ -145,6 +166,21 @@ export class RoutingComponents {
   }
   commentReel(req: any, res: any) {
     this.reel.updateCommentReel(req, res)
+  }
+  getCommentByReelId(req: any, res: any) {
+    this.reel.getCommentByReelId(req, res)
+  }
+
+  //devices
+
+  registerDevice(req: any, res: any){
+    this.notification.registerDevice(req, res)
+  }
+  findAllDevice(req: any, res: any){
+    this.notification.findAllDevice(req, res)
+  }
+  updateDevice(req: any, res: any){
+    this.notification.update(req, res)
   }
   //--------------------News------------------------>
   // getNews(req:any, res: any){
@@ -261,6 +297,11 @@ export class RoutingComponents {
   getMatchByTournament(req: any, res: any) {
     this.match.getMatchByTournament(req, res)
   }
+
+  updateMatch(req: any, res: any) {
+    this.match.updateMatch(req, res)
+  }
+
   subscribeMatch(req: any, res: any) {
     this.subscribe.subscribeMatches(req, res)
   }
@@ -275,6 +316,9 @@ export class RoutingComponents {
   }
   playerImage(req: any, res: any) {
     this.playerslist.addplayerImage(req, res)
+  }
+  getPlayerInfo(req: any, res: any) {
+    this.player.playerinfo(req, res)
   }
   
   getTeamPlayer(req: any, res: any) {
@@ -323,6 +367,11 @@ export class RoutingComponents {
   addReel(req: any, res: any) {
     this.reels.addReel(req, res)
   }
+
+  deleteComment(req: any, res: any) {
+    this.reels.deleteComment(req, res)
+  }
+
   showReels(req: any, res: any) {
     this.reels.showReels(req, res)
   }
@@ -375,7 +424,11 @@ export class RoutingComponents {
   // <------------------notification------------------->
   // adminSendNitification
   adminSendNitification(req: any, res: any) {
-    this.notification.adminSendNitification(req, res)
+    this.notification.sendNotification(req, res)
+  }
+
+  subscribeToNotification(req: any, res: any) {
+    this.notification.subscribeToNotification(req, res)
   }
 
 

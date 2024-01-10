@@ -25,7 +25,7 @@ export class cronJob {
   async subscribe() {
     cron.schedule('* * * * *', () => {
       console.log("subscribe")
-      // this.subscribes.subscribeMatchCron()
+      this.subscribes.subscribeMatchCron()
     })
   }
 

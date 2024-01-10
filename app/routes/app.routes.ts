@@ -20,13 +20,22 @@ export class AppRoutes {
     this.upload = upload
     /* Post calls */
     this.AppPostRoutes = [
-      //DEPOSIT
       {
         path: "/user/v1/contact",
         component: [
           routingComponents.contact.bind(routingComponents)
         ]
       },
+
+      {
+        path: "/user/v1/sunscribe/notification",
+        component: [
+          this.tokenController.auth(["user"]),
+          routingComponents.subscribeToNotification.bind(routingComponents)
+        ]
+      },
+
+     
 
       {
         path: "/user/v1/test",
@@ -77,16 +86,7 @@ export class AppRoutes {
           routingComponents.addThemes.bind(routingComponents)
         ]
       },
-      // {
-      //   path: "/user/v1/addUpdateReelStatus/:reel_id",
-      //   component: [
-      //     // this.tokenController.verifyToken,
-      //     this.tokenController.auth(["user"]),
-      //     this.apiValidation.validateBodyData(reelsUpdateBody),
-      //     this.apiValidation.validateParamsData(reelsUpdateParams),
-      //     routingComponents.addUpdateReelStatus.bind(routingComponents)
-      //   ]
-      // },
+     
       {
         path: "/user/v1/reel/like",
         component: [
@@ -107,8 +107,24 @@ export class AppRoutes {
           routingComponents.commentReel.bind(routingComponents)
         ]
       },
+      //Drvices
+      {
+        path: "/user/v1/register/device",
+        component: [
 
+          this.tokenController.auth(["user"]),
+          routingComponents.registerDevice.bind(routingComponents)
+        ]
+      },
 
+      {
+        path: "/user/v1/post/query",
+        component: [
+
+          // this.tokenController.auth(["user"]),
+          routingComponents.postQuery.bind(routingComponents)
+        ]
+      },
 
       // 404
       {
@@ -131,6 +147,20 @@ export class AppRoutes {
           // this.tokenController.verifyToken,
           this.tokenController.auth(["user"]),
           routingComponents.findAllUSer.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/user/v1/reel/getcomments",
+        component: [
+          this.tokenController.auth(["user"]),
+          routingComponents.getCommentByReelId.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/user/v1/notification/list",
+        component: [
+          this.tokenController.auth(["user"]),
+          routingComponents.notificationData.bind(routingComponents)
         ]
       },
     
@@ -180,6 +210,16 @@ export class AppRoutes {
         ]
 
       },
+
+      {
+        path: "/user/v1/get/reel",
+        component: [
+          routingComponents.getReel.bind(routingComponents)
+        ]
+
+      },
+
+
       {
         path: "/user/v1/get_team",
         component: [
@@ -265,6 +305,13 @@ export class AppRoutes {
         component: [
           //  this.tokenController.auth(["user"]),
           routingComponents.players.bind(routingComponents)
+        ]
+      },
+      {
+        path: "/user/v1/player/info",
+        component: [
+          //  this.tokenController.auth(["user"]),F
+          routingComponents.getPlayerInfo.bind(routingComponents)
         ]
       },
       {

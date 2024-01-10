@@ -60,7 +60,6 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
     }
   }
 
-
   //   update tournament whith tournament key
 
   async update_tournaments(req: any, res: any) {
@@ -83,9 +82,6 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
-
-
-
 
   async add_matches(req: any, res: any) {
     try {
@@ -126,11 +122,11 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
   async detail_match(req: any, res: any) {
     try {
       let match_detail: any = await this.cricketapi.detail_match(req.query.match_key , res);
-      let { toss, play, players, notes, data_review, squad, estimated_end_date, completed_date_approximate, umpires, weather } = match_detail?.data;
-      estimated_end_date = estimated_end_date && estimated_end_date !== undefined ? estimated_end_date : 0;
-      await this.connection.write?.query(detail_match, [JSON.stringify(toss), JSON.stringify(play), JSON.stringify(players), JSON.stringify(notes), JSON.stringify(data_review), JSON.stringify(squad), estimated_end_date, completed_date_approximate, JSON.stringify(umpires), weather, req.query.match_key]);
+      let { toss, start_at, status, play, players, notes, data_review, squad, estimated_end_date, completed_date_approximate, umpires, weather } = match_detail?.data;
+      estimated_end_date = estimated_end_date ? estimated_end_date : 0;
+    let a = { toss, start_at ,status, play, players, notes, data_review, squad, estimated_end_date, completed_date_approximate, umpires, weather }
+     await this.updateMatches( a , req.query.match_key )
       this.sendSuccess(res, { status: true, msg: "Match details updated successfully" })
-
     } catch (err) {
       console?.error(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
@@ -184,16 +180,13 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
-
-
-
   async get_association_player_stats(req, res) {
     try {
       const { ass_key, player_key, competition } = req.query
       let associatino_stats: any = await this.cricketapi.get_association_player_stats(ass_key, player_key , res)
       let { stats, player, recent_teams } = associatino_stats.data
       let formet = Object.keys(stats)
-      let { key, code, name }: any = Object.values(recent_teams)[0]
+      let { key, code, name }: any = (recent_teams ? Object.values(recent_teams) :[])[0]
 
       let finaledata = []
       for (let x of formet) {
@@ -210,6 +203,17 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
     } catch (err) {
       console?.log(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+    }
+  }
+
+
+  // server to sql function
+  async updateMatches(data, match_key) {
+    try {
+      await this.connection.write.query('UPDATE cricket_match SET ? WHERE match_key = ?', [data, match_key]);
+      return true
+    } catch (err) {
+      return false
     }
   }
 

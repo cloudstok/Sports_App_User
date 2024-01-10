@@ -38,7 +38,7 @@ export class squadController extends ResponseInterceptor {
       let data = []
       let [squad]: any = await this.connection.write.query(sql, [req.query.tou_key])
       for (let x of squad) {
-        let players: any = Object.values(x.players)
+        let players: any =x.players ? Object.values(x.players) :[]
         delete x.players
         x.team.a.players = { bt: [], bo: [], ar: [] }
         x.team.b.players = { bt: [], bo: [], ar: [] }

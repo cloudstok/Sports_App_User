@@ -47,7 +47,8 @@ export class user extends ResponseInterceptor {
 
     async login(req: any, res: any) {
         try {
-            const { phone, password } = req.body
+            const { phone, password ,device_id} = req.body
+            let token = ''
             const [user]: any = await this.connection.write.query(SQL_CHECK_USER, [phone]);
             if (user.length === 0) {
                 return this.sendBadRequest(res, "You are not register", this.BAD_REQUEST)
@@ -56,7 +57,15 @@ export class user extends ResponseInterceptor {
             if (!comparePassword) {
                 return this.sendBadRequest(res, "Wrong Password", this.BAD_REQUEST,)
             }
-            const token = await this.tokenController.generateToken(user[0], res)
+            console.log(device_id)
+            if(device_id) {
+                console.log(device_id)
+                await this.connection.write.query("update user_profile set device = ? where phone = ?" , [device_id , phone ])
+                const [data]: any = await this.connection.write.query(SQL_CHECK_USER, [phone]);
+                 token = await this.tokenController.generateToken(data[0], res)
+            }else{
+                token = await this.tokenController.generateToken(user[0], res)
+            }  
             return this.sendSuccess(res, { message: "Login Successfully", token: token, userData: user[0] })
         }
         catch (err) {
@@ -79,10 +88,10 @@ export class user extends ResponseInterceptor {
     async updateUserByAuth(req: any, res: any) {
         try {
             const { phone } = res.locals.auth.user
-            const { fname, mname, lname, Phone, email } = req.body
-            const [user]: any = await this.connection.write.query(SQL_UPDATE_USER, [fname, mname, lname, email, phone]);
+            // const { name, Phone, email } = req.body\
+            console.log(req.body)
+            const [user]: any = await this.connection.write.query(SQL_UPDATE_USER, [ req.body, phone]);
             return this.sendSuccess(res, { message: "User updated Successfully", user: user })
-
         }
         catch (err) {
             console.error(err)
@@ -95,7 +104,7 @@ export class user extends ResponseInterceptor {
             const { phone } = res.locals.auth.user
             const files = req.files
             const url: any = await this.uploads3.uploadImage(files)
-            // console.log(url.Location ,phone)
+            console.log(url.Location ,phone)
             await this.connection.write.query("update user_profile set image = ? where phone = ? limit 1", [url.Location, phone]);
             return this.sendSuccess(res, { message: "User Image upload  Successfully", user: url.location })
 
@@ -138,8 +147,9 @@ export class user extends ResponseInterceptor {
     async updateAllUsers(req: any, res: any) {
         try {
             const { phone } = req.query.phoner
-            const { fname, mname, lname, Phone, email } = req.body
-            const [user]: any = await this.connection.write.query(SQL_UPDATE_USER, [fname, mname, lname, email, phone]);
+            // const { fname, mname, lname, Phone, email } = req.body
+            console.log(req.body)
+            const [user]: any = await this.connection.write.query(SQL_UPDATE_USER, [req.body, phone]);
             return this.sendSuccess(res, { message: "User updated Successfully", user: user })
         }
         catch (err) {
@@ -157,6 +167,24 @@ export class user extends ResponseInterceptor {
             return this.sendSuccess(res, { data: user[0] })
         }
         catch (err) {
+            console.error(err)
+            this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
+        }
+    }
+
+
+    async notificationData(req :any , res :any){
+        try{
+            const { data } = req.query
+           let  notificationData  :any = ""
+            if(data == "tournament"){
+                 [notificationData] = await this.connection.write.query("select tou_key , name from tournament where tou_key in (select tou_key from notification where match_key = null)");
+            }
+            if(data == "match"){
+             [notificationData] = await this.connection.write.query("select match_key , name from cricket_match where match_key in (select match_key from notification)");
+            }
+            return this.sendSuccess(res, { data: notificationData })
+        }catch(err){
             console.error(err)
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
         }

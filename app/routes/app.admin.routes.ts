@@ -95,6 +95,15 @@ export class AdminAppRoutes {
           routingComponents.add_fantasyPoints.bind(routingComponents)
         ]
       },
+
+      {
+        path: "/admin/v1/update/match",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.updateMatch.bind(routingComponents)
+        ]
+      },
+
       {
         path: "/admin/v1/update_tournament",
         component: [
@@ -153,11 +162,25 @@ export class AdminAppRoutes {
           routingComponents.addReel.bind(routingComponents)
         ]
       },
+      {
+        path: "/admin/v1/delete/comments",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.deleteComment.bind(routingComponents)
+        ]
+      },
 
       {
         path: "/admin/v1/send/notification",
         component: [
           routingComponents.adminSendNitification.bind(routingComponents)
+        ]
+      },
+
+      {
+        path: "/admin/v1/update/notification",
+        component: [
+          routingComponents.updateDevice.bind(routingComponents)
         ]
       },
 
@@ -221,6 +244,15 @@ export class AdminAppRoutes {
           routingComponents.get_tournament.bind(routingComponents)
         ]
       },
+
+      {
+        path: "/admin/v1/all/device",
+        component: [
+          //  this.tokenController.auth(["admin"]),
+          routingComponents.findAllDevice.bind(routingComponents)
+        ]
+      },
+
       {
         path: "/admin/v1/match/team/player",
         component: [
@@ -372,6 +404,8 @@ export class AdminAppRoutes {
           routingComponents.deleteReel.bind(routingComponents)
         ]
       },
+
+   
       {
         path: "/admin/v1/deleteuser/:u_id",
         component: [

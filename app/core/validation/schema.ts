@@ -23,6 +23,7 @@ export const reelsUpdateBody = Joi.object().keys({
 export const login = Joi.object().keys({
   phone: validData.number,
   password: validData.alphaNum,
+  device_id:validData.string
 });
 export const reel = Joi.object().keys({
   PageLimit: validData.number,

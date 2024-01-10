@@ -7,7 +7,7 @@ export class tokenController extends ResponseInterceptor {
   }
   async generateToken(storeData: {}, res: any) {
     try {
-      return await jwt.sign({ user: storeData }, appConfig.jwt.jwtSecretKey, { expiresIn: appConfig.jwt.jwtExpiry })
+      return await jwt.sign({ user: storeData }, appConfig.jwt.jwtSecretKey)
     } catch (err) {
       let responseBody = {
         version: appConfig.ver,

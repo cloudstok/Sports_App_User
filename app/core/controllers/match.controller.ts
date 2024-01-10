@@ -4,7 +4,6 @@ import { countries } from './countries'
 import { players } from "./playerController";
 import { ResponseInterceptor } from "../utilities/response-interceptor";
 import { AnyCnameRecord } from "dns";
-const detail_match = "update  cricket_match set status = ?, play =?, players=?, data_review=?, squad = ?, estimated_end_date = ?, completed_date_approximate = ? where match_key = ?";
 export class match extends ResponseInterceptor {
   connection: connection
   countries: countries
@@ -17,13 +16,30 @@ export class match extends ResponseInterceptor {
   }
   // up date live data 
   async update_live_match(data: any) {
-    // console.log(Object.keys(data))
-    await this.connection.write.query(detail_match, [data.status, JSON.stringify(data.play), JSON.stringify(data.players), JSON.stringify(data.data_review), JSON.stringify(data.squad), data.estimated_end_date, data.completed_date_approximate, data.key])
+    try{
+      let matchDate = {
+        status: data.status,
+        play: JSON.stringify(data.play),
+        players: JSON.stringify(data.players),
+        data_review: JSON.stringify(data.data_review),
+        squad: JSON.stringify(data.squad),
+        estimated_end_date: data.estimated_end_date,
+        completed_date_approximate: data.completed_date_approximate
+      }
+
+    await this.updateMatches(matchDate, data.key)
     return true
+
+    }catch(err){
+      return err
+    }
+ 
+
+
   }
 
   async getMatchByTournament(req: any, res: any) {
-    const [data]: any = await this.connection.write.query('SELECT match_key ,   team, squad , name, is_subscribe ,short_name, sub_title, status, start_at ,is_deleted,is_Active , tou_key from cricket_match where tou_key = ?', [req.params.tou_key])
+    const [data]: any = await this.connection.write.query('SELECT match_key , format,   team, squad , name, is_subscribe ,short_name, sub_title, status, start_at ,is_deleted,is_Active , tou_key from cricket_match where tou_key = ?', [req.params.tou_key])
     for (let x of data) {
 
       delete x.team;
@@ -42,32 +58,6 @@ export class match extends ResponseInterceptor {
     }
     this.sendSuccess(res, { data: data })
   }
-
-
-
-  // async getTeamPlayer(team , squad) {
-  //   try {
-  //       team.a.url = await this.countries.teamImageURL(team.a.code)
-  //       team.b.url = await this.countries.teamImageURL(team.b.code)
-  //      if(squad){
-  //       if (squad.a.playing_xi) {
-  //         team.a.player = await this.players.getPlayer(squad.a.playing_xi)
-  //         team.b.player = await this.players.getPlayer(squad.b.playing_xi)
-  //         delete squad.a.player_keys
-  //         delete squad.b.player_keys
-  //       } else {
-  //         team.a.player = await this.players.getPlayer(squad.a.player_keys)
-  //         team.b.player = await this.players.getPlayer(squad.b.player_keys)
-  //       }
-  //     }
-  //     team = Object.values(team)
-  //     return team
-  //   } catch (err) {
-  //     console.error(`Error while Find Team Player is::::`, err);
-  //    return false
-  //   }
-  // }
-
 
 
   ///  find get Match Data from  database
@@ -123,17 +113,20 @@ export class match extends ResponseInterceptor {
       let matchData = await this.getMatchData(sql_MatchFxitures);
       let finalData = []
       for (let x of matchData) {
-        let key = new Date(x?.start_at * 1000).toISOString().split('T')[0];
-        let matchObj = {
-          date: key,
-          matches: [x]
+        if (x?.start_at) {
+          let key = new Date(x?.start_at * 1000)?.toISOString()?.split('T')[0];
+          let matchObj = {
+            date: key,
+            matches: [x]
+          }
+          let keyCheck = finalData.find(e => e.date === key)
+          if (keyCheck) {
+            keyCheck.matches.push(x)
+          } else {
+            finalData.push(matchObj)
+          }
         }
-        let keyCheck = finalData.find(e => e.date === key)
-        if (keyCheck) {
-          keyCheck.matches.push(x)
-        } else {
-          finalData.push(matchObj)
-        }
+
       }
       if (finalData.length > 0) {
         this.sendSuccess(res, { data: finalData })
@@ -175,7 +168,7 @@ export class match extends ResponseInterceptor {
         x.venue.country.url = await this.imageURL(x.venue.country.code)
         x.start_at = x.start_at.toLocaleString();
         if (x.squad) {
-          x.squad = Object.values(x?.squad) || []
+          x.squad = x?.squad ? Object.values(x?.squad) : []
         }
       }
       return this.sendSuccess(res, { data: tournament })
@@ -261,7 +254,7 @@ export class match extends ResponseInterceptor {
     }
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////////////
 
   async finddetailsby_match_key(req: any, res: AnyCnameRecord) {
     try {
@@ -283,21 +276,27 @@ export class match extends ResponseInterceptor {
     }
   }
 
-  async ActiveMatch(req: any, res: any) {
+  async updateMatch(req: any, res: any) {
     try {
-      const { value, tou_key } = req.query
-      await this.connection.write.query('UPDATE cricket_match SET is_active = ? WHERE tou_key = ?', [value, tou_key]);
-      if (+value) {
-        return this.sendSuccess(res, { status: 'success', msg: "cricket_match Active successful" })
-      } else {
-        return this.sendSuccess(res, { status: 'success', msg: "cricket_match deActive successful" })
-      }
+      const { match_key } = req.query
+      let data = await this.updateMatches(req.body, match_key)
+      // await this.connection.write.query('UPDATE cricket_match SET ? WHERE match_key = ?', [req.body, match_key]);
+      return this.sendSuccess(res, { status: 'success', msg: "cricket_match Active successful" })
     } catch (err) {
-      // console.error(`Error while deleting tournament is::::`, err);
+
       return this.sendInternalError(res, 'Something went wrong with the request')
     }
   }
 
+
+  async updateMatches(data, match_key) {
+    try {
+      await this.connection.write.query('UPDATE cricket_match SET ? WHERE match_key = ?', [data, match_key]);
+      return true
+    } catch (err) {
+      return false
+    }
+  }
 
 
 

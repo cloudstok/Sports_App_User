@@ -24,8 +24,8 @@ export class players extends ResponseInterceptor {
 
       let stats: any = await this.cricketApi?.get_tournament_stats(req?.params?.tou_key , res);
       stats = stats.data
-      stats.players = Object.values(stats.players)
-      stats.teams = Object.values(stats.teams)
+      stats.players = stats?.players ? Object.values(stats?.players): []
+      stats.teams = stats?.teams ? Object.values(stats?.teams) : []
       for (let x of stats.teams) {
         let player = []
         for (let y of stats.players) {
@@ -80,8 +80,8 @@ export class players extends ResponseInterceptor {
           // console.log(Object.keys(el))
           let [data]: any = await this.connection.write.query(sql_chackStats, [el.key, req.params.tou_key])
           if (data.length === 0) {
-            d.push([req.params.tou_key, el.name, el.jersey_name, el.key, el.legal_name, el.gender, el.date_of_birth, JSON.stringify(el.nationality), el.team_key, el.seasonal_role, JSON.stringify(el?.performance ?? {})])
-            p.push([el.key, el.name, el.jersey_name, el.legal_name, el.gender, el.date_of_birth, JSON.stringify(el.nationality)])
+            d.push([req.params.tou_key, el?.name, el?.jersey_name, el?.key, el?.legal_name, el?.gender, el?.date_of_birth, JSON.stringify(el?.nationality), el?.team_key, el?.seasonal_role, JSON.stringify(el?.performance ?? {})])
+            p.push([el?.key, el?.name, el?.jersey_name, el?.legal_name, el?.gender, el?.date_of_birth, JSON.stringify(el?.nationality)])
           } else {
             await this.connection.write.query(sql_updateStats, [JSON.stringify(el?.performance ?? {}), el.key, req.params.tou_key])
           }
@@ -131,7 +131,7 @@ export class players extends ResponseInterceptor {
 
   async getPlayer(player: any) {
     try {
-      if (player.length > 0) {
+      if (player?.length > 0) {
         let sql = `select * from players where player_key in (?)`;
         const [data] = await this.connection.write.query(sql, [player])
         return data
@@ -150,21 +150,21 @@ export class players extends ResponseInterceptor {
       const sql = "select team, squad from cricket_match where match_key = ? "
       let [player]: any = await this.connection.write.query(sql, [req.query.match_key])
       for (let x of player) {
-        x.team.a.url = await this.countries.teamImageURL(x.team.a.code)
-        x.team.b.url = await this.countries.teamImageURL(x.team.b.code)
-        if (x.squad.a.playing_xi) {
-          x.team.a.player = await this.getPlayer(x.squad.a.playing_xi)
-          x.team.b.player = await this.getPlayer(x.squad.b.playing_xi)
+        x.team.a.url = await this.countries.teamImageURL(x?.team?.a?.code)
+        x.team.b.url = await this.countries.teamImageURL(x?.team?.b?.code)
+        if (x?.squad?.a?.playing_xi) {
+          x.team.a.player = await this.getPlayer(x?.squad?.a?.playing_xi)
+          x.team.b.player = await this.getPlayer(x?.squad?.b?.playing_xi)
           delete x.squad.a.player_keys
           delete x.squad.b.player_keys
         } else {
-          x.team.a.player = await this.getPlayer(x.squad.a.player_keys)
-          x.team.b.player = await this.getPlayer(x.squad.b.player_keys)
+          x.team.a.player = await this.getPlayer(x?.squad?.a?.player_keys)
+          x.team.b.player = await this.getPlayer(x?.squad?.b?.player_keys)
         }
         delete x.squad
       }
       // console.log(player)
-      player = Object.values(player[0]?.team)
+      player =  player[0]?.team? Object.values(player[0]?.team) : []
 
       return this.sendSuccess(res, { data: player })
     } catch (err) {

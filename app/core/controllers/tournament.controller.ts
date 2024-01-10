@@ -27,6 +27,8 @@ export class tournament extends ResponseInterceptor {
   async findTournamentbyAssKey(PageLimit, PageOffset, ass_key) {
     try {
       let [allTournament]: any = await this.connection.write.query('SELECT * FROM tournament where association_key = ? and is_deleted = 1 ', [ass_key]);
+      // and start_at between start_at and last_at 
+      
 
       for (let x of allTournament) {
         if (new Date(x.start_date * 1000) <= new Date() && new Date(x.last_scheduled_match_date * 1000) >= new Date()) {
@@ -147,9 +149,9 @@ export class tournament extends ResponseInterceptor {
 
   async createTeam(t, p) {
     try {
-      t = Object.values(t)
+      t =t? Object.values(t) :[]
       t = [...new Map(t.map(item => [item['key'], item])).values()]
-      p = Object.values(p)
+      p = p ? Object.values(p):[]
       p = p.map(e => (
         { key: e.key, name: e.name, role: e.roles, nationality: e.nationality }))
       p = [...new Map(p.map(item => [item['key'], item])).values()]
@@ -208,9 +210,9 @@ export class tournament extends ResponseInterceptor {
       await this.connection.write.query(`UPDATE tournament SET is_Active = ${value} WHERE tou_key = '${tou_key}'`);
       await this.connection.write.query(`  UPDATE cricket_match SET is_Active = ${value} WHERE tou_key = '${tou_key}'`);
       if (+value) {
-        return this.sendSuccess(res, { status: 'success', msg: "Tournament Active successful" })
+        return this.sendSuccess(res, { status: 'success', msg: "Tournament Activated Successfully" })
       } else {
-        return this.sendSuccess(res, { status: 'success', msg: "Tournament Deactive successful" })
+        return this.sendSuccess(res, { status: 'success', msg: "Tournament Deactivated Successfully" })
       }
     } catch (err) {
       console.error(`Error while deleting tournament is::::`, err);
@@ -249,29 +251,12 @@ export class tournament extends ResponseInterceptor {
             rounds: element?.rounds ?? "",
             tournamentPoints: element?.tou_points ?? "",
           };
-        // console.log(element.tou_points)
-        // if (finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
-        //   console.log(finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points)
-        //   for (let e of finalData['teamsDetails']['tournamentPoints'][0]?.groups[0]?.points) {
-        //     // console.log(e)
-        //     let url = await this.imageURL(e?.team?.code) || process.env.country || "vishal"
-        //     e.team.url = url
-        //       // delete e.team
-
-        //   }
-        // }
-        // console.log(finalData['teamsDetails']['tournamentPoints'][0]?.groups[0].points)
 
         for (let x of finalData['teamsDetails']['tournamentPoints']) {
           if (x.tournament_round.name === 'Knockout') {
             finalData['teamsDetails']['tournamentPoints'].shift()
           }
         }
-
-        // if(element.play){
-
-        // }
-
 
         element.team.a.url = await this.imageURL(element?.team?.a?.code) || process.env.country
         element.team.b.url = await this.imageURL(element?.team?.b?.code) || process.env.country
@@ -302,12 +287,12 @@ export class tournament extends ResponseInterceptor {
           }
         });
         if (element.players) {
-          (Object.values(element?.players ?? {})).map((e: any) => {
+          (element?.players ? Object.values(element?.players): []).map((e: any) => {
             players.push(e?.player)
           })
         }
         if (element.team) {
-          teams.push(...Object.values(element?.team ?? {}))
+          teams.push(...Object.values(element?.team ))
         }
       };
 
@@ -341,7 +326,7 @@ export class tournament extends ResponseInterceptor {
 
       team = team[0].teams
       if (team != null) {
-        team = Object.values(team)
+        team = team ? Object.values(team) :[]
         for (let x of team) {
 
           x.imageURL = await this.imageURL(x.code)

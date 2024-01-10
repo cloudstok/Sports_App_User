@@ -53,12 +53,14 @@ export class subscribe {
   async subscribeMatchCron() {
     try {
       let [matchs]: any = await this.connection.write.query("SELECT * FROM sport_app.cricket_match where status = 'not_started' and is_subscribe = 0 and is_Active = 1")
+
       for (let x of matchs) {
-        await this.subscribe(x.match_key)
+        let startTime = new Date(+x.start_at * 1000);
+        // console.log(new Date(+x.start_at * 1000))
+        // await this.subscribe(x.match_key)
       }
-
     } catch (err) {
-
+            
     }
   }
 
