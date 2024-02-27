@@ -5,6 +5,15 @@ import { tokenController } from "../jwt/jsonwebtoken"
 import { SQL_ALL_USER, SQL_CHECK_USER, SQL_DELETE_USER, SQL_INSERT_USER, SQL_UPDATE_USER } from "../query/query";
 import { otpController } from "./otp.controller";
 import { uploads3 } from "../aws/uploads3";
+
+const addLikes = "INSERT INTO reels_like set ?" 
+const updateLikes = "UPDATE reels_like set ? where like_id = ?"
+const getAllLikes = "SELECT * FROM reels_like"
+const getUserByphone = "SELECT name , image FROM user_profile where phone = ?"
+const getLikeById = "SELECT * FROM reels_like where like_id = ?"
+const DeleteLikes = "DELETE FROM reels_like WHERE like_id = ?"
+
+
 export class user extends ResponseInterceptor {
     public connection: connection
     encryptionDecryption: EncryptionDecryption;
@@ -19,17 +28,30 @@ export class user extends ResponseInterceptor {
         this.otpController = new otpController()
         this.uploads3 = new uploads3()
     }
+
+
+async findUserByPhone(phone){
+    try{
+        const [user] =  await this.connection.write.query(getUserByphone , [phone])
+        return user
+         }catch(err){
+            return false
+         }
+}
+
+
+
+
     async register(req: any, res: any) {
         try {
-            const { phone, password, otp, otp_id } = req.body
-
+            const { phone, password, otp_id } = req.body
             let check: any = await this.otpController.verify(otp_id);
-            if (check.status != "USED") {
-                return this.sendBadRequest(res, "phone Number is Not verify", this.BAD_REQUEST)
+            if (check?.status != "USED") {
+                return this.sendBadRequest(res, "phone Number is not verified", this.BAD_REQUEST)
             }
             //     console.log(check.phone, phone, typeof check.phone, typeof phone)
-            if (check.phone != phone) {
-                return this.sendBadRequest(res, "invalid phone Number", this.BAD_REQUEST)
+            if (check?.phone != phone) {
+                return this.sendBadRequest(res, "Invalid phone Number", this.BAD_REQUEST)
             }
             const [user]: any = await this.connection.write.query(SQL_CHECK_USER, [phone]);
             if (user.length > 0) {
@@ -37,7 +59,7 @@ export class user extends ResponseInterceptor {
             }
             const hash = await this.encryptionDecryption.Encryption(password)
             await this.connection.write.query(SQL_INSERT_USER, [phone, hash]);
-            return this.sendSuccess(res, { message: "User Insert Successfully" })
+            return this.sendSuccess(res, { message: "User created successfully" })
         }
         catch (err) {
             console.error(err)
@@ -146,9 +168,8 @@ export class user extends ResponseInterceptor {
     // --------------------- admin-----------------------
     async updateAllUsers(req: any, res: any) {
         try {
-            const { phone } = req.query.phoner
+            const { phone } = req.params
             // const { fname, mname, lname, Phone, email } = req.body
-            console.log(req.body)
             const [user]: any = await this.connection.write.query(SQL_UPDATE_USER, [req.body, phone]);
             return this.sendSuccess(res, { message: "User updated Successfully", user: user })
         }

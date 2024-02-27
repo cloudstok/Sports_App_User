@@ -13,7 +13,7 @@ export class contact extends ResponseInterceptor {
         const {name, email, phone} = req.body
         const sql = "INSERT INTO contacts(name, email, phone) VALUES(?,?,?)";
         await this.connection.write.query(sql , [name, email, phone])
-      return  this.sendSuccess(res, { status: true, msg: "Your Query Send Successfully" })
+      return  this.sendSuccess(res, { status: true, msg: "Query Sent Successfully" })
     } catch (err) {
       console.error(err);
       return this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)

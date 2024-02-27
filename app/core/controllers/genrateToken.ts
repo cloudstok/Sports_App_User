@@ -46,11 +46,11 @@ export class token extends ResponseInterceptor {
 
   }
 
-  async setTokenRedis(data) {
-    data = JSON.parse(data)
-    data.data.project_key = appConfig.PROJECT_KEY
-    data.data.api_key = appConfig.API_KEY
-    await redis.setRedis("token", JSON.stringify(data?.data), 23 * 3600)
+  async setTokenRedis(data) {                          
+    data = JSON.parse(data)                          
+    data.data.project_key = appConfig.PROJECT_KEY                          
+    data.data.api_key = appConfig.API_KEY                          
+    await redis.setRedis("token", JSON.stringify(data?.data), 23 * 3600)                          
     // console.log(await redis.getRedis("token"), "token")
   }
 

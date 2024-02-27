@@ -24,9 +24,9 @@ export class tournament extends ResponseInterceptor {
     }
   }
 
-  async findTournamentbyAssKey(PageLimit, PageOffset, ass_key) {
+  async findTournamentbyAssKey(limit, offset, ass_key) {
     try {
-      let [allTournament]: any = await this.connection.write.query('SELECT * FROM tournament where association_key = ? and is_deleted = 1 ', [ass_key]);
+      let [allTournament]: any = await this.connection.write.query('SELECT * FROM tournament where association_key = ? and is_deleted = 1 order by start_date desc', [ass_key]);
       // and start_at between start_at and last_at 
       
 
@@ -49,8 +49,8 @@ export class tournament extends ResponseInterceptor {
 
   async findTournamentByAss(req, res) {
     try {
-      const { PageLimit, PageOffset, ass_key } = req.query
-      let tournamentData: any = await this.findTournamentbyAssKey(PageLimit, PageOffset, ass_key);
+      const { limit, offset, ass_key } = req.query
+      let tournamentData: any = await this.findTournamentbyAssKey(limit, offset, ass_key);
       return this.sendSuccess(res, { data: tournamentData })
 
     } catch (err) {

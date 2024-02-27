@@ -3,6 +3,7 @@ import Redis from 'ioredis';
 
 // Create a Redis client instance
 const redis = new Redis({
+  readOnly: false,
   host: appConfig.redisHost, // Redis server host
   port: 6379,        // Redis server port
   password: '',      // Optional: Redis server password, if set

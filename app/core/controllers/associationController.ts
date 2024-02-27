@@ -15,7 +15,7 @@ export class Association extends ResponseInterceptor {
   }
   async associationList(req, res) {
     try {
-      const { PageLimit, PageOffset } = req.query
+      const { limit, offset } = req.query
       let [associationList] = await this.connection.write.query("Select * from associations where is_deleted = 1 ");
       return res.status(200).send(associationList);
 

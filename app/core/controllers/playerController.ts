@@ -19,7 +19,7 @@ export class players extends ResponseInterceptor {
     this.countries = new countries()
   }
 
-  async addStats(req: any, res: any) {
+  async addStats(req: any, res: any, cron?) {
     try {
 
       let stats: any = await this.cricketApi?.get_tournament_stats(req?.params?.tou_key , res);
@@ -92,10 +92,11 @@ export class players extends ResponseInterceptor {
         await this.addPlayer(p)
         await this.connection.write.query(sql_addStats, [d])
       }
-
+      if(cron) return;
       this.sendSuccess(res, { message: "Player Stats inserted successfully" })
     } catch (err) {
       console.error(err)
+      if(cron) return;
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }

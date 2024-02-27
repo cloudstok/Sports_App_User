@@ -75,10 +75,10 @@ export class otpController extends ResponseInterceptor {
         return this.sendBadRequest(res, "Invalid OTP", this.BAD_REQUEST)
       }
       if (data.expiration_time < new Date()) {
-        return this.sendBadRequest(res, "OTP Expirer", this.BAD_REQUEST)
+        return this.sendBadRequest(res, "OTP Expired", this.BAD_REQUEST)
       }
       this.update_otp({ status: 'USED' }, otp_id)
-      return this.sendSuccess(res, { message: "OTP Verify Successfully" })
+      return this.sendSuccess(res, { message: "OTP verified successfully" })
     } catch (err) {
       console.error(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)

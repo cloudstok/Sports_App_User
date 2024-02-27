@@ -21,10 +21,10 @@ export class countries extends ResponseInterceptor {
       }
       // console.log(url , "image")
 
-      const sql = "UPDATE  countries SET imgURl = ?  where code = ?"
+      const sql = "UPDATE countries SET imgURl = ?  where code = ?"
       let data = await this.connection.write.query(sql, [url, req.query.code])
       //console.log(data)
-      this.sendSuccess(res, { status: true, msg: ' image uploaded  successfully' })
+      this.sendSuccess(res, { status: true, msg: ' image updated successfully' })
     } catch (err) {
       console.error(err)
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)

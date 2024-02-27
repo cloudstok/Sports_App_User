@@ -30,9 +30,10 @@ class App {
         });
         const admin_appRoutes = new AdminAppRoutes();
         const appRoutes = new AppRoutes();
-        this.cron.subscribe()
-
+        this.cron.autoSubscribeMatch();   
+        
         // this.token.genrateToken()
+        this.cron.genrateToken();
 
         let AllGetRoutes = [...admin_appRoutes.AppGetRoutes, ...appRoutes.AppGetRoutes]
         let AllPostRoutes = [...admin_appRoutes.AppPostRoutes, ...appRoutes.AppPostRoutes]
@@ -67,7 +68,7 @@ class App {
             })
         });
     }
-
+   
     private config(): void {
         this.app.use(express.json({ limit: "50mb" }));
         this.app.use(express.urlencoded({ extended: true }));

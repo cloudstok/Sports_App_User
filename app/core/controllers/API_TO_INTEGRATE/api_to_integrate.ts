@@ -62,28 +62,32 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
 
   //   update tournament whith tournament key
 
-  async update_tournaments(req: any, res: any) {
+  async update_tournaments(req: any, res: any, cron?) {
     try {
       let detail_tournament: any = await this.cricketapi?.get_tournament(req?.query?.tou_key , res)
       await this.connection.write?.query(update_tournaments, [JSON.stringify(detail_tournament?.data?.teams), JSON.stringify(detail_tournament?.data?.rounds), req?.query?.tou_key])
+      if(cron) return;
       this.sendSuccess(res, { status: true, msg: 'tournaments detail inserted successfully' })
     } catch (err) {
       console?.error(err)
+      if(cron) return;
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
-  async tournaments_point_table(req: any, res: any) {
+  async tournaments_point_table(req: any, res: any, cron?) {
     try {
       let detail_tournament: any = await this.cricketapi.get_tournament_tables(req?.query?.tou_key , res)
       await this.connection.write?.query("update tournament set tou_points = ? where tou_key = ?", [JSON.stringify(detail_tournament?.data?.rounds), req?.query?.tou_key])
-      this.sendSuccess(res, { status: true, msg: 'tournaments detail inserted successfully' })
+      if(cron) return;
+      this.sendSuccess(res, { status: true, msg: 'tournaments points updated successfully' })
     } catch (err) {
       console?.error(err)
+      if(cron) return;
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
 
-  async add_matches(req: any, res: any) {
+  async add_matches(req: any, res: any, cron?) {
     try {
       let match_data: any = await this.cricketapi.featured_matches(req?.query?.tou_key , res);
       let finalData = []
@@ -94,14 +98,16 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
         ])
       }
       await this.connection.write?.query(add_matches, [finalData])
+      if(cron) return;
       this.sendSuccess(res, { status: true, msg: 'matches inserted successfully' })
 
     } catch (err) {
       console?.error(err)
+      if(cron) return;
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }
-  async update_matches(req: any, res: any) {
+  async update_matches(req: any, res: any, cron?) {
     try {
       let match_data: any = await this.cricketapi.featured_matches(req?.query?.tou_key , res);
       // let finalData = []
@@ -111,10 +117,12 @@ export class API_TO_INTEGRATE extends ResponseInterceptor {
         ]
         await this.connection.write?.query(update_match, finalData)
       }
-      this.sendSuccess(res, { status: true, msg: 'matches updated successfully' })
+      if(cron) return;
+      this.sendSuccess(res, { status: true, msg: 'tournament matches updated successfully' })
 
     } catch (err) {
       console?.error(err)
+      if(cron) return;
       this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)
     }
   }

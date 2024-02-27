@@ -12,8 +12,8 @@ export class News extends ResponseInterceptor {
     }
     async getNews(req: any, res: any) {
         try {
-            const { PageLimit, PageOffset } = req.query
-            const [news] = await this.connection.write.query(SQL_SHOW_NEWS, [+PageLimit, +PageOffset]);
+            const { limit, offset } = req.query
+            const [news] = await this.connection.write.query(SQL_SHOW_NEWS, [+limit, +offset]);
             return this.sendSuccess(res, { data: news })
         } catch (err) {
             console.error(err)

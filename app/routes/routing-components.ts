@@ -13,7 +13,8 @@ import { Association } from "../core/controllers/associationController";
 import { squadController } from "../core/controllers/squad.controller";
 import { NotificationController } from "../core/notification/notification";
 import {contact} from '../core/controllers/contact'
-
+import { reelComments } from '../core/controllers/reel.comments.controller';
+import {reelLike} from "../core/controllers/reel.like.controller";
 //.admin
 // import { ResponseInterceptor } from "../core/utilities/response-interceptor";
 // import { TestController } from "../core/controllers/test.controller";
@@ -52,7 +53,8 @@ export class RoutingComponents {
   subscribe: subscribe;
   notification : NotificationController
   contacts :contact
-  
+  reelComments: reelComments;
+  reelLike : reelLike;
   constructor() {
     this.responseInterceptor = new ResponseInterceptor();
     this.test = new TestController();
@@ -81,7 +83,8 @@ export class RoutingComponents {
     this.subscribe = new subscribe();
     this.notification =  new NotificationController()
     this.contacts = new contact()
-  
+    this.reelComments = new reelComments();
+    this.reelLike = new reelLike();
   }
 
   /**
@@ -135,6 +138,42 @@ export class RoutingComponents {
     this.user.findById(req, res)
   }
 
+  // <-----------------Reel Comments---------------->
+
+  addComment(req: any, res: any){
+    this.reelComments.addCommentToTable(req, res);
+  }
+
+  updateComment(req: any, res: any){
+    this.reelComments.updateCommentToTable(req, res);
+  }
+
+  getCommentByReelid(req: any, res: any){
+    this.reelComments.getAllCommentsByReelIdTable(req, res);
+  }
+
+  getCommentByCommentId(req: any, res: any){
+    this.reelComments.getAllCommentsByCommentIdTable(req, res);
+  }
+
+    // <-----------------Reel Likes---------------->
+
+    addLike(req: any, res: any){
+      this.reelLike.addLikeToTable(req, res);
+    }
+  
+    updateLike(req: any, res: any){
+      this.reelLike.updateLikeToTable(req, res);
+    }
+  
+    getLikeByReelid(req: any, res: any){
+      this.reelLike.getAllLikesByReelIdTable(req, res);
+    }
+  
+    getLikeByLikeId(req: any, res: any){
+      this.reelLike.getAllLikesByLikeIdTable(req, res);
+    }
+
   // <-----------------for themes------------------->
   addThemes(req: any, res: any) {
     this.theme.addThemes(req, res)
@@ -151,25 +190,8 @@ export class RoutingComponents {
   }
 
   //-------------------reels------------------------->
-  showReel(req: any, res: any) {
-    this.reel.getReelAuthorized(req, res)
-  }
+ 
 
-  getReel(req: any, res: any) {
-    this.reel.getReelUnauthorized(req, res)
-  }
-  // addUpdateReelStatus(req: any, res: any) {
-  //   this.reel.addUpdateReelStatus(req, res)
-  // }
-  likeReel(req: any, res: any) {
-    this.reel.updateLikeReel(req, res)
-  }
-  commentReel(req: any, res: any) {
-    this.reel.updateCommentReel(req, res)
-  }
-  getCommentByReelId(req: any, res: any) {
-    this.reel.getCommentByReelId(req, res)
-  }
 
   //devices
 
@@ -363,23 +385,14 @@ export class RoutingComponents {
   }
   
   //<---------------reels---------------->
+  getAllReel(req: any, res: any) {
+    this.reel.getAllReel(req, res)
+  }
 
   addReel(req: any, res: any) {
-    this.reels.addReel(req, res)
+    this.reel.addReelToTable(req, res)
   }
-
-  deleteComment(req: any, res: any) {
-    this.reels.deleteComment(req, res)
-  }
-
-  showReels(req: any, res: any) {
-    this.reels.showReels(req, res)
-  }
-
-
-  deleteReel(req: any, res: any) {
-    this.reels.deleteReel(req, res)
-  }
+ 
   //<--------------News-------------->
   getNews(req: any, res: any) {
     this.news.getNews(req, res)

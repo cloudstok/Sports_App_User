@@ -27,7 +27,14 @@ export class match extends ResponseInterceptor {
         completed_date_approximate: data.completed_date_approximate
       }
 
-    await this.updateMatches(matchDate, data.key)
+      let matchSubscribtionData = {
+        status: data.status,
+        estimated_end_date: data.estimated_end_date,
+        completed_date_approximate: data.completed_date_approximate
+      }
+
+    await this.updateMatches(matchDate, data.key);
+    await this.updateMatchesSubcribtion(matchSubscribtionData, data.key)
     return true
 
     }catch(err){
@@ -39,7 +46,7 @@ export class match extends ResponseInterceptor {
   }
 
   async getMatchByTournament(req: any, res: any) {
-    const [data]: any = await this.connection.write.query('SELECT match_key , format,   team, squad , name, is_subscribe ,short_name, sub_title, status, start_at ,is_deleted,is_Active , tou_key from cricket_match where tou_key = ?', [req.params.tou_key])
+    const [data]: any = await this.connection.write.query('SELECT match_key , format,   team, squad , name, is_subscribe ,short_name, sub_title, status, start_at ,is_deleted,is_Active , tou_key from cricket_match where tou_key = ? order by start_at desc', [req.params.tou_key])
     for (let x of data) {
 
       delete x.team;
@@ -107,8 +114,6 @@ export class match extends ResponseInterceptor {
   // modified data foe  match Fxitures
   async getMatchFxitures(req: any, res: any) {
     try {
-      let { limit, offset, date } = req.query
-
       let sql_MatchFxitures = `select match_key, name, short_name, sub_title, status, start_at, metric_group, sport, winner, team, gender, format, toss, play, estimated_end_date, completed_date_approximate, tou_key, tou_name, tou_short_name from cricket_match  order by start_at desc `;
       let matchData = await this.getMatchData(sql_MatchFxitures);
       let finalData = []
@@ -141,6 +146,7 @@ export class match extends ResponseInterceptor {
   // modified data for  match data
 
   async get_match(req: any, res: any) {
+    // const data = req.files.docs
     try {
       let { limit, offset } = req.query;
 
@@ -281,7 +287,7 @@ export class match extends ResponseInterceptor {
       const { match_key } = req.query
       let data = await this.updateMatches(req.body, match_key)
       // await this.connection.write.query('UPDATE cricket_match SET ? WHERE match_key = ?', [req.body, match_key]);
-      return this.sendSuccess(res, { status: 'success', msg: "cricket_match Active successful" })
+      return this.sendSuccess(res, { status: 'success', msg: "Cricket match updated successfully" })
     } catch (err) {
 
       return this.sendInternalError(res, 'Something went wrong with the request')
@@ -298,6 +304,14 @@ export class match extends ResponseInterceptor {
     }
   }
 
+  async updateMatchesSubcribtion(data, match_key) {
+    try {
+      await this.connection.write.query('UPDATE match_subscribtion SET ? WHERE match_key = ?', [data, match_key]);
+      return true
+    } catch (err) {
+      return false
+    }
+  }
 
 
 }

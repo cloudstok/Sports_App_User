@@ -69,7 +69,7 @@ export class admin extends ResponseInterceptor {
         try {
             const { phone, password } = req.body
             const [user]: any = await this.connection.write.query(SQL_UPDATE_ADMIN, [password, phone]);
-            return this.sendSuccess(res, { message: "User updated Successfully", data: user })
+            return this.sendSuccess(res, { message: "Admin updated Successfully", data: user })
         }
         catch (err) {
             this.sendBadRequest(res, `${err}`, this.BAD_REQUEST)

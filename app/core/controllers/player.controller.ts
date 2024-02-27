@@ -290,11 +290,16 @@ export class playerController extends ResponseInterceptor {
             for (let x of finalData) {
                 let totalRun = 0
                 let totalstrike_rate = 0
+                let totalWickets = 0
                 let c = await this.tournament(x.tou_key)
                 Object.assign(x, c)
                 for (let y of x.match) {
                     let run = y.score?.score?.['1']?.batting?.score?.runs;
+                    let wickets = y.score?.score?.['1']?.bowling?.score?.wickets;
                     let strike_rate = y.score?.score?.['1']?.batting?.score?.strike_rate;
+                    if(wickets){
+                        totalWickets += wickets
+                    }
                     if (run) {
                         totalRun += run
                         totalstrike_rate += strike_rate
@@ -304,6 +309,7 @@ export class playerController extends ResponseInterceptor {
                 x.totalRun = totalRun
                 x.totalRunAvg = totalRun / x.match.length
                 x.totalMatch = x.match.length
+                x.wickets = totalWickets
             }
             return this.sendSuccess(res, { status: "success", msg: "Player stats", finalData })
         } catch (err) {
